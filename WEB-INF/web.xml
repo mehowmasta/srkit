@@ -14,7 +14,7 @@
 <context-param><param-name>env</param-name><param-value>dev</param-value></context-param>
 <context-param><param-name>uploadDir</param-name><param-value>_uploads</param-value></context-param>
 <context-param><param-name>downloadDir</param-name><param-value>_downloads</param-value></context-param>
-<context-param><param-name>patreonWebhook</param-name><param-value>OulXFq6hEuM3kKBQ2jzwEEC1N2Ec1OL8rV4FbnOJgeZ1DivhjhpTDh_aV_ZZPiCk</param-value></context-param>
+<context-param><param-name>patreonWebhook</param-name><param-value>[[mehowmasta patreon webhook]]</param-value></context-param>
 <listener>
     <listener-class>sr.web.CtxListener</listener-class>
 </listener>
