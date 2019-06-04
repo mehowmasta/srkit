@@ -1,0 +1,25 @@
+<script src="pickarmorpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='pickArmorPop' class='popup search'>
+	<div class='popupHeader'>
+		<div class='x' onclick='pickArmorPop.close()'>X</div>
+		<div class='flex searchWrap' style='align-items:center;' >
+			<div class='inputWrap' style='margin:1rem 2rem;'>
+				<input type='text' id='pickArmorPopSearchInput' name='pickArmorPopSearchInput' tabindex='1' onkeyup='pickArmorPop.keyup(event)'>
+				<label class='inputLabel'>search</label>
+			</div>
+			<div id='pickArmorPopClearSearchBtn' class='imgBtn' onclick='pickArmorPop.clear();' style='display:none;'><img class='medIcon'  src='<%= Images.get(Images.Clear) %>'><label>Clear</label></div>
+		</div>
+	</div>
+	<div class='popupContent'>		
+		<div class='container'>
+			<div class='tableWrap' style='margin:0.5rem;'>
+				<div class='tableTitle'>Armor</div>
+				<table class='pickTable table show' id='pickArmorPopTable'>
+					<tr><td style='width:100%;text-align:center;'>Loading...</td></tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

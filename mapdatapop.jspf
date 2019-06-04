@@ -1,0 +1,12 @@
+<script src="mapdatapop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='mapDataPop' class='popup mapDataPop' style='z-index:500;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='mapDataPop.close()'>X</div>
+	</div>
+	<div class='popupContent' style='padding-top:1.5rem;'>
+		<div id='mapDataPopContainer' class='container' style='' >
+		</div>
+	</div>
+</div>

@@ -1,0 +1,15 @@
+ALTER TABLE `tcharacter` ADD INDEX `iUser` (`User` ASC);
+ALTER TABLE `tcharacteradeptpower` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharacterarmor` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharacterbioware` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharactercontact` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharactercyberdeck` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharactercyberdeckprogram` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharactercyberware` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharacterdrone` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharactergear` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharacterquality` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharacterskill` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharacterspell` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharactervehicle` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);
+ALTER TABLE `tcharacterweapon` ADD INDEX `iCharacterRow` (`CharacterRow` ASC);

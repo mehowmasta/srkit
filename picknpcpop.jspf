@@ -1,0 +1,67 @@
+<script src="picknpcpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+#pickNPCPopThumbContainer{
+	opacity:0;
+	margin:2rem 1rem 1rem;
+	width: auto;
+	display: flex;
+	justify-content: center;
+	flex-wrap:wrap;
+}
+#pickNPCPopThumbContainer.show{
+	opacity:1;
+}
+#pickNPCPopThumbContainer .long{
+	display:none !important;
+}
+
+#pickNPCPopThumbContainer .divider {
+	text-align:left;
+	min-width: calc(100vw + 8rem);
+	white-space: normal;
+	padding-right: 8rem;
+	padding-left: 4rem;
+	-ms-transform: translateX(2rem);
+	-webkit-transform: translateX(2rem);
+	-moz-transform: translateX(2rem);
+	-o-transform: translateX(2rem);
+	transform: translateX(2rem);
+}
+.thumbPreview{
+	border:0.2rem solid black;
+}
+#pickNPCPopThumbContainer .section{
+}
+</style>
+<div id='pickNPCPop' class='popup' style='width:100vw;margin:0;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='pickNPCPop.close()'>X</div>
+		<div class='popupTitle' >Global SIN Registry</div>
+		<div class='flex'>
+			<div class='flex searchWrap' style='align-items:center;' >
+				<div class='inputWrap' style='margin:1rem 2rem;'>
+					<input type='text' id='pickNPCPopSearchInput' name='pickNPCPopSearchInput' tabindex='1' onkeyup='pickNPCPop.keyup(event)'>
+					<label class='inputLabel'>search</label>
+				</div>
+			</div>
+			<div class='flex prWrap' style='align-items:center;' >
+				<div class='selectWrap' style='margin:1rem 2rem;'>
+					<select id='pickNPCPopProfessionalRating' tabindex='1' onchange='pickNPCPop.changePRFilter()'>
+						<option value='-1'>Any</option>
+						<option value='0'>0 Thugs & Mouth Breathers</option>
+						<option value='1'>1 Gangers & Street Scum</option>
+						<option value='2'>2 Corporate Security</option>
+						<option value='3'>3 Police Patrols</option>
+						<option value='4'>4 Organized Crime Gang</option>
+						<option value='5'>5 Elite Corporate Security</option>
+						<option value='6'>6 Elite Special Forces</option>
+					</select>
+					<label class='inputLabel'>Professional Rating</label>
+				</div>
+			</div>
+			<div id='pickNPCPopClearSearchBtn' class='imgBtn' onclick='pickNPCPop.clear();' style='display:none;align-self: center;'><img class='medIcon' src='<%= Images.get(Images.Clear)%>'><label>Clear</label></div>
+		</div>
+	</div>
+	<div id='pickNPCPopThumbContainer' class='popupContent'>
+	</div>
+</div>

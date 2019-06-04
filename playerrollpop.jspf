@@ -1,0 +1,14 @@
+<script src="playerrollpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='playerRollPop' class='popup search'>
+	<div class='popupHeader'>
+		<div class='x' onclick='playerRollPop.close()'>X</div>	
+		<div class='pcname' id='playerRollPopName{{Row}}'></div>
+		<div class='pcimg' id='playerRollPopPortrait{{Row}}'></div>	
+	</div>
+	<div class='popupContent'>		
+		<div class='container'>
+		</div>
+	</div>
+</div>

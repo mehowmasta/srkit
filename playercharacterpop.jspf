@@ -1,0 +1,213 @@
+<script src="playercharacterpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='playerCharacterPopContainer'></div>
+<div id='playerCharacterPopTemplate'>
+	<div id='playerCharacterPop{{Row}}' class='popup playerCharacterPop'>
+		<div class='popupHeader'>
+			<div class='x' onclick='playerCharacterPop.close({{Row}})'>X</div>
+		</div>
+		<div class='popupContent' style='position:relative;'>
+			<div class='pcname' id='playerCharacterPopName{{Row}}'></div>
+			<div class='pcvalue'>
+				<span id='playerCharacterPopKarmaWrap{{Row}}'><label>Karma:</label><span id='playerCharacterPopKarma{{Row}}'></span></span>		
+				<span id='playerCharacterPopPRWrap{{Row}}'><label>PR:</label><span id='playerCharacterPopProfessionalRating{{Row}}'></span></span>
+				<span id='playerCharacterPopNuyenWrap{{Row}}'><label>Nuyen:</label><span id='playerCharacterPopNuyen{{Row}}'></span><span style='color:white;'> ¥</span></span>
+				&emsp;
+				<i id='playerCharacterPopMisc{{Row}}' style='color:white;text-transform:uppercase;' ></i>
+			</div>
+			
+			<div class='pcimg' id='playerCharacterPopPortrait{{Row}}'></div>
+			<div class='flex' style='justify-content: center;'>
+				<div class='container'>
+					<div class='container playerCharacterPopAttributes' id='playerCharacterPopAttributes{{Row}}'></div>
+				</div>
+			</div>
+			<div id='playerTabs' class='flex' style='justify-content: flex-end;overflow: hidden;'>
+				<div class='tabFillLeft'></div>
+				<div id='tabSheet{{Row}}' class='playerTab selected' onclick='playerCharacterPop.pickTab("Sheet",{{Row}});'>Sheet</div>
+				<div id='tabTrack{{Row}}' class='playerTab' onclick='playerCharacterPop.pickTab("Track",{{Row}});'>Track</div>
+				<div id='tabRoll{{Row}}' class='playerTab' onclick='playerCharacterPop.pickTab("Roll",{{Row}});'>Roll</div>
+				<div class='tabFillRight'></div>
+			</div>
+			<div style='max-height:calc(100vh - 16rem);overflow-y:auto;'>
+				
+				<div id='playerCharacterPopDivSheet{{Row}}' class='flex'>
+					<div class='pccontainer'>	
+						<div class='pcrow'>
+							<div style='width:40%'><b>Initiative: </b><span id='playerCharacterPopInitiative{{Row}}'></span></div>
+							<div style='width:60%'><b>Metatype: </b><span id='playerCharacterPopMetatype{{Row}}'></span></div>
+						</div>
+						<div class='pcrow'>
+							<div style='width:40%'><b>Armor: </b><span id='playerCharacterPopArmorSum{{Row}}'></span></div>
+							<div style='width:60%'><b>Limits: </b><span id='playerCharacterPopLimits{{Row}}'></span></div>
+						</div>
+						<div class='pcrow'>
+							<div><b>Metatype Abilities: </b><span id='playerCharacterPopMetatypeTraits{{Row}}'></span></div>
+						</div>
+						<div class='pcrow'>
+							<div><b>Reputation: </b><span id='playerCharacterPopReputation{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopSkillRow{{Row}}'>
+							<div><b>Skills</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopSkill{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopWeaponRow{{Row}}'>
+							<div><b>Weapons</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopWeapon{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopArmorRow{{Row}}'>
+							<div><b>Armor</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopArmor{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopGearRow{{Row}}'>
+							<div><b>Gear</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopGear{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopCyberwareRow{{Row}}'>
+							<div><b>Cyberware</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopCyberware{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopBiowareRow{{Row}}'>
+							<div><b>Bioware</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopBioware{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopCyberdeckRow{{Row}}'>
+							<div><b>Cyberdecks</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopCyberdeck{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopDroneRow{{Row}}'>
+							<div><b>Drones</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopDrone{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopVehicleRow{{Row}}'>
+							<div><b>Vehicles</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopVehicle{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopAdeptPowerRow{{Row}}'>
+							<div><b>Adept Powers</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopAdeptPower{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopSpellRow{{Row}}'>
+							<div><b>Spells</b></div>
+							<div class='flexSpacer'></div>
+							<div ><span id='playerCharacterPopSpell{{Row}}'></span></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopQualityRow{{Row}}'>
+							<div><b>Qualities</b></div>
+							<div class='flexSpacer'></div>
+							<div id='playerCharacterPopQuality{{Row}}'></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopKnowledgeRow{{Row}}'>
+							<div><b>Knowledge</b></div>
+							<div class='flexSpacer'></div>
+							<div id='playerCharacterPopKnowledge{{Row}}'></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopContactRow{{Row}}'>
+							<div><b>Contacts</b></div>
+							<div class='flexSpacer'></div>
+							<div id='playerCharacterPopContact{{Row}}'></div>
+						</div>
+					</div>
+					<div class='spacer'></div>
+					<div class='container flex'>		
+						<button id='playerCharacterPopEditBtn{{Row}}' type='button' onclick='playerCharacterPop.edit({{Row}})' <%=_bean.userIsGuest()?"disabled" : "" %>>Edit</button>
+					</div>
+				</div>
+				<div id='playerCharacterPopDivTrack{{Row}}' class='flex'  style='display:none;'>
+					<div class='flex' style='flex-wrap:wrap;'>
+						<div class='pccontainer' id='playerCharacterPopDamageTrackWrap{{Row}}'>
+							<div class='pcrow playerCharacterPopTrack' style='flex-wrap:wrap;max-width: 22.4rem;' id='playerCharacterPopDamageTrack{{Row}}'>				
+								<div><b>Condition Monitor</b></div>
+								<div class='flexSpacer'></div>
+							</div>
+						</div>
+					</div>
+					<div class='flex' style='flex-wrap:wrap;'>
+						<div class='pccontainer' id='playerCharacterPopDamageStatusWrap{{Row}}'>
+							<div class='pcrow playerCharacterPopTrack' style='flex-wrap:wrap;' id='playerCharacterPopStatusTrack{{Row}}'>				
+							<div><b>Status</b></div>
+							<div class='flexSpacer'></div>
+							</div>
+						</div>
+					</div>
+					<div class='flex' style='flex-wrap:wrap;'>
+						<div class='pccontainer' id='playerCharacterPopAmmoTrackWrap{{Row}}'>
+							<div class='pcrow playerCharacterPopTrack' style='flex-wrap:wrap;' id='playerCharacterPopAmmoTrack{{Row}}'>
+								<div><b>Ammo</b></div>
+								<div class='flexSpacer'></div>
+								<div class='flex playerCharacterPopAmmoContainer'  id='playerCharacterPopAmmoContainer{{Row}}'></div>
+							</div>
+						</div>
+					</div>
+					<div class='flex' style='flex-wrap:wrap;'>
+						<div class='pccontainer' id='playerCharacterPopMatrixTrackWrap{{Row}}'>
+							<div class='pcrow playerCharacterPopTrack' style='flex-wrap:wrap;' id='playerCharacterPopMatrixTrack{{Row}}'>
+								<div><b>Matrix Condition</b></div>
+								<div class='flexSpacer'></div>
+								<div class='flex playerCharacterPopMatrixContainer'  id='playerCharacterPopMatrixContainer{{Row}}'></div>
+							</div>
+						</div>
+					</div>
+					<div class='flex' style='flex-wrap:wrap;'>
+						<div class='pccontainer' id='playerCharacterPopDroneTrackWrap{{Row}}'>
+							<div class='pcrow playerCharacterPopTrack' style='flex-wrap:wrap;' id='playerCharacterPopDroneTrack{{Row}}'>
+								<div><b>Drone Condition</b></div>
+								<div class='flexSpacer'></div>
+								<div class='flex playerCharacterPopDroneContainer'  id='playerCharacterPopDroneContainer{{Row}}'></div>
+							</div>
+						</div>
+					</div>
+					<div class='flex' style='flex-wrap:wrap;'>
+						<div class='pccontainer' id='playerCharacterPopVehicleTrackWrap{{Row}}'>
+							<div class='pcrow playerCharacterPopTrack' style='flex-wrap:wrap;' id='playerCharacterPopVehicleTrack{{Row}}'>
+								<div><b>Vehicle Condition</b></div>
+								<div class='flexSpacer'></div>
+								<div class='flex playerCharacterPopVehicleContainer'  id='playerCharacterPopVehicleContainer{{Row}}'></div>
+							</div>
+						</div>
+					</div>
+				</div>				
+				<div id='playerCharacterPopDivRoll{{Row}}' class='flex'  style='display:none;'>
+					<div class='pccontainer'>	
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopSkillRollRow{{Row}}'>
+							<div><b>Skills</b></div>
+							<div class='flexSpacer'></div>
+							<div  id='playerCharacterPopSkillRoll{{Row}}' style='width:100%;'></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopDefenseRollRow{{Row}}'>
+							<div><b>Defense</b></div>
+							<div class='flexSpacer'></div>
+							<div  id='playerCharacterPopDefenseRoll{{Row}}' style='width:100%;'></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopSpellDefenseRollRow{{Row}}'>
+							<div><b>Spell Defense</b></div>
+							<div class='flexSpacer'></div>
+							<div  id='playerCharacterPopSpellDefenseRoll{{Row}}' style='width:100%;'></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopKnowledgeRollRow{{Row}}'>
+							<div><b>Knowledge</b></div>
+							<div class='flexSpacer'></div>
+							<div  id='playerCharacterPopKnowledgeRoll{{Row}}' style='width:100%;'></div>
+						</div>
+						<div class='pcrow' style='flex-wrap:wrap;' id='playerCharacterPopNaturalRollRow{{Row}}'>
+							<div><b>Natural</b></div>
+							<div class='flexSpacer'></div>
+							<div  id='playerCharacterPopNaturalRoll{{Row}}' style='width:100%;'></div>
+						</div>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>

@@ -1,0 +1,51 @@
+<script src="detailmodpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='detailModPop' class='popup' style='max-width: 50rem;width: calc(100vw - 1.5rem);'>
+	<div class='popupHeader'>
+		<div class='x' onclick='detailModPop.close()'>X</div>
+		<div class='title' id='detailModPopTitle'></div>
+	</div>
+	<div class='popupContent'>
+		<div id='detailModPopSection' style='width:100%;overflow:auto;'>
+		</div>
+		<div id='detailModPopPickers'>
+			<div id='detailModPopGradeWrap' class='flex'>
+				<div class="selectWrap">
+					<input name="detailModPopGrade" id="detailModPopGrade" disabled="" value="[none]" type="text">
+					<input  value="[none]" type="hidden">
+					<label class="inputLabel">Grade</label>
+				</div>
+			</div>
+			<div id='detailModPopRatingWrap' class='flex' style='align-items:center;'>
+				<!-- <div class='subtitle spacer'>Rating</div> -->
+				<button id='detailModPopRatingMinus' type='button' style='width:4rem;min-width:4rem;' onclick='detailModPop.ratingChange(-1)'>-</button>
+				<div class='inputWrap'>
+					<input type='number' id='detailModPopRating' name='detailModPopRating' tabindex='1' size='2' style='width:6rem;text-align: center;' value='1' min='0' max='36' onfocus='this.select();'>
+					<label class='inputLabel'>Rating</label>
+				</div>
+				<button id='detailModPopRatingPlus' type='button' style='width:4rem;min-width:4rem;' onclick='detailModPop.ratingChange(1)'>+</button>
+			</div>
+			<div id='detailModPopQuantityWrap' class='flex' style='align-items:center;'>
+				<!--  <div class='subtitle spacer'>Quantity</div> -->
+				<button id='detailModPopQuantityMinus' type='button' style='width:4rem;min-width:4rem;' onclick='detailModPop.quantityChange(-1)'>-</button>
+				<div class='inputWrap'>
+					<input type='number' id='detailModPopQuantity' name='detailModPopQuantity' tabindex='1' size='2' style='width:6rem;text-align: center;' value='1' min='0' max='36' onfocus='this.select();'>
+					<label class='inputLabel'>Quantity</label>
+				</div>
+				<button id='detailModPopQuantityPlus' type='button' style='width:4rem;min-width:4rem;' onclick='detailModPop.quantityChange(1)'>+</button>
+			</div>				
+		</div>
+		<div id='detailModPopSummary'>
+		</div>		
+		<div id='detailModPopButtons' style='margin:1.5rem 0;'>
+			<button id='detailModPopRemoveBtn' type='button' onclick='detailModPop.remove()'>Remove</button>
+			<button id='detailModPopUpdateBtn' type='button' onclick='detailModPop.update()'>Ok</button>
+			<button id='detailModPopAddBtn' type='button' onclick='detailModPop.add()'>Add</button>
+		</div>	
+	</div>
+</div>
+<script>
+detailModPop.blankCyberwareAttachment = <%= (new CharacterCyberwareAttachmentRec()).toString()%>;
+
+</script>

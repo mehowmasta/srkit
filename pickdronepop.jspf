@@ -1,0 +1,25 @@
+<script src="pickdronepop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='pickDronePop' class='popup search'>
+	<div class='popupHeader'>
+		<div class='x' onclick='pickDronePop.close()'>X</div>
+		<div class='flex searchWrap' style='align-items:center;' >
+			<div class='inputWrap' style='margin:1rem 2rem;'>
+				<input type='text' id='pickDronePopSearchInput' name='pickDronePopSearchInput' tabindex='1' onkeyup='pickDronePop.keyup(event)'>
+				<label class='inputLabel'>search</label>
+			</div>
+			<div id='pickDronePopClearSearchBtn' class='imgBtn' onclick='pickDronePop.clear();' style='display:none;'><img class='medIcon' src='<%= Images.get(Images.Clear)%>'><label>Clear</label></div>
+		</div>
+	</div>
+	<div class='popupContent'>		
+		<div class='container'>
+			<div class='tableWrap' style='margin:0.5rem;'>
+				<div class='tableTitle'>Drones</div>
+				<table class='table show' id='pickDronePopTable' style='max-height: calc(100vh - 11rem);'>
+					<tr><td style='width:100%;text-align:center;'>Loading...</td></tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

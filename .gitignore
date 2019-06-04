@@ -1,0 +1,6 @@
+/.project
+svn/
+settings/
+*.class
+/.settings/
+/.svn/

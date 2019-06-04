@@ -1,0 +1,64 @@
+<script src="dicerollpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+.die{
+	width:2rem;
+	height:2rem;
+	margin:0.3rem;
+}
+.die.hits, .die.glitch{
+	width:3rem;
+	height:3rem;
+}
+#labelHits,#labelGlitch{
+	font-size:130%;
+}
+.fly{
+	display:block !important;
+	animation-name: fly;
+    animation-duration: 0.8s;
+	animation-iteration-count: 1;	
+    animation-fill-mode: backwards;
+}
+@keyframes fly {
+    0%   {transform:translateY(14rem) scale(12) rotateZ(0);}
+    100% {transform:translateY(0) scale(1) rotateZ(719deg);}
+}
+</style>
+<div id='diceRollPop' class='popup search' style='min-width:23rem;max-width:34rem;bottom:initial;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='diceRollPop.close()'>X</div>
+		<div style='position: absolute;' class="imgBtn hover" data-hover="Roll tests" onclick="diceRollPop.showInfo();"><img class="medIcon" style='width:1.6rem;'  src='<%= Images.get(Images.Info) %>'></div>
+	</div>
+	<div class='popupContent'>
+		<div class='flex searchWrap' style='align-items:center;padding-top:3rem;' >
+			<button type='button' style='width:4rem;min-width:4rem;' onclick='diceRollPop.minusOne()'>-</button>
+			<div class='inputWrap'>
+				<input type='number' id='diceCount' name='diceCount' tabindex='1' size='2' style='width:6rem;text-align: center;' value='1' min='0' max='36' onfocus='this.select();'>
+				<label class='inputLabel'>dice</label>
+			</div>
+			<button type='button' style='width:4rem;min-width:4rem;' onclick='diceRollPop.plusOne()'>+</button>
+		</div>
+		<div class='flex' style='align-items:center;margin-top:1.5rem;'>
+			<button id='btnEdge' type='button' class='parentBtn' onclick='diceRollPop.toggleEdge()'>Edge</button>
+			<div class='childBtnContainer flex' id='btnEdgeSelector' style='align-items:center;'>
+				<div class='x' style='top:-2rem;' onclick='diceRollPop.toggleEdge()'>X</div>
+				<div class='inputWrap childBtn'>
+					<input type='number' id='edgeRating' value='1' size='3' maxlength='2' onkeydown='diceRollPop.edgeRatingKeydown(event);' onfocus='this.select();' style='text-align:right;max-width:6rem;'><label class='inputLabel'>Edge Rating</label>
+				</div>
+				<button id='rollPushTheLimitBtn' type='button' class='childBtn' style='max-height:3.75rem;' onclick='diceRollPop.pushTheLimit()'>Push Limit</button>
+				<button id='rollSecondChanceBtn' type='button' class='childBtn' disabled='disabled' style='max-height:3.75rem;' onclick='diceRollPop.secondChance()'>Second Chance</button>
+			</div>	
+			<button type='button' onclick='diceRollPop.roll()' style='max-height:3.75rem;'>Roll</button>
+		</div>		
+		<div style='padding-top:0.5rem;'>
+			<button id='diceRollBtnClear' class='mini' type='button' onclick='diceRollPop.clear()' style='display:none;'>Clear</button>
+		</div>
+		<div id='diceRolls' class='flex' style='padding:2rem;overflow:hidden;'>
+		
+		</div>
+		<div style='padding:0.5rem;'>
+			<button id='diceRollBtnPrev' class='mini' type='button' onclick='diceRollPop.previousRoll()' disabled='disabled'>&lt;</button>
+			<button id='diceRollBtnNext' class='mini' type='button' onclick='diceRollPop.nextRoll()' disabled='disabled'>&gt;</button>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,56 @@
+<script src="journalpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='journalPop' class='popup' style='max-width:100vw;' >
+	<div class='popupHeader'>
+		<div class='x' onclick='journalPop.close()'>X</div>
+		<div class='title' id='journalPopTitle' >Journal</div>
+	</div>
+	<div class='popupContent'>
+		<div class='flex journalWrap' style='align-items:center;height: calc(100vh - 4rem);' >
+			<div class='flex' style='min-width:15rem;flex:2;max-width:25rem;justify-content:flex-start;flex-direction:column;'>
+				<div id='journalPopList' class='flex' style='height:calc(100vh - 12rem);'>				
+					
+				</div>
+				<div class="flex" style="align-items:center;">
+					<button id='journalPopNewBtn' type="button" tabindex="1" name="journalPopNewBtn" onclick="journalPop.newEntry()" class="hover" data-hover="Add New Journal Entry">New</button>			
+				</div>
+			</div>
+			<div id='journalPopEntry' class='transition' style=''></div>
+			<div id='journalPopEntryEdit' class='transition open' style='flex-direction:column;'>
+				<div class='flex' style='justify-content:flex-start;flex:1;flex-direction:column;height:calc(100vh - 12rem);'>				
+					<div class='flex' style='justify-content:space-between;width:100%;flex:0;'>
+						<div class="selectWrap">
+							<input type='text' id='jounralPopType' name='jounralPopType' tabindex='1' onfocus='this.select();' list='jounralPopTypeList'>
+							<label class="inputLabel">Type</label>
+							<datalist id="jounralPopTypeList">
+								<option>Brainstorming</option>
+								<option>Note</option>
+								<option>Session</option>							
+								<option>Story</option>
+							</datalist>
+						</div>
+						<div class="dateTimeWrap">
+							<input class='jdatetime' type='text' id='jounralPopTime' name='jounralPopTime' tabindex='1' onfocus='this.select();'>
+							<label class="inputLabel">Time</label>
+						</div>						
+					</div>
+					<div class='spacer'></div>
+					<div class="inputWrap" style='width:35rem;flex:0;'>
+						<input type='text' id='jounralPopTitle' name='jounralPopTitle' tabindex='1' onfocus='this.select();'>
+						<label class="inputLabel">Title</label>
+					</div>
+					<div class='spacer'></div>
+					<div class="inputWrap" style='flex:10;'>
+						<textarea tabindex="1" style="height:100%;width:100%;resize:none;" class="hover" name="journalPopText" id="journalPopText"></textarea>
+						<label class="inputLabel">Text</label>
+					</div>
+				</div>
+				<div class="flex footer" style="align-items:center;flex:1;">
+					<button id='journalPopUpdateBtn' type="button" tabindex="1" name="journalPopUpdateBtn" onclick="journalPop.updateEntry()" class="hover" data-hover="Update journal entry">Update</button>
+					<button id="journalPopCancelBtn"  tabindex="1" type="button" onclick="journalPop.cancelEntry()" class="hover" data-hover="Cancel editting journal entry">Cancel</button>					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

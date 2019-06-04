@@ -1,0 +1,158 @@
+<script src="contactpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<div id='contactPop' class='popup' style='max-width: 50rem;width: calc(100vw - 1.5rem);'>
+	<div class='popupHeader'>
+		<div class='x' onclick='contactPop.close()'>X</div>
+		<div class='title' id='contactPopTitle'>Contact</div>
+	</div>
+	<div class='popupContent flex'>
+		<div style='display:flex;flex-wrap:nowrap;overflow-x:auto;align-items:center;'>
+			<div id='contactPopPortraitDiv' class='portrait' style='display:none;align-items:flex-start;'>
+				<div>
+					<img id='contactPopPortraitImg' style='height: 22rem;border: 0.2rem solid black;'>
+					<input type='hidden' value='0' id='contactPopPortrait'>
+					<br>
+					<button class='mini' style='' type='button' onclick='contactPop.changePortrait()'>Change</button>
+					<button class='mini' style='' type='button' onclick='contactPop.removePortrait()'>Remove</button>
+				</div>
+			</div>
+			<div class='flex' id='contactPopFieldDiv' style='flex:3;'>
+				<div class="inputWrap"  style="width:20.0rem !important;">
+					<input tabindex="1" type="text" maxlength="80" onfocus="this.select()" id="contactPopName">
+					<label class="inputLabel">Name</label>
+				</div>
+				<div class="selectWrap"  style="width:20.0rem !important;">
+					<input tabindex="1" type='text' onfocus="this.select()" id="contactPopArchetype" list="contactPopArchetypeList"/>
+					<label class="inputLabel">Archetype</label>
+					<datalist id="contactPopArchetypeList">
+							<option value="Amerindian Tribesperson"></option>
+						    <option value="Antiquities and Oddities Dealer"></option>
+						    <option value="Armorer"></option>
+						    <option value="Bartender"></option>
+						    <option value="Beat Cop"></option>
+						    <option value="Blogger"></option>
+						    <option value="Bodyguard"></option>
+						    <option value="Bookie"></option>
+						    <option value="Cleaner"></option>
+						    <option value="Club Hopper"></option>
+						    <option value="Club Owner"></option>
+						    <option value="Company Man"></option>
+						    <option value="Corporate Headhunter"></option>
+						    <option value="Corporate Manager"></option>
+						    <option value="Corporate Scientist"></option>
+						    <option value="Corporate Secretary"></option>
+						    <option value="Corporate Wage Slave"></option>
+						    <option value="Coyote"></option>
+						    <option value="Cult Member"></option>
+						    <option value="Dockworker"></option>
+						    <option value="Fence"></option>
+						    <option value="Firefighter"></option>
+						    <option value="Fixer"></option>
+						    <option value="Freedom Fighter"></option>
+						    <option value="Forensics Expert"></option>
+						    <option value="Gambler"></option>
+						    <option value="Gang Leader"></option>
+						    <option value="Go-Ganger"></option>
+						    <option value="Grassroots Politician"></option>
+						    <option value="Hate Group Member"></option>
+						    <option value="Hermetic Academic"></option>
+						    <option value="High Stakes Negotiator"></option>
+						    <option value="ID Manufacturer"></option>
+						    <option value="Infobroker"></option>
+						    <option value="Janitor"></option>
+						    <option value="Mafia Consiglieri"></option>
+						    <option value="Mechanic"></option>
+						    <option value="Mercenary Alchemist"></option>
+						    <option value="Mr. Johnson"></option>
+						    <option value="Nomad"></option>
+						    <option value="Ork Nation Organizer"></option>
+						    <option value="Parabotanist"></option>
+						    <option value="Parabiologist"></option>
+						    <option value="Paramed"></option>
+						    <option value="Paramed Shaman"></option>
+						    <option value="Parasecurity Expert"></option>
+						    <option value="Pawn Broker"></option>
+						    <option value="Pimp"></option>
+						    <option value="Pirate"></option>
+						    <option value="Police Chief"></option>
+						    <option value="Political Intern"></option>
+						    <option value="Radical"></option>
+						    <option value="Rent-a-Cop"></option>
+						    <option value="Shark Lawyer"></option>
+						    <option value="Simsense Star"></option>
+						    <option value="Slumlord"></option>
+						    <option value="Smuggler"></option>
+						    <option value="Snitch"></option>
+						    <option value="Spider"></option>
+						    <option value="Squatter"></option>
+						    <option value="Street Doc"></option>
+						    <option value="Street Vendor"></option>
+						    <option value="Stripper"></option>
+						    <option value="Supply Sergeant"></option>
+						    <option value="Talent Scout"></option>
+						    <option value="Talislegger"></option>
+						    <option value="Talismonger"></option>
+						    <option value="Tamanous Member"></option>
+						    <option value="Taxi Driver"></option>
+						    <option value="TerraFirst! Activist"></option>
+						    <option value="Trid Pirate"></option>
+						    <option value="Troll Street Dealer"></option>
+						    <option value="Urban Anthropologist"></option>
+						    <option value="Vory Shestiorka"></option>
+						    <option value="Wiz Kid Ganger"></option>
+					</datalist>
+				</div>
+				<div class='flexSpacer'></div>
+				<div class="inputWrap">
+						<input type="number" id="contactPopAge" tabindex="1" style="width:6rem;text-align: center;"  min="0" onfocus="this.select();">
+						<label class="inputLabel">Age</label>
+					</div>
+				<div class="selectWrap">
+					<select tabindex="1" id="contactPopSex">
+					</select>
+					<label class="inputLabel">Sex</label>
+				</div>
+				<div class="selectWrap">
+					<select tabindex="1" id="contactPopMetaType">
+					</select>
+					<label class="inputLabel">MetaType</label>
+				</div>
+				<div class="inputWrap">
+					<textarea tabindex="1" cols="40" style="height:4em;;" id="contactPopNote"></textarea>
+					<label class="inputLabel">Note</label>
+				</div>	
+				<div class='flexSpacer'>
+					<button id='contactPopAddPortraitBtn' class='mini' type='button' onclick='contactPop.addPortrait()' style='display:none;' >Add Portrait</button>
+				</div>					
+			</div>	
+		</div>
+		<div class='flexSpacer'></div>
+		<div id="contactPopConnectionWrap" class="flex" style="align-items:center;padding:0 1rem;">
+			<button id="contactPopConnectionMinus" type="button" style="width:4rem;min-width:4rem;" onclick="contactPop.connectionChange(-1)" disabled="disabled">-</button>
+			<div class="inputWrap">
+				<input type="number" id="contactPopConnection" tabindex="1" size="2" style="width:6rem;text-align: center;" value="1" min="1" max="12" onfocus="this.select();">
+				<label class="inputLabel">Connection</label>
+			</div>
+			<button id="contactPopConnectionPlus" type="button" style="width:4rem;min-width:4rem;" onclick="contactPop.connectionChange(1)">+</button>
+		</div>
+		<div id="contactPopLoyaltyWrap" class="flex" style="align-items:center;padding:0 1rem;">
+			<button id="contactPopLoyaltyMinus" type="button" style="width:4rem;min-width:4rem;" onclick="contactPop.loyaltyChange(-1)" disabled="disabled">-</button>
+			<div class="inputWrap">
+				<input type="number" id="contactPopLoyalty" tabindex="1" size="2" style="width:6rem;text-align: center;" value="1" min="1" max="6" onfocus="this.select();">
+				<label class="inputLabel">Loyalty</label>
+			</div>
+			<button id="contactPopLoyaltyPlus" type="button" style="width:4rem;min-width:4rem;" onclick="contactPop.loyaltyChange(1)">+</button>
+		</div>	
+		<div id='contactPopButtons' style='margin:1.5rem 0;' class='flexSpacer'>
+			<button id='contactPopRemoveBtn' type='button' onclick='contactPop.remove()'>Remove</button>
+			<button id='contactPopUpdateBtn' type='button' onclick='contactPop.update()'>Update</button>
+			<button id='contactPopAddBtn' type='button' onclick='contactPop.update()'>Add</button>
+		</div>
+	</div>	
+</div>
+
+
+
+
+
+
+	

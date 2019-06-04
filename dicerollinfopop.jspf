@@ -1,0 +1,149 @@
+<script src="dicerollinfopop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='diceRollInfoPop' class='popup diceRollInfoPop' style='z-index:500;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='diceRollInfoPop.close()'>X</div>
+	</div>
+	<div class='popupContent' style='padding-top:1.5rem;'>
+		<div class=' section container'>
+			<div class='title'>Success Test</div>
+			<div class='subtitle' >
+				<span class='skillTest'>Perception</span>
+				<span style='margin:2rem 0;'> + </span>
+				<span class='attributeTest'>Intuition</span>
+				<span class='limitTest'>[Mental]</span>
+				<span class='thresholdTest'>(2)</span>
+			</div>
+		</div>
+		<div class='section container'>
+			<div class='title'>Opposed Test</div>
+			<div class='subtitle'>
+				<span class='skillTest'>Sneaking</span>
+				<span style='margin:2rem 0;'> + </span>
+				<span class='attributeTest'>Agility</span>
+				<span class='limitTest'>[Physical]</span>
+				<span style='margin:2rem 0;'> vs. ... </span>				
+			</div>
+		</div>
+		<div class='section container'>
+			<div class='title'>Extended Test</div>
+			<div class='subtitle'>
+				<span class='skillTest'>Chemistry</span>
+				<span style='margin:2rem 0;'> + </span>
+				<span class='attributeTest'>Logic</span>
+				<span class='limitTest'>[Mental]</span>
+				<span class='thresholdTest'>(10,</span>
+				<span class='intervalTest'> 1 hour)</span>				
+			</div>
+		</div>
+		<div class='tableWrap'>
+			<div class='tableTitle'>Success Test Thresholds</div>
+			<table class='table' id='successTestTable'>
+				<thead>
+					<tr>
+						<td class='tdl'>Difficulty</td><td class='tdc'>Threshold</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class='tdl'>Easy</td>
+						<td class='tdc'>1</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Average</td>
+						<td class='tdc'>2</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Hard</td>
+						<td class='tdc'>4</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Very Hard</td>
+						<td class='tdc'>6</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Extreme</td>
+						<td class='tdc'>8-10</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class='tableWrap'>
+			<div class='tableTitle'>Extended Test Thresholds</div>
+			<table class='table' id='extendedTestTable'>
+				<thead>
+					<tr>
+						<td class='tdl'>Difficulty</td><td class='tdc'>Threshold</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class='tdl'>Easy</td>
+						<td class='tdc'>6</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Average</td>
+						<td class='tdc'>12</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Hard</td>
+						<td class='tdc'>18</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Very Hard</td>
+						<td class='tdc'>24</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Extreme</td>
+						<td class='tdc'>30+</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class='tableWrap'>
+			<div class='tableTitle'>Extended Test Intervals</div>
+			<table class='table' id='intervalTestTable'>
+				<thead>
+					<tr>
+						<td class='tdl'>Task</td><td class='tdc'>Time Interval</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class='tdl'>Fast</td>
+						<td class='tdc'>1 Combat Turn</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Quick</td>
+						<td class='tdc'>1 minute</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Short</td>
+						<td class='tdc'>10 minutes</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Average</td>
+						<td class='tdc'>30 minutes</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Long</td>
+						<td class='tdc'>1 hour</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Consuming</td>
+						<td class='tdc'>1 day</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Exhaustive</td>
+						<td class='tdc'>1 week</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Mammoth</td>
+						<td class='tdc'>1 month</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

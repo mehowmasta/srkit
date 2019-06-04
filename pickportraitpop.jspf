@@ -1,0 +1,31 @@
+<script src="pickportraitpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+#pickPortraitPopThumbContainer{
+	opacity:0;
+	margin:2rem 1rem 1rem;
+	width: auto;
+	display: flex;
+	justify-content: center;
+	flex-wrap:wrap;
+}
+#pickPortraitPopThumbContainer.show{
+	opacity:1;
+}
+.thumbPreview{
+	border:0.2rem solid black;
+}
+</style>
+<div id='pickPortraitPop' class='popup' style='width:auto;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='pickPortraitPop.close()'>X</div>
+		<div class='flex searchWrap' style='align-items:center;' >
+			<div class='inputWrap' style='margin:1rem 2rem;'>
+				<input type='text' id='pickPortraitPopSearchInput' name='pickPortraitPopSearchInput' tabindex='1' onkeyup='pickPortraitPop.keyup(event)'>
+				<label class='inputLabel'>search</label>
+			</div>
+			<div id='pickPortraitPopClearSearchBtn' class='imgBtn' onclick='pickPortraitPop.clear();' style='display:none;'><img class='medIcon' src='<%= Images.get(Images.Clear)%>'><label>Clear</label></div>
+		</div>
+	</div>
+	<div id='pickPortraitPopThumbContainer' class='popupContent'>
+	</div>
+</div>

@@ -1,0 +1,31 @@
+<script src="pickmappop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+#pickMapPopThumbContainer{
+	opacity:0;
+	margin:2rem 1rem 1rem;
+	width: auto;
+	display: flex;
+	justify-content: center;
+	flex-wrap:wrap;
+}
+#pickMapPopThumbContainer.show{
+	opacity:1;
+}
+.thumbPreview{
+	border:0.2rem solid black;
+}
+</style>
+<div id='pickMapPop' class='popup' style='width:auto;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='pickMapPop.close()'>X</div>
+		<div class='flex searchWrap' style='align-items:center;' >
+			<div class='inputWrap' style='margin:1rem 2rem;'>
+				<input type='text' id='pickMapPopSearchInput' name='pickMapPopSearchInput' tabindex='1' onkeyup='pickMapPop.keyup(event)'>
+				<label class='inputLabel'>search</label>
+			</div>
+			<div id='pickMapPopClearSearchBtn' class='imgBtn' onclick='pickMapPop.clear();' style='display:none;'><img class='medIcon' src='<%= Images.get(Images.Clear)%>'><label>Clear</label></div>
+		</div>
+	</div>
+	<div id='pickMapPopThumbContainer' class='popupContent'>
+	</div>
+</div>

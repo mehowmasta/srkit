@@ -1,0 +1,20 @@
+<div id='mapTokenOptionsPop' class='popup noback' style='bottom:initial;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='srMap.closeOptions()'>X</div>		
+	<div id='mapTokenOptionsPopTitle' class='title' style='padding:1rem;'>Map Data Options</div>
+	</div>
+	<div id='mapTokenOptions' style='display:flex;'>		
+		<div class='flex' style='justify-content:flex-start;padding-left:1rem;'>
+			<div class='subtitle'>Layers</div>
+			<div class='spacer'></div>
+			<div class='flex nowrap' style='justify-content:flex-start;'>
+				<div class="checkWrap"><input type="radio" name="mapTokenOptionsLayer" id="mapTokenOptionsLayerMap" value="mapTokenOptionsLayerMap"  tabindex="1" onchange='srMap.changeLayer(this)'><label for="mapTokenOptionsLayerMap">Map</label></div>
+				<div class="checkWrap"><input type="radio" name="mapTokenOptionsLayer" id="mapTokenOptionsLayerGM" value="mapTokenOptionsLayerGM"  tabindex="1" onchange='srMap.changeLayer(this)'><label for="mapTokenOptionsLayerGM">GM</label></div>
+				<div class="checkWrap"><input type="radio" name="mapTokenOptionsLayer" id="mapTokenOptionsLayerPlayer" value="mapTokenOptionsLayerPlayer"  tabindex="1" onchange='srMap.changeLayer(this)'><label for="mapTokenOptionsLayerPlayer">Player</label></div>
+			</div>
+		</div>
+		<div  id='mapTokenDelete' droppable='true' ondrop='srMap.deleteDrop(event)' ondragover='srMap.deleteDragOver(event)' onclick='srMap.deleteClick()'>
+			<img class='medIcon' src='<%= Images.get(Images.Trash) %>'>
+		</div>
+	</div>
+</div>

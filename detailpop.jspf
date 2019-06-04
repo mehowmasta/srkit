@@ -1,0 +1,142 @@
+
+<script src="detailpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+.detailPopList{
+text-align:left;padding:1rem;font-size:1.4rem;
+}
+</style>
+<div id='detailPop' class='popup' style='max-width: 50rem;width: calc(100vw - 1.5rem);'>
+	<div class='popupHeader'>
+		<div class='x' onclick='detailPop.close()'>X</div>
+		<div class='title' id='detailPopTitle'></div>
+	</div>
+	<div class='popupContent'>
+		<div id='detailPopSection' style='width:100%;overflow:auto;'>
+		</div>
+		<div id='detailPopPickers'>
+			<div id='detailPopKnowledgeTypeWrap' class='flex'>
+				<div class="selectWrap">
+					<select onchange="detailPop.knowledgeChange(this.value)" style="" id="detailPopKnowledgeType">
+						<option value="Academic">Academic</option>
+						<option value="Interest">Interest</option>
+						<option value="Language">Language</option>
+						<option value="Professional">Professional</option>
+						<option value="Street">Street</option>
+					</select>
+					<label class="inputLabel">Type</label>
+				</div>
+			</div>
+			<div id='detailPopKnowledgeNameWrap' class='flex'>
+				<div class="selectWrap">
+					<input type='text' id='detailPopKnowledgeName' name='detailPopKnowledgeName' tabindex='1' onfocus='this.select();' list='detailPopKnowledgeNameList'>
+					<label class="inputLabel">Name</label>
+					<datalist id="detailPopKnowledgeNameList">
+					
+					</datalist>
+				</div>
+				<div class='spacer'></div>
+				<div id='detailPopKnowledgeNativeWrap' class="checkWrap" style='text-align:center;'>
+					<input name="detailPopKnowledgeNative" id="detailPopKnowledgeNative" onchange='detailPop.knowledgeNativeChange(this.checked)' tabindex="1" type="checkbox">
+					<label for="detailPopKnowledgeNative">Native</label>
+				</div>
+			</div>
+			<div id='detailPopGradeWrap' class='flex'>
+				<div class="selectWrap">
+					<select onchange="detailPop.gradeChange()" style="" id="detailPopGrade">
+						<option value="Standard">Standard</option>
+						<option value="Alphaware">Alphaware</option>
+						<option value="Betaware">Betaware</option>
+						<option value="Deltaware">Deltaware</option>
+						<option value="Used">Used</option>
+					</select>
+					<label class="inputLabel">Grade</label>
+				</div>
+			</div>
+			<div id='detailPopRatingWrap' class='flex' style='align-items:center;'>
+				<!-- <div class='subtitle spacer'>Rating</div> -->
+				<button id='detailPopRatingMinus' type='button' style='width:4rem;min-width:4rem;' onclick='detailPop.ratingChange(-1)'>-</button>
+				<div class='inputWrap'>
+					<input type='number' id='detailPopRating' name='detailPopRating' tabindex='1' size='2' style='width:6rem;text-align: center;' value='1' min='0' max='36' onfocus='this.select();'>
+					<label class='inputLabel'>Rating</label>
+				</div>
+				<button id='detailPopRatingPlus' type='button' style='width:4rem;min-width:4rem;' onclick='detailPop.ratingChange(1)'>+</button>
+			</div>
+			<div id='detailPopSpecialWrap' class='flex'>
+				<div class="selectWrap">
+					<input type='text' id='detailPopSpecial' name='detailPopSpecial' tabindex='1' onfocus='this.select();' list='detailPopSpecialList'>
+					<label class="inputLabel">Specialization</label>
+					<datalist id="detailPopSpecialList">
+					
+					</datalist>
+				</div>
+			</div>
+			<div id='detailPopLevelWrap' class='flex' style='align-items:center;'>
+				<!-- <div class='subtitle spacer'>Level</div> -->
+				<button id='detailPopLevelMinus' type='button' style='width:4rem;min-width:4rem;' onclick='detailPop.levelChange(-1)'>-</button>
+				<div class='inputWrap'>
+					<input type='number' id='detailPopLevel' name='detailPopLevel' tabindex='1' size='2' style='width:6rem;text-align: center;' value='1' min='0' max='36' onfocus='this.select();'>
+					<label class='inputLabel'>Level</label>
+				</div>
+				<button id='detailPopLevelPlus' type='button' style='width:4rem;min-width:4rem;' onclick='detailPop.levelChange(1)'>+</button>
+			</div>
+			<div id='detailPopModWrap' class='section' style='margin-bottom:1rem;'>
+				<div class='subtitle spacer'>Modifications</div>
+				<div id='detailPopModListSums' class='flex sums'></div>
+				<div id='detailPopModList' class='detailPopList'>				
+				</div>
+				<div>
+					<button id='detailPopAddModBtn' type='button' class='mini' onclick='detailPop.addMod()'>Add Mod</button>
+				</div> 
+			</div>
+			<div id='detailPopProgramWrap' class='section' style='margin-bottom:1rem;'>
+				<div class='subtitle spacer'>Programs</div>
+				<div id='detailPopProgramList' class='detailPopList' >				
+				</div>
+				<div>
+					<button id='detailPopAddProgramBtn' type='button' class='mini' onclick='detailPop.addProgram()'>Add Program</button>
+				</div> 
+			</div>
+			<div id='detailPopQuantityWrap' class='flex' style='align-items:center;'>
+				<!--  <div class='subtitle spacer'>Quantity</div> -->
+				<button id='detailPopQuantityMinus' type='button' style='width:4rem;min-width:4rem;' onclick='detailPop.quantityChange(-1)'>-</button>
+				<div class='inputWrap'>
+					<input type='number' id='detailPopQuantity' name='detailPopQuantity' tabindex='1' size='2' style='width:6rem;text-align: center;' value='1' min='0' max='36' onfocus='this.select();'>
+					<label class='inputLabel'>Quantity</label>
+				</div>
+				<button id='detailPopQuantityPlus' type='button' style='width:4rem;min-width:4rem;' onclick='detailPop.quantityChange(1)'>+</button>
+			</div>
+			<div id='detailPopEquipWrap'>
+				<div class="checkWrap" style='text-align:center;'>
+					<input name="detailPopEquip" id="detailPopEquip" tabindex="1" type="checkbox">
+					<label for="detailPopEquip">Equip</label>
+				</div>
+			</div>
+				
+		</div>
+		<div id='detailPopSummary'>
+		</div>		
+		<div id='detailPopButtons' style='margin:1.5rem 0;'>
+			<button id='detailPopRemoveBtn' type='button' onclick='detailPop.remove()'>Remove</button>
+			<button id='detailPopUpdateBtn' type='button' onclick='detailPop.update()'>Update</button>
+			<button id='detailPopAddBtn' type='button' onclick='detailPop.add()'>Add</button>
+		</div>	
+	</div>
+</div>
+<script>
+
+detailPop.blankAdeptPower = <%= (new CharacterAdeptPowerRec()).toString()%>;
+detailPop.blankArmor = <%= (new CharacterArmorRec()).toString()%>;
+detailPop.blankBioware = <%= (new CharacterBiowareRec()).toString()%>;
+detailPop.blankCharacterKnowledge = <%= (new CharacterKnowledgeRec()).toString()%>;
+detailPop.blankCyberdeck = <%= (new CharacterCyberdeckRec()).toString()%>;
+detailPop.blankCyberdeckProgram = <%= (new CharacterCyberdeckProgramRec()).toString()%>;
+detailPop.blankCyberware = <%= (new CharacterCyberwareRec()).toString()%>;
+detailPop.blankDrone = <%= (new CharacterDroneRec()).toString()%>;
+detailPop.blankGear = <%= (new CharacterGearRec()).toString()%>;
+detailPop.blankQuality = <%= (new CharacterQualityRec()).toString()%>;
+detailPop.blankSkill = <%= (new CharacterSkillRec()).toString()%>;
+detailPop.blankSpell = <%= (new CharacterSpellRec()).toString()%>;
+detailPop.blankVehicle = <%= (new CharacterVehicleRec()).toString()%>;
+detailPop.blankWeapon = <%= (new CharacterWeaponRec()).toString()%>;
+
+</script>

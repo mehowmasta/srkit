@@ -1,0 +1,36 @@
+<script src="chatpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+.chatInput{
+	width:100%;
+	border:0 none;
+	background:transparent;
+	font-family:Ceviche One;
+	font-size:16pt;
+}
+.chatPop {
+	background-color: black;
+	opacity: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100vw;
+	height: 100vh;
+	pointer-events: none;
+	overflow: none;
+	-webkit-overflow-scrolling: none;
+	-webkit-transition: all 500ms;
+    transition: all 500ms;
+}
+.chatPop.show{
+	opacity: 0.8;
+	pointer-events: auto;
+}
+</style>
+<div id='chatPop' class='chatPop'>
+	<div id='chatPopMessages'>
+		<div>logging into system</div>
+	</div>
+	<input type=text class='chatInput'>
+</div>

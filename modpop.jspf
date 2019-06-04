@@ -1,0 +1,51 @@
+<script src="modpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+#modPop  .section{
+	min-width:initial;
+	max-width:initial;
+	background-color:#444;
+	-webkit-box-shadow:0 0 black;
+	box-shadow:0 0 black;
+	-webkit-transition: none;
+    transition: none;
+}
+#modPop .section:hover {
+	cursor:default;
+	background-color:#444;
+	-webkit-box-shadow:0 0 black;
+	box-shadow: 0 0 black;
+}
+.modPop .title{
+	padding:0;
+	text-align:left;
+	font-size:2rem;
+	border-bottom:0.1rem solid #ebb530;
+}
+.modPop .subtitle{
+	text-align:right;
+	border-bottom:0 none;
+}
+.modPop .desc, .modPop .info, .modPop .properties{
+	text-align:left;	
+	font-size:1.4rem;
+}
+.modPop .properties  td {
+	width: 33%;
+	white-space: nowrap;
+	padding-right: 1rem;
+}
+.modPop .source{
+	right:1rem;
+}
+</style>
+<div id='modPop' class='popup modPop'>
+	<div class='popupHeader'>
+		<div class='x' onclick='modPop.close()'>X</div>
+	</div>
+	<div class='popupContent' style='padding-top:1.5rem;'>
+		<div id='modPopContainer' class='container'>
+		</div>
+		<div id='modPopEquipped' class='container section' style='text-align:right;'>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,69 @@
+<script src='messengerpop.js?s=<%=stamp %>'></script>
+<style>
+</style>
+<div id='messengerPopup' class='popup messengerPop'  onclick="">
+	<div class='popupHeader'>
+		<div class='x' onclick='messengerPop.close()'>X</div>
+			<div class='title'>Comm Link <span class='subtitle' style='border:0 none;'>v0.10</span></div>
+	</div>
+	<div class='popupContent'>
+		<div class='messengerThreadWrap'>
+			<div id='messengerPopupIntro'></div>
+			<div class='subtitle'>Active Links</div>
+			<div id='messengerPopupThreads'></div>	
+			<div style='margin:1em 0;bottom:0;text-align:center;width:100%;'>		
+				<button type='button' tabindex='1' onclick='return messengerPop.newThread();'>New Link</button>	
+			</div> 
+		</div>
+	</div>
+	
+</div>
+
+<div id='messengerPopupMessageThreads'>
+</div>
+
+<div id='messagePopupTemplate'  style='display:none;'>
+	<div id='messagePopup{{threadId}}' class='popup messengerPop' onclick="">
+		<div class='popupHeader'>
+			<div class='x' onclick='messengerPop.closeThread(this)'>X</div>
+			<div class='flex' style='justify-content:flex-start;align-items:center;margin-bottom:1em;text-align:left;width:100%;min-height: 8rem;'>	
+				<button type="button" class="navButton back hover mini" data-hover="Back to Links" tabindex="1" style='line-height: 1rem;' onclick="messengerPop.back(this)">&#8678;</button>
+				<div class='messagePopUsers flex' id='messagePopupDivUsers{{threadId}}' style=''></div>	
+				<div class='flex' style='align-items: center;flex-wrap:wrap;'>
+					<button style='' class='parentBtn mini hover' data-hover='Connect another user to this link' id='messagePopupAddUserToggleBtn{{threadId}}' type='button' tabindex='1' onclick='messengerPop.toggleAddUserButtons(this)'>Add User</button>	
+					<div class='childBtnContainer flex' id='messagePopupAddUserToggleBtn{{threadId}}Selector' style='justify-content:flex-start;align-items:center;max-width:35rem;min-height:8rem;'>
+						<div class='x' style='top:0rem;' onclick='messengerPop.toggleAddUserButtons(this)'>X</div>					
+						<div class='inputWrap childBtn'>
+							<input type='email' id='messagePopupAddUserLogin{{threadId}}' name='' onfocus="this.select()" onkeyup='messengerPop.userKeyup(event)' list='messagePopupAddUserList'><label class='inputLabel'>User Login</label>
+							<datalist id="messagePopupAddUserList">
+					
+							</datalist>
+						</div>
+						<button id='messagePopupAddUserBtn{{threadId}}' type='button' class='childBtn mini' style='max-height:3.75rem' onclick='messengerPop.addUser(this)'>Add</button>
+					</div>
+					<button id='messagePopupLeaveBtn{{threadId}}' type='button' style='align-self: center;' class='mini hover' data-hover='Disconnect from this link' tabindex='1' onclick='messengerPop.leaveThread(this)'>Leave</button>
+			  		<button id='messagePopupDeleteBtn{{threadId}}' type='button' style='align-self: center;' class='mini hover' data-hover='Destroy this link' tabindex='1' onclick='messengerPop.deleteThread(this)'>Delete</button>		
+			  	</div>	
+			  	<div class="checkWrap" id="messagePopupShareRollWrap{{threadId}}">
+				  	<input type="checkbox"  id="messagePopupShareRoll{{threadId}}" tabindex="1" onchange='messengerPop.updateShareRolls(this)'>
+				  	<label class='hover' id="messagePopupShareRollLabel{{threadId}}" for="messagePopupShareRoll{{threadId}}" data-hover='Check to automatically send your roll results to this thread.'>Share Rolls</label>
+			  	</div>	
+			</div>
+		</div>
+		<div class='popupContent'>
+		  <div id='messagePopupMessages{{threadId}}'  style='max-height: calc(100vh - 25rem);overflow-y: auto;' onclick=""></div>		  
+		  
+	 	</div>
+	 	<div class='popupFooter flex messageFooter'>
+		 	<div style='width:calc(100% - 3rem);' onclick="">
+			  	<textarea class='messageText' id='messagePopupText{{threadId}}' placeholder='type here, ENTER to send' onkeydown='messengerPop.keydown(event)' tabindex=1></textarea>
+			  	<!-- <button type='button' onclick='messengerPop.sendMessage(this)'  tabindex=1>Send</button> -->
+		   </div>
+		   <div style='width:3rem;' >
+		   		<div class='imgBtn hover' data-hover='Share Map' onclick='messengerPop.shareMap(this)'>
+		   			<img class="medIcon"  src='<%= Images.get(Images.Map) %>'>
+		   		</div>
+		   </div>
+	 	</div>
+	</div>
+</div>

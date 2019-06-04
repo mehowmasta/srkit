@@ -1,0 +1,40 @@
+<%@ page language="java" import="sr.web.*,sr.web.page.*,sr.data.*"  autoFlush="true" contentType="text/html; charset=UTF-8"  %>
+<%@include  file="dochdrstamp.jspf"%><%
+	response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+	response.setHeader("Pragma","no-cache"); //HTTP 1.0
+	response.setDateHeader ("Expires", -1); //prevents caching at the proxy server
+	AppBasePage _bean = (AppBasePage) sr.web.page.PageMapper.getInstance().getPage(pageContext);
+	if (_bean == null) 
+    {
+    	return;
+	}
+	%>
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<meta HTTP-EQUIV="Expires" CONTENT="-1">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="icon" href="favicon.ico">
+<link rel="manifest" href="manifest.jsp">
+<link href='https://fonts.googleapis.com/css?family=Jura' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Electrolize' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Ceviche One' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet'>
+<link href="style.jsp?p=<%=_bean.isMobile() %>&a=<%=_bean.isSysAdmin()%>&<%=_bean.getThemeParameters()%>" rel="stylesheet" charset="UTF-8" type="text/css" />
+<title><%= AppBasePage.PRODUCT_NAME %></title>
+<script src="raphael.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<script src="keyedarray.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<script src="irutil.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<script src="irpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<script src="irdatepick.js?s=<%= stamp %>" type="text/javascript"></script>
+<script src="irdate.js?s=<%= stamp %>" type="text/javascript"></script>
+<script src="statusconsole.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<script src="sr5.js?s=<%=stamp %>"></script>
+<script src="srmap.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<script src="websocketclient.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<script src="nav.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<script src="gridtrack.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+</head>

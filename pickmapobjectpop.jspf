@@ -1,0 +1,9 @@
+<script src="pickmapobjectpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<div id='pickMapObjectPop' class='popup' style='bottom:initial;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='pickMapObjectPop.close()'>X</div>		
+	<div class='title' style='padding:1rem;'>Pick Map Object</div>
+	</div>
+	<div id='pickMapObjectPopContainer' class='container flex' style='padding-top:1rem;''>
+	</div>
+</div>

@@ -1,0 +1,49 @@
+<script>
+var confirmPop = {
+		id:"confirmPop",
+		callback:null,
+		close:function(){
+			var self = confirmPop;
+			popup(self.id);
+		},
+		pick:function(yesNo)
+		{
+			var self = confirmPop;
+			self.close();
+			if(self.callback!=null)
+			{
+				self.callback(yesNo);
+			}
+			self.callback=null;
+		},
+		show:function(msg,callback)
+		{
+			var self = confirmPop;
+			if(!msg || msg.length==0)
+			{
+				Status.error("no message for confirm pop",3000);
+			}
+			if(callback==null)
+			{
+				Status.error("no callback for confirm pop",3000);
+			}
+			ir.set(self.id + "Msg",msg);
+			self.callback=callback;
+			var pop = ir.get(self.id);
+			popup(pop);
+		},
+	zz_confirmPop:0	
+};
+</script>
+<div id='confirmPop' class='confirmPop shadow'>
+	<div class='popupHeader'>
+		<div class='x' onclick='confirmPop.close()'>X</div>
+	</div>
+	<div class='popupContent'>
+		<div id='confirmPopMsg' style='margin:2rem auto 1rem'></div>
+		<div class='container flex'>
+			<button type='button' onclick='confirmPop.pick(true)'>Yes</button>
+			<button type='button' onclick='confirmPop.pick(false)'>No</button>
+		</div>	
+	</div>
+</div>

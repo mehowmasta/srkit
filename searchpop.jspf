@@ -1,0 +1,15 @@
+<script src="searchpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<div id='searchPop' class='popup search' style='max-width:30rem;bottom:initial;z-index:150;' >
+	<div class='popupHeader'>
+		<div class='x' onclick='searchPop.close()'>X</div>
+	</div>
+	<div class='popupContent'>
+		<div class='flex searchWrap' style='align-items:center;' >
+			<div class='inputWrap' style='margin:1rem 1rem;'>
+				<input type='text' id='searchInput' name='searchInput' tabindex='1' onkeyup='searchPop.keyup(event)'>
+				<label class='inputLabel'>search</label>
+			</div>
+			<div id='clearSearchBtn' class='imgBtn' onclick='searchPop.clear();' style='display:none;'><img class='medIcon' src='<%= Images.get(Images.Clear)%>'><label>Clear</label></div>
+		</div>
+	</div>
+</div>

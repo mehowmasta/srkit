@@ -1,0 +1,5 @@
+<script src="hoverpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<div id='hoverPop' class='' >
+	<div id='hoverPopContent' class='popupContent' style='text-align:left;'>
+	</div>
+</div>

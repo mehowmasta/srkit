@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+
+<description>sr</description>
+<display-name>sr</display-name>
+<context-param><param-name>dbdriver</param-name><param-value>com.mysql.jdbc.Driver</param-value></context-param>
+<context-param><param-name>dbpool</param-name><param-value>3</param-value></context-param>
+<context-param><param-name>dburl</param-name><param-value>jdbc:mysql://localhost/sr5</param-value></context-param>
+<context-param><param-name>dbuser</param-name><param-value>[[your mysql database username]]</param-value></context-param>
+<context-param><param-name>dbpwd</param-name><param-value>[[your mysql database password]]</param-value></context-param>
+<context-param><param-name>env</param-name><param-value>dev</param-value></context-param>
+<context-param><param-name>uploadDir</param-name><param-value>_uploads</param-value></context-param>
+<context-param><param-name>downloadDir</param-name><param-value>_downloads</param-value></context-param>
+<context-param><param-name>patreonWebhook</param-name><param-value>OulXFq6hEuM3kKBQ2jzwEEC1N2Ec1OL8rV4FbnOJgeZ1DivhjhpTDh_aV_ZZPiCk</param-value></context-param>
+<listener>
+    <listener-class>sr.web.CtxListener</listener-class>
+</listener>
+<listener> 
+    <listener-class>sr.web.SesListener</listener-class>
+</listener>  
+<jsp-config>
+    <jsp-property-group>
+        <url-pattern>*.jsp</url-pattern>
+        <page-encoding>UTF-8</page-encoding>
+    </jsp-property-group>
+</jsp-config>
+<security-constraint>
+	<web-resource-collection>
+		<web-resource-name>jsp fragment</web-resource-name>
+		<url-pattern>*.jspf</url-pattern>
+		<http-method>GET</http-method>
+		<http-method>POST</http-method>
+		<http-method>PUT</http-method>
+	</web-resource-collection> 
+	<auth-constraint>
+		<role-name>blockaccess</role-name>
+	</auth-constraint> 
+</security-constraint>
+	
+<security-role>
+	<role-name>blockaccess</role-name>
+</security-role>
+
+<filter>
+  <filter-name>CorsFilter</filter-name>
+  <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+  <init-param>
+    <param-name>cors.allowed.origins</param-name>
+    <param-value>*</param-value>
+  </init-param>
+  <init-param>
+    <param-name>cors.allowed.methods</param-name>
+    <param-value>GET,POST,HEAD,OPTIONS,PUT</param-value>
+  </init-param>
+  <init-param>
+    <param-name>cors.allowed.headers</param-name>
+    <param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers</param-value>
+  </init-param>
+  <init-param>
+    <param-name>cors.exposed.headers</param-name>
+    <param-value>Access-Control-Allow-Origin,Access-Control-Allow-Credentials</param-value>
+  </init-param>
+  <init-param>
+    <param-name>cors.support.credentials</param-name>
+    <param-value>true</param-value>
+  </init-param>
+  <init-param>
+    <param-name>cors.preflight.maxage</param-name>
+    <param-value>10</param-value>
+  </init-param>
+</filter>
+<filter-mapping>
+  <filter-name>CorsFilter</filter-name>
+  <url-pattern>/*</url-pattern>
+</filter-mapping>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error.jsp</location>
+  </error-page>
+</web-app>

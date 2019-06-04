@@ -1,0 +1,79 @@
+<!--  begin docftr.jspf -->
+<%@include  file="searchpop.jspf"%>
+<%@include  file="dicerollpop.jspf"%>
+<%@include  file="dicerollinfopop.jspf"%>
+<%@include  file="playercharacterpop.jspf"%>
+<%@include  file="confirmpop.jspf"%>
+<%@include  file="descriptionpop.jspf"%>
+<%@include  file="pickmappop.jspf"%>
+<%@include  file="pickportraitpop.jspf"%>
+<%@include  file="imagepreviewpop.jspf"%>
+<%@include  file="messengerpop.jspf"%>
+<%@include  file="hoverpop.jspf"%>
+<%@include  file="maptokenoptionpop.jspf" %>
+<%@include  file="journalpop.jspf" %>
+<div id='popupBackground'></div>
+<script>
+sr5.attributeType = new KeyedArray("Name",<%=AttributeType.toJson()%>);
+sr5.blankPlayer = <%= new CharacterRec() %>;
+sr5.blankContact = <%= new CharacterContactRec() %>;
+sr5.characters.add(<%= _bean.get("CurrentCharacter")%>);
+sr5.cyberwareGrade = new KeyedArray("name",<%= CyberwareGrade.toJson()%>);
+sr5.deleteButton = "<%= _bean.get("DeleteButton") %>";
+sr5.delimiter = "<%= _bean.get("Delimiter") %>";
+sr5.iconPath = "<%= _bean.get("IconPath") %>";
+sr5.isMobile = ir.isTrue(<%= _bean.get("MobileDevice")%>);
+sr5.mapObjectType = new KeyedArray("name",<%= MapDataRec.ObjectType.toJson()%>);
+sr5.knowledgeType = new KeyedArray("name",<%= CharacterKnowledgeRec.KnowledgeType.toJson()%>);
+sr5.messageCount = <%= _bean.get("MessageCount") %>;
+sr5.metatypes = new KeyedArray("Row",<%=_bean.get("Metatypes")%>);
+sr5.pageErrors = "<%= _bean.getError() %>";
+sr5.pageStatus = "<%= _bean.getStatus() %>";
+sr5.professionalRating = new KeyedArray("row",<%= ProfessionalRating.toJson()%>);
+sr5.sex = new KeyedArray("Row",<%=_bean.get("Sex")%>);
+sr5.serverTime = "<%= _bean.get("ServerTime") %>";
+sr5.splitter = "<%= _bean.get("Splitter") %>";
+sr5.statusType = new KeyedArray("name",<%= StatusType.toJson() %>);
+sr5.user = <%= _bean.get("User") %>;
+srMap.blankMapData = <%= new MapDataRec() %>;
+track.scoreBoardType = new KeyedArray("name",<%= ScoreBoardType.toJson() %>);
+(function()
+		{
+			window.setTimeout(sr5.initWebSocket,1);
+			window.setTimeout(irDatePicker.init,2);
+			window.addEventListener("scroll", sr5.onScroll);
+			if(sr5.pageStatus.length>0)
+			{
+				Status.success(sr5.pageStatus,7000);
+			}
+			if(sr5.pageErrors.length>0)
+			{
+				Status.error(sr5.pageErrors,7000);
+			}
+			window.setTimeout(sr5.initHover,1000);
+			sr5.initTables();
+			sr5.initParagraphs();
+			sr5.initPopups();
+			sr5.initNavInfoBtn();
+			if(sr5.user.PlayerCharacter>0 && sr5.characters.size()>0)
+			{
+				sr5.initPlayer();
+			}
+			else
+			{
+				if(ir.exists("navPcBtn"))
+				{
+					ir.hide("navPcBtn");
+				}
+			}
+		})();
+</script>
+<%  
+	if (_bean != null)
+	{
+		_bean.release();
+		_bean = null;
+	}
+%>
+</body>
+</html>

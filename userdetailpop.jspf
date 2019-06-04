@@ -1,0 +1,34 @@
+
+<script src="userdetailpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+
+</style>
+<div id='userDetailPop' class='popup' style='max-width:24rem;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='userDetailPop.close()'>X</div>
+		<div class='title' style='padding:1rem;' id='userDetailPopTitle'></div>
+	</div>
+	<div class='popupContent '>	
+		<div class="inputWrap"  style="width:20.0rem !important;" >
+			<input tabindex="1" type="text" maxlength="50" class="hover" onfocus="this.select()" name="userDetailPopName" id="userDetailPopName">
+			<label class="inputLabel">Name</label>
+		</div>
+		<div class="inputWrap"  style="width:20.0rem !important;" >
+			<input tabindex="1" type="email" maxlength="80"class="hover" onfocus="this.select()" name="userDetailPopEMail" id="userDetailPopEMail">
+			<label class="inputLabel">EMail</label>
+		</div>
+		<div class="selectWrap"  style="width:15.0rem !important;" > 
+			<select tabindex="1" class="hover" name="userDetailPopRole" id="userDetailPopRole">
+			</select>
+			<label class="inputLabel">Role</label>
+		</div>
+	</div>
+	<div class='popupFooter'>	
+		<div id='userDetailPopButtons' style='margin:1.5rem 0;text-align:center;'>
+			<button id='userDetailPopRemoveBtn' type='button' onclick='userDetailPop.deleteUser()'>Remove</button>
+			<button id='userDetailPopResetBtn' type='button' onclick='userDetailPop.reset()'>Reset</button>
+			<button id='userDetailPopUpdateBtn' type='button' onclick='userDetailPop.update()'>Update</button>
+			<button id='userDetailPopAddBtn' type='button' onclick='userDetailPop.update()'>Add</button>
+		</div>	
+	</div>
+</div>

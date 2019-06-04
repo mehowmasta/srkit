@@ -1,0 +1,28 @@
+<script src="pickqualitypop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='pickQualityPop' class='popup search'>
+	<div class='popupHeader'>
+		<div class='x' onclick='pickQualityPop.close()'>X</div>
+		<div class='flex searchWrap' style='align-items:center;' >
+			<div class='inputWrap' style='margin:1rem 2rem;'>
+				<input type='text' id='pickQualityPopSearchInput' name='pickQualityPopSearchInput' tabindex='1' onkeyup='pickQualityPop.keyup(event)'>
+				<label class='inputLabel'>search</label>
+			</div>
+			<div id='pickQualityPopClearSearchBtn' class='imgBtn' onclick='pickQualityPop.clear();' style='display:none;'><img class='medIcon' src='<%= Images.get(Images.Clear)%>'><label>Clear</label></div>
+		</div>
+	</div>
+	<div class='popupContent'>		
+		<div class='container'>
+			<div class='tableWrap' style='margin:0.5rem;'>
+				<div class='tableTitle'>Qualities</div>
+				<table class='pickTable table show' id='pickQualityPopTable' style='max-height: calc(100vh - 18rem);'>
+					<tr><td style='width:100%;text-align:center;'>Loading...</td></tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class='popupFooter' style='text-align:center;padding:0.5rem;'>
+		<button id="pickQualityPopUpdateBtn" type="button" onclick="pickQualityPop.update()">Update</button>
+	</div>
+</div>

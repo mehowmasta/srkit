@@ -1,0 +1,29 @@
+<script src="pickspellpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='pickSpellPop' class='popup search'>
+	<div class='popupHeader'>
+		<div class='x' onclick='pickSpellPop.close()'>X</div>
+		<div class='flex searchWrap' style='align-items:center;' >
+			<div class='inputWrap' style='margin:1rem 2rem;'>
+				<input type='text' id='pickSpellPopSearchInput' name='pickSpellPopSearchInput' tabindex='1' onkeyup='pickSpellPop.keyup(event)'>
+				<label class='inputLabel'>search</label>
+			</div>
+			<div id='pickSpellPopClearSearchBtn' class='imgBtn' onclick='pickSpellPop.clear();' style='display:none;'><img class='medIcon' src='<%= Images.get(Images.Clear)%>'><label>Clear</label></div>
+		</div>
+	</div>
+	<div class='popupContent'>
+		
+		<div class='container'>
+			<div class='tableWrap' style='margin:0.5rem;'>
+				<div class='tableTitle'>Spells</div>
+				<table class='table show' id='pickSpellPopTable' style='max-height: calc(100vh - 18rem);'>
+					<tr><td style='width:100%;text-align:center;'>Loading...</td></tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class='popupFooter' style='text-align:center;padding:0.5rem;'>
+		<button id="pickSpellPopUpdateBtn" type="button" onclick="pickSpellPop.update()">Update</button>
+	</div>
+</div>

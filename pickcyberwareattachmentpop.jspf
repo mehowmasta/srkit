@@ -1,0 +1,25 @@
+<script src="pickcyberwareattachmentpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<style>
+</style>
+<div id='pickCyberwareAttachmentPop' class='popup search'>
+	<div class='popupHeader'>
+		<div class='x' onclick='pickCyberwareAttachmentPop.close()'>X</div>
+		<div class='flex searchWrap' style='align-items:center;' >
+			<div class='inputWrap' style='margin:1rem 2rem;'>
+				<input type='text' id='pickCyberwareAttachmentPopSearchInput' name='pickCyberwareAttachmentPopSearchInput' tabindex='1' onkeyup='pickCyberwareAttachmentPop.keyup(event)'>
+				<label class='inputLabel'>search</label>
+			</div>
+			<div id='pickCyberwareAttachmentPopClearSearchBtn' class='imgBtn' onclick='pickCyberwareAttachmentPop.clear();' style='display:none;'><img class='medIcon' src='<%= Images.get(Images.Clear)%>'><label>Clear</label></div>
+		</div>
+	</div>
+	<div class='popupContent'>
+		<div class='container'>
+			<div class='tableWrap show' style='margin:0.5rem;'>
+				<div class='tableTitle'>Cyberware Attachment</div>
+				<table class='pickTable table show' id='pickCyberwareAttachmentPopTable'>
+					<tr><td style='width:100%;text-align:center;'>Loading...</td></tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
