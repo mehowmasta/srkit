@@ -10,7 +10,7 @@ SrKit is written in <a href='https://www.eclipse.org/downloads/packages/release/
 
 To get the project running there are a few steps you will need to take.
 
-1. the <a href='/WEB-INF/web.xml'>web.xml</a> <line>ln:12-13</line> file will need to be edited for you local machine. Replace "[[ your database username]]" with your local instance database username, and same with the password.
+1. the <a href='/WEB-INF/web.xml'>web.xml</a> file ln:12-13 will need to be edited for you local machine. Replace "[[ your database username]]" with your local instance database username, and same with the password.
 
 2. the SrKit Database/Schema will need be created and named "sr5". (You can name it whatever you like, but you'll have to change the code in multiple places, I do not recommend it)
 
