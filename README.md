@@ -2,7 +2,7 @@
 <pre>
 <a href='www.srkit.ca'>SrKit Login</a> &emsp;&emsp; <a href='https://www.reddit.com/r/ShadowrunKit/'>SrKit Reddit</a> &emsp;&emsp; <a href='https://www.patreon.com/srkit'>SrKit Patreon</a>
 </pre>
-<h3>SrKit</h3>
+<h1 style='color:#EBB530'>SrKit</h1>
 <img src='/images/banner2.png'>
 Welcome Developers, 
 
