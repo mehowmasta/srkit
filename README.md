@@ -13,9 +13,7 @@ To get the project running there are a few steps you will need to take.
 
 2. the SrKit Database/Schema will need be created and named "sr5". (You can name it whatever you like, but you'll have to change the code in multiple places, I do not recommend it)
 
-3. once the Database is created you can use the <a href='/sr5_sql/sr5dump.sql'>sr5dump.sql</a> to import all the required tables for the project. Make sure you select the correct database/schema.
-
-<code>USE sr5</code>
+3. once the Database is created you can use the <a href='/sr5_sql/sr5dump.sql'>sr5dump.sql</a> to import all the required tables for the project. Make sure you select the correct database/schema. <code>USE sr5</code>
 
 you can either run the script from mysql workbench or 
 
