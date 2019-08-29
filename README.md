@@ -1,5 +1,3 @@
-<<<<<<< Upstream, based on branch 'master' of https://github.com/mehowmasta/srkit.git
-
 <pre>
 <a href='www.srkit.ca'>SrKit Login</a> &emsp;&emsp; <a href='https://www.reddit.com/r/ShadowrunKit/'>SrKit Reddit</a> &emsp;&emsp; <a href='https://www.patreon.com/srkit'>SrKit Patreon</a>
 </pre>
@@ -23,16 +21,3 @@ To get the project running there are a few steps you will need to take.
 5. SrKit also uses MySql Stored Procedures. There are 2 stored procedures you will need to run they are <a href='/sr5_sql/select_character.sql'>select_character.sql</a> and <a href='/sr5_sql/select_message_threads.sql'>select_message_threads.sql</a>. You can run them from mysql workbench or right from the command line: <code> mysql sr5 < [[path of select_character.sql file]]/select_character.sql</code>
 
 <i>Note: the project may use 3rd party *.jar files. If some classes are missing they are probably 3rd party. You can download them, or ask me for them and place them in /[[your tomcat path]]/lib</i>
-=======
-# srkit
-SrKit
-Welcome Developers
-SrKit was build in Eclipse Oxygen.1 Release (4.7.1). Using Java JDK/JRE 1.8.0_151 and Apache Tomcat 8.5 with MySql 5.6.
-
-To get the project running:
--> The web.xml will need to be edited, to add "your database username" and "your database password"
--> the database dump is located in 
-
-
-Note:This project may use third party *.jar files. If the are missing add them to your /tomcat/lib folder
->>>>>>> 471f187 Create README.md
