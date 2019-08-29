@@ -24,6 +24,7 @@ sr5.delimiter = "<%= _bean.get("Delimiter") %>";
 sr5.iconPath = "<%= _bean.get("IconPath") %>";
 sr5.isMobile = ir.isTrue(<%= _bean.get("MobileDevice")%>);
 sr5.mapObjectType = new KeyedArray("name",<%= MapDataRec.ObjectType.toJson()%>);
+sr5.meleeModifier = new KeyedArray("name",<%= MeleeModifier.toJson() %>);
 sr5.knowledgeType = new KeyedArray("name",<%= CharacterKnowledgeRec.KnowledgeType.toJson()%>);
 sr5.messageCount = <%= _bean.get("MessageCount") %>;
 sr5.metatypes = new KeyedArray("Row",<%=_bean.get("Metatypes")%>);

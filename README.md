@@ -1,4 +1,3 @@
-
 <pre>
 <a href='www.srkit.ca'>SrKit Login</a> &emsp;&emsp; <a href='https://www.reddit.com/r/ShadowrunKit/'>SrKit Reddit</a> &emsp;&emsp; <a href='https://www.patreon.com/srkit'>SrKit Patreon</a>
 </pre>
