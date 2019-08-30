@@ -398,6 +398,16 @@ button.mini{
 	cursor:pointer;
 }
 
+.detail label{
+	color: <%=f3%>;
+	font-size:1.1rem !important;
+	font-variant-caps: normal;
+	white-space:normal;
+	padding:0 !important;
+}
+.detail:hover label{	
+	color:<%=f1%>;
+}
 #detailModPopSection .desc{
 	text-align:left;
 	max-height:10rem;
@@ -1892,13 +1902,22 @@ max-width: calc(100vw - 6rem);
 .playerCharacterPopTrack {
 	display:block;
 }
-.playerCharacterPopTrack .subtitle
+.playerCharacterPopTrack .subtitle,  .playerCharacterPopModifiers .subtitle
 {
 	font-size: 1rem;
 	text-align: center;
 	width: 100%;
 	color: <%=f3%>;
 }
+ .playerCharacterPopModifiers .subtitle{
+ 	border-bottom:1px solid <%=f3%>;
+	text-align: left;
+	margin-top:0.5rem;
+	text-indent:1rem;
+ }
+  .playerCharacterPopModifiers .detail{
+  	padding:0 0.1rem !important;
+  }
 .playerCharacterAmmo{
 	padding:0.5rem;
 }

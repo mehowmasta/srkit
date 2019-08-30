@@ -21,6 +21,7 @@ sr5.characters.add(<%= _bean.get("CurrentCharacter")%>);
 sr5.cyberwareGrade = new KeyedArray("name",<%= CyberwareGrade.toJson()%>);
 sr5.deleteButton = "<%= _bean.get("DeleteButton") %>";
 sr5.delimiter = "<%= _bean.get("Delimiter") %>";
+sr5.environmentalModifier = <%= EnvironmentalModifier.toJson() %>;
 sr5.iconPath = "<%= _bean.get("IconPath") %>";
 sr5.isMobile = ir.isTrue(<%= _bean.get("MobileDevice")%>);
 sr5.mapObjectType = new KeyedArray("name",<%= MapDataRec.ObjectType.toJson()%>);

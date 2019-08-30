@@ -3,16 +3,16 @@ package sr.data;
 import ir.util.StringKit;
 
 public enum MeleeModifier{
-AttackerCharge("Attacker making charging attack","2"),
+AttackerCharge("Attacker making charging attack","+2"),
 AttackerProne("Attacker prone","-1"),
 AttackerCallShot("Attacker making a Called Shot","-4"),
-AttackerPos("Attacker has superior position","2"),
+AttackerPos("Attacker has superior position","+2"),
 AttackerOffHand("Attacker using off-hand weapon","-2"),
-AttackerFriends("Attacker has friends in melee","1"),
+AttackerFriends("Attacker has friends in melee","+1"),
 AttackerWound("Attacker wounded","-[Wound]"),
-AttackerTouch("Touch-only attack","2"),
-DefenderCharge("Defender receiving a charge","1"),
-DefenderProne("Opponent prone","1");
+AttackerTouch("Touch-only attack","+2"),
+DefenderCharge("Defender receiving a charge","+1"),
+DefenderProne("Opponent prone","+1");
 
 public final String text;
 public final String modifier;
@@ -24,8 +24,8 @@ private MeleeModifier(String text, String mod) {
 
 public static String toJson()
 {
-	StringBuilder b = new StringBuilder("{skills:[");
-	b.append(skills.toString()).append("]")
+	StringBuilder b = new StringBuilder("{skills:");
+	b.append(StringKit.jsq(skills))
 	 .append(",modifiers:[");
 	String comma = "";
 	for(MeleeModifier t : MeleeModifier.values())

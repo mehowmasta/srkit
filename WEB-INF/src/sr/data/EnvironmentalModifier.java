@@ -9,12 +9,12 @@ import ir.util.StringKit;
  *
  */
 public enum EnvironmentalModifier {
-	Vis_Light("Light Rain/Fog/Smoke","-1","Visibility"),
-	Vis_Mod("Moderate Rain/Fog/Smoke","-3","Visibility"),
-	Vis_Heavy("Heavy Rain/Fog/Smoke","-6","Visibility"),
-	Light_Partial("Partial Light/Weak Glare","-1","Light/Glare"),
-	Light_Dim("Dim Light/Moderate Glare","-3","Light/Glare"),
-	Light_Dark("Total Darkness/Blinding Glare","-6","Light/Glare"),
+	Vis_Light("Light Rain /Fog /Smoke","-1","Visibility"),
+	Vis_Mod("Moderate Rain /Fog /Smoke","-3","Visibility"),
+	Vis_Heavy("Heavy Rain /Fog /Smoke","-6","Visibility"),
+	Light_Partial("Partial Light /Weak Glare","-1","Light /Glare"),
+	Light_Dim("Dim Light /Moderate Glare","-3","Light /Glare"),
+	Light_Dark("Total Darkness /Blinding Glare","-6","Light /Glare"),
 	Wind_Light("Light Winds","-1","Wind"),
 	Wind_Mod("Moderate Winds","-3","Wind"),
 	Wind_Strong("Strong Winds","-6","Wind"),
@@ -24,7 +24,7 @@ public enum EnvironmentalModifier {
 	public final String text;
 	public final String type;
 	public final String modifier;
-	public static final String[] skills = {"Con","Instruction","Leadership","Performance","Animal Handling","Etiquette","Intimidation","Negotiation","Impersonation"};
+	public static final String[] skills = {};
 	private EnvironmentalModifier(String text, String mod, String type) {
 		this.text=text;
 		this.modifier = mod;
@@ -32,8 +32,8 @@ public enum EnvironmentalModifier {
 	}
 	public static String toJson()
 	{
-		StringBuilder b = new StringBuilder("{skills:[");
-		b.append(skills.toString()).append("]")
+		StringBuilder b = new StringBuilder("{skills:");
+		b.append(StringKit.jsq(skills))
 		 .append(",modifiers:[");
 		String comma = "";
 		for(EnvironmentalModifier t : EnvironmentalModifier.values())

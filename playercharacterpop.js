@@ -1,5 +1,6 @@
 var playerCharacterPop = {
 	id:"playerCharacterPop",
+	modifierTemplate :"<div class='flex detail' style='width:100%;flex-wrap:nowrap;align-items:center;'><div><input type='checkbox' id='{0}_{1}ChkBox' class='{2}' onchange='{6}'><label for='{0}_{1}ChkBox'></label></div><div><label for='{0}_{1}ChkBox'>{3}</label></div><div style='text-align:right;flex:1;'><b>{4}</b>{5}</div></div>",
 	player:null,
 	prefix:"playerCharacter",
 	rollTemplate: "<div class='flex detail' style='justify-content:space-between;width:100%;' onclick='diceRollPop.show({2});'><div>&bull;{0}&emsp;<b>{2}</b></div><div> <i>[{1}]</i></div></div>",
@@ -163,6 +164,26 @@ var playerCharacterPop = {
 		}
 		ir.show("playerCharacterPopDroneTrackWrap"+self.player.Row,count>0);
 	},
+	buildEnvironmentalModifier:function(){
+		var self = playerCharacterPop;
+		var modifiers = sr5.environmentalModifier.modifiers;
+		var container = ir.get(self.id +"EnvironmentalModifier"+self.player.Row);
+		var htm = "";
+		var subtitle = "@#$#@DSF#@";
+		for(var i = 0, z= modifiers.length; i < z; i++)
+		{
+			var a = modifiers[i];
+			if(subtitle !== a.type)
+			{
+				subtitle = a.type;
+				htm+= "<div class='subtitle' style='grid-column-start: 1;grid-column-end: 4;'>"+subtitle+"</div>";
+			}
+			var className = "environmental"+a.type+"Chk"+self.playerRow;
+			var onchange = "playerCharacterPop.changeEnvironmental("+self.playerRow+",\""+a.type+"\",this);";
+			htm += ir.format(self.modifierTemplate,"environmental",a.name,className,a.text,a.modifier,"",onchange);
+		}
+		container.innerHTML = htm;
+	},
 	buildGear:function()
 	{
 		var self = playerCharacterPop;
@@ -227,6 +248,19 @@ var playerCharacterPop = {
 			}
 		}
 		ir.show("playerCharacterPopMatrixTrackWrap"+self.player.Row,count>0);
+	},
+	buildMeleeModifier:function(){
+		var self = playerCharacterPop;
+		var modifiers = sr5.meleeModifier.modifiers;
+		var container = ir.get(self.id +"MeleeModifier"+self.player.Row);
+		var htm = "";
+		for(var i = 0, z= modifiers.length; i < z; i++)
+		{
+			var a = modifiers[i];
+			//<div class='flex detail' style='justify-content:space-between;width:100%;'><div><input type='checkbox' id='{0}_{1}ChkBox' {2}><label for='{0}_{1}ChkBox'><b>{3}</b></label></div><div> <i>[{4}]</i>{5}</div></div>
+			htm += ir.format(self.modifierTemplate,"melee",a.name,"",a.text,a.modifier,"")
+		}
+		container.innerHTML = htm;
 	},
 	buildNaturalRoll:function(){
 		var self = playerCharacterPop;
@@ -295,6 +329,33 @@ var playerCharacterPop = {
 			container.innerHTML+= ir.format(template,a.Name,a.Name +" " + a.Rating+" + "+a.Attribute+" "+self.player[a.Attribute] + extraText,a.Rating+self.player[a.Attribute]+extraAmount);
 		}
 		ir.show(self.id + "SkillRollRow"+self.player.Row,skills.length>0);
+	},
+	buildSocialModifier:function(){
+		var self = playerCharacterPop;
+		var modifiers = sr5.socialModifier.modifiers;
+		var container = ir.get(self.id +"SocialModifier"+self.player.Row);
+		var htm = "";		
+		var subtitle = "@#$#@DSF#@";
+		for(var i = 0, z= modifiers.length; i < z; i++)
+		{
+			var a = modifiers[i];
+			if(subtitle !== a.skill)
+			{
+				subtitle = a.skill;
+				htm+= "<div class='subtitle' style='grid-column-start: 1;grid-column-end: 3;'>"+(subtitle.length==0?"General Modifiers":subtitle+" Modifiers")+"</div>";
+			}
+			if(a.name === "Friendly")
+			{
+				htm+= "<div style='grid-column-start: 1;grid-column-end: 3;'><label><b style='color:white;'>The NPC's attiude toward the character is:</b></label></div>";
+			}
+			if(a.name === "AdvToNPC")
+			{
+				htm+= "<div style='grid-column-start: 1;grid-column-end: 3;'><label><b style='color:white;'>Character's desired result is::</b></label></div>";
+			}
+			//<div class='flex detail' style='justify-content:space-between;width:100%;'><div><input type='checkbox' id='{0}_{1}ChkBox' {2}><label for='{0}_{1}ChkBox'><b>{3}</b></label></div><div> <i>[{4}]</i>{5}</div></div>
+			htm += ir.format(self.modifierTemplate,"social",a.name,"",a.text,a.modifier,"")
+		}
+		container.innerHTML = htm;
 	},
 	buildSpell:function()
 	{
@@ -372,6 +433,21 @@ var playerCharacterPop = {
 		ir.show(self.id +"WeaponRow"+self.player.Row,self.player.Weapon!=null && self.player.Weapon.size()>0);
 		self.buildAmmoTrack();
 	},
+	changeEnvironmental:function(row,type,ele){
+		var self = playerCharacterPop;
+		var types = document.getElementsByClassName("environmental"+type+"Chk"+row);
+		if(ele.checked)
+		{
+			for(var i=0, z= types.length;i <z;i++)
+			{
+				var a = types[i];
+				if(ele.id != a.id)
+				{
+					a.checked=false;
+				}
+			}
+		}
+	},
 	close:function(row){
 		var self = playerCharacterPop;
 		//ir.get(self.id+row).classList.remove("show");
@@ -410,14 +486,17 @@ var playerCharacterPop = {
 		self.buildCyberware();
 		self.buildDamageTrack();
 		self.buildDrone();
+		self.buildEnvironmentalModifier();
 		self.buildGear();
 		self.buildKnowledge();
 		self.buildKnowledgeRoll();
+		self.buildMeleeModifier();
 		self.buildNaturalRoll();
 		self.buildPortrait();
 		self.buildQuality();
 		self.buildSkill();
 		self.buildSkillRoll();
+		self.buildSocialModifier();
 		self.buildSpell();
 		self.buildSpellDefenseRoll();
 		self.buildStatusTrack();
