@@ -113,6 +113,7 @@ public class CharacterRec extends AppRec {
 
 	public static final String AGE = "Age";
 	public static final String AGILITY = "Agility";
+	public static final String APPLYMODIFIERS = "ApplyModifiers";
 	public static final String ASTRALINITIATIVE = "AstralInitiative";
 	public static final String BODY = "Body";
 	public static final String CHARISMA = "Charisma";
@@ -220,6 +221,7 @@ public class CharacterRec extends AppRec {
 	public int Nuyen = 0;//
 	//
 	/** Record Data */
+	public boolean ApplyModifiers = true;
 	public CharacterType Type = CharacterType.PC;//
 	public int ProfessionalRating = 0;
 	public int Row = 0;

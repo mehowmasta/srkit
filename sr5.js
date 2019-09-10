@@ -661,6 +661,9 @@ var sr5 = {
 			}
 			return htm;
 		},
+		getCharacterWound:function(char){
+			return (Math.floor(char.PhysicalCurrent/3) + Math.floor(char.StunCurrent/3))*-1;
+		},
 		getContact:function(s){
 			return "&bull;"
 				+ s.Archetype
@@ -1657,6 +1660,7 @@ var sr5 = {
 				playerCharacterPop.player = sr5.characters.get(sr5.user.PlayerCharacter);
 				sr5.player = playerCharacterPop.player;
 				sr5.initPlayerAttachments(sr5.player);
+				sr5.initPlayerModifiers(sr5.player);
 				sr5.initPlayerSkillBonus(sr5.player);
 				playerCharacterPop.init(sr5.player);
 			}
@@ -1700,6 +1704,13 @@ var sr5 = {
 					}
 				}
 			}
+		},
+		initPlayerModifiers:function(player){
+			player.EnvironmentalModifier = {};
+			player.DefenseModifier = {};
+			player.SituationalModifier = {};
+			player.SocialModifier = {};
+			player.MeleeModifier = {};
 		},
 		initPlayerSkillBonus:function(player){
 			var skills = player.Skill.values;
@@ -1858,6 +1869,7 @@ var sr5 = {
 				if(res.ok)
 				{
 					sr5.initPlayerAttachments(res.player);
+					sr5.initPlayerModifiers(res.player);
 					sr5.initPlayerSkillBonus(res.player);
 					sr5.characters.add(res.player);
 					if(callback!=null)

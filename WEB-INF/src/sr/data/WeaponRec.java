@@ -19,6 +19,8 @@ public class WeaponRec extends SrRec {
 	public static final String MODIFIERS = "Modifiers";
 	public static final String REACH = "Reach";
 	public static final String RECOILCOMPENSATION = "RecoilCompensation";
+	public final static String SKILL = "Skill";
+	public final static String SKILLROW = "SkillRow";
 	public final static String STANDARDUPGRADES = "StandardUpgrades";
 	public final static String TABLE = "tWeapon";
 	public final static String TYPE = "Type";
@@ -33,6 +35,8 @@ public class WeaponRec extends SrRec {
 	public String Modifiers = "";
 	public String Reach = "";
 	public String RecoilCompensation = "";
+	public String Skill = "";
+	public int SkillRow = 0;
 	public String StandardUpgrades = "";
 	public String Type = "";
 	public String Wireless = "";

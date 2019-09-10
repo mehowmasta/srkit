@@ -309,6 +309,11 @@ var track = {
 			}
 			count = ir.n(count) + 1;
 			sr5.ajaxAsync({fn:"updatePhysical",characterRow:characterRow,count:count})
+			var char = sr5.characters.get(characterRow);
+			if(char!=null)
+			{
+				char.PhysicalCurrent = count;
+			}
 		}
 		if(ele.classList.contains("stun"))
 		{
@@ -319,6 +324,11 @@ var track = {
 			}
 			count = ir.n(count) + 1;
 			sr5.ajaxAsync({fn:"updateStun",characterRow:characterRow,count:count})
+			var char = sr5.characters.get(characterRow);
+			if(char!=null)
+			{
+				char.StunCurrent = count;
+			}
 		}
 		if(ele.classList.contains("Ammo"))
 		{

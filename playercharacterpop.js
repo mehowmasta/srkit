@@ -1,9 +1,17 @@
 var playerCharacterPop = {
 	id:"playerCharacterPop",
-	modifierTemplate :"<div class='flex detail' style='width:100%;flex-wrap:nowrap;align-items:center;'><div><input type='checkbox' id='{0}_{1}ChkBox' class='{2}' onchange='{6}'><label for='{0}_{1}ChkBox'></label></div><div><label for='{0}_{1}ChkBox'>{3}</label></div><div style='text-align:right;flex:1;'><b>{4}</b>{5}</div></div>",
+	modifierInput :"<div id='{0}_{1}_InpBoxWrap{6}' style='display:none;z-index:1;margin:0.2rem 0 0.2rem 0.5rem;' class='inputWrap'><input type='number' id='{0}_{1}_InpBox{6}' name='detailPopRating' tabindex='1' size='2' style='width:5rem;height:3rem;text-align: center;' value='{5}' min='{4}' max='{3}' onfocus='this.select();'><label class='inputLabel'>{2}</label></div>",
+	modifierTemplate :"<div class='flex detail' style='width:100%;flex-wrap:nowrap;align-items:center;'><div><input type='checkbox' id='{0}_{1}_ChkBox{7}' data-name='{1}' class='{2}' onchange='{6}'><label for='{0}_{1}_ChkBox{7}'></label></div><div style='flex:3;'><label for='{0}_{1}_ChkBox{7}'>{3}</label></div><div style='text-align:right;flex:1;'><b id='{0}_{1}_ModDisp{7}'>{4}</b>{5}</div></div>",
 	player:null,
 	prefix:"playerCharacter",
-	rollTemplate: "<div class='flex detail' style='justify-content:space-between;width:100%;' onclick='diceRollPop.show({2});'><div>&bull;{0}&emsp;<b>{2}</b></div><div> <i>[{1}]</i></div></div>",
+	rollTemplate: "<div class='flex detail' style='justify-content:space-between;width:100%;' onclick='diceRollPop.show({2});'><div style='margin-right:1rem;'>&bull;{0}&emsp;<b>{2}</b></div><div style='flex:1;text-align:right;min-width:50%;'> <i>[{1}]</i></div></div>",
+	applyModifiers:function(){
+		var self = playerCharacterPop;
+		checked = ir.v(self.id +"ApplyModifiers"+self.player.Row);	
+		self.player.ApplyModifiers = checked;
+		sr5.ajaxAsync({fn:"setPlayerApplyModifier",row:self.player.Row,apply:checked},null);
+		self.rebuildRolls();
+	},
 	buildAdeptPower:function()
 	{
 		var self = playerCharacterPop;
@@ -47,6 +55,59 @@ var playerCharacterPop = {
 		self.buildDefenseRoll();
 		self.buildSpellDefenseRoll();
 	},	
+	buildAttackRoll:function(){
+		var self = playerCharacterPop;
+		var container = ir.get(self.id +"AttackRoll"+self.player.Row);
+		container.innerHTML = "";
+		var template = self.rollTemplate;
+		var weapons = self.player.Weapon.values;
+		var player = self.player;
+		for(var i =0,z=weapons.length;i<z;i++)
+		{
+			var a = weapons[i];
+			var extraText = "";
+			var extraAmount = 0;
+			var delim = "";
+			var skill = player.Skill.get(a.SkillRow);
+			if(skill==null)
+			{
+				continue;
+			}
+			if(skill.Rating == 0)
+			{
+				extraAmount=-1;
+				extraText = " + Defaulting -1";
+			}
+			if(player.ApplyModifiers)
+			{
+				//Check Environmental modifiers
+				var env = player.EnvironmentalModifier;
+				for(var prop in env){
+					var mod = sr5.environmentalModifier.modifiers.get(prop);
+					if(mod!=null)
+					{
+						extraAmount += ir.n(mod.modifier);
+						extraText += " + " + mod.text + " " + ir.n(mod.modifier);
+					}
+				}
+				// check Situational modifiers
+				var sit = player.SituationalModifier;
+				for(var prop in sit){
+					var mod = sr5.situationalModifier.modifiers.get(prop);
+					if(mod!=null)
+					{
+						if(!mod.useInput)
+						{
+							extraAmount += ir.n(mod.modifier);
+							extraText += " + " + mod.text + " " + ir.n(mod.modifier);
+						}
+					}
+				}
+			}
+			container.innerHTML+= ir.format(template,a.Name,skill.Name +" " + skill.Rating+" + "+skill.Attribute+" "+self.player[skill.Attribute] + extraText,skill.Rating+self.player[skill.Attribute]+extraAmount);
+		}
+		
+	},
 	buildAttributes:function()
 	{
 		var self = playerCharacterPop;
@@ -95,41 +156,103 @@ var playerCharacterPop = {
 		var physicalCurrent = self.player.PhysicalCurrent;
 		var stunCurrent = self.player.StunCurrent;
 		container.appendChild(track.buildGrid(type,null,null,physicalMax,stunMax,physicalCurrent,stunCurrent));
-	},
+	},	
+	buildDefenseModifier:function(){
+		var self = playerCharacterPop;
+		var modifiers = sr5.defenseModifier.modifiers.values;
+		var container = ir.get(self.id +"DefenseModifier"+self.player.Row);
+		var htm = "";		
+		for(var i = 0, z= modifiers.length; i < z; i++)
+		{	
+			var a = modifiers[i];
+			var onchange = "playerCharacterPop.changeDefense("+self.player.Row+",this);";
+			//<div class='flex detail' style='justify-content:space-between;width:100%;'><div><input type='checkbox' id='{0}_{1}ChkBox' {2}><label for='{0}_{1}ChkBox'><b>{3}</b></label></div><div> <i>[{4}]</i>{5}</div></div>
+			htm += ir.format(self.modifierTemplate,"defense",a.name,"",a.text,a.modifier,"",onchange,self.player.Row);
+		}
+		container.innerHTML = htm;
+	},	
 	buildDefenseRoll:function(){
 		var self = playerCharacterPop;
 		var armor = sr5.getArmorSum(self.player.Armor.values);
 		var container = ir.get(self.id +"DefenseRoll"+self.player.Row);	
 		var meleeSkill = -1;
+		var meleeText = "";
+		var meleeExtra = 0;
 		var gymnasticsSkill = -1;
+		var gymnasticsText = "";
+		var gymnasticsExtra = 0;
 		var unarmedSkill = -1;
+		var unarmedText = "";
+		var unarmedExtra = 0;
+		var extraText = "";
+		var extraAmount = 0;
 		var skills = self.player.Skill.values;
 		for(var i =0, z=skills.length;i<z;i++)
 		{
 			var s = skills[i];
 			if(s.Name.indexOf("Blades")>-1 || s.Name.indexOf("Clubs")>-1 || s.Name.indexOf("Melee")>-1)
 			{
-				meleeSkill = Math.max(meleeSkill,s.Rating);
+				meleeSkill = s.Rating;
+				if(s.Rating==0)
+				{
+					meleeExtra = -1;
+					meleeText = " + Defaulting -1"
+				}
 			}
 			if(s.Name.indexOf("Gymnastics")>-1)
 			{
-				gymnasticsSkill = Math.max(gymnasticsSkill,s.Rating);
+				gymnasticsSkill = s.Rating;
+				if(s.Rating==0)
+				{
+					gymnasticsExtra = -1;
+					gymnasticsText = " + Defaulting -1"
+				}
 			}
 
 			if(s.Name.indexOf("Unarmed")>-1)
 			{
-				unarmedSkill = Math.max(unarmedSkill,s.Rating);
+				unarmedSkill = s.Rating;
+				if(s.Rating==0)
+				{
+					unarmedExtra = -1;
+					unarmedText = " + Defaulting -1"
+				}
 			}
 		}
 		ir.set(container,"");
 		var template = self.rollTemplate;
-		container.innerHTML+= ir.format(template,"Standard Defense","Reaction "+self.player.Reaction+ " + Intuition "+self.player.Intuition+"",self.player.Reaction+self.player.Intuition);
-		container.innerHTML+= ir.format(template,"Resist - With Armor","Body "+self.player.Body+ " + Armor "+armor+"",self.player.Body+armor);
-		container.innerHTML+= ir.format(template,"Resist - Armor Penetrated","Body "+self.player.Body,self.player.Body);		
-		container.innerHTML+= ir.format(template,"Block","Reaction "+self.player.Reaction+ " + Intuition "+self.player.Intuition+" + Gymnastics "+gymnasticsSkill,self.player.Reaction+self.player.Intuition+gymnasticsSkill);
-		container.innerHTML+= ir.format(template,"Dodge","Reaction "+self.player.Reaction+ " + Intuition "+self.player.Intuition+" + Unarmed "+unarmedSkill,self.player.Reaction+self.player.Intuition+unarmedSkill);		
-		container.innerHTML+= ir.format(template,"Parry","Reaction "+self.player.Reaction+ " + Intuition "+self.player.Intuition+" + Melee "+meleeSkill,self.player.Reaction+self.player.Intuition+meleeSkill);
-		container.innerHTML+= ir.format(template,"Full Defense","Reaction "+self.player.Reaction+" + Intuition "+self.player.Intuition+" + Willpower "+self.player.Willpower,self.player.Reaction+self.player.Intuition+self.player.Willpower);
+		if(self.player.ApplyModifiers)
+		{
+			//Check Environmental
+			var env = self.player.EnvironmentalModifier;
+			for(var prop in env){
+				var mod = sr5.environmentalModifier.modifiers.get(prop);
+				if(mod!=null)
+				{
+					extraAmount += ir.n(mod.modifier);
+					extraText += " + " + mod.text + " " + ir.n(mod.modifier);
+				}
+			}
+			var def = self.player.DefenseModifier;
+			for(var prop in def){
+				var mod = sr5.defenseModifier.modifiers.get(prop);
+				if(mod!=null)
+				{
+					if(!mod.useInput)
+					{
+						extraAmount += ir.n(mod.modifier);
+						extraText += " + " + mod.text + " " + ir.n(mod.modifier);
+					}
+				}
+			}
+		}	
+		container.innerHTML+= ir.format(template,"Standard Defense","Reaction "+self.player.Reaction+ " + Intuition "+self.player.Intuition+extraText,self.player.Reaction+self.player.Intuition+extraAmount);
+		container.innerHTML+= ir.format(template,"Resist - With Armor","Body "+self.player.Body+ " + Armor "+armor+extraText,self.player.Body+armor+extraAmount);
+		container.innerHTML+= ir.format(template,"Resist - Armor Penetrated","Body "+self.player.Body+extraText,self.player.Body+extraAmount);		
+		container.innerHTML+= ir.format(template,"Block","Reaction "+self.player.Reaction+ " + Intuition "+self.player.Intuition+" + Gymnastics "+gymnasticsSkill + gymnasticsText+extraText,self.player.Reaction+self.player.Intuition+gymnasticsSkill+gymnasticsExtra+extraAmount);
+		container.innerHTML+= ir.format(template,"Dodge","Reaction "+self.player.Reaction+ " + Intuition "+self.player.Intuition+" + Unarmed "+unarmedSkill+ unarmedText+extraText,self.player.Reaction+self.player.Intuition+unarmedSkill+unarmedExtra+extraAmount);		
+		container.innerHTML+= ir.format(template,"Parry","Reaction "+self.player.Reaction+ " + Intuition "+self.player.Intuition+" + Melee "+meleeSkill+ meleeText+extraText,self.player.Reaction+self.player.Intuition+meleeSkill+meleeExtra+extraAmount);
+		container.innerHTML+= ir.format(template,"Full Defense","Reaction "+self.player.Reaction+" + Intuition "+self.player.Intuition+" + Willpower "+self.player.Willpower+extraText,self.player.Reaction+self.player.Intuition+self.player.Willpower+extraAmount);
 	},
 	buildDrone:function()
 	{
@@ -166,7 +289,7 @@ var playerCharacterPop = {
 	},
 	buildEnvironmentalModifier:function(){
 		var self = playerCharacterPop;
-		var modifiers = sr5.environmentalModifier.modifiers;
+		var modifiers = sr5.environmentalModifier.modifiers.values;
 		var container = ir.get(self.id +"EnvironmentalModifier"+self.player.Row);
 		var htm = "";
 		var subtitle = "@#$#@DSF#@";
@@ -178,9 +301,9 @@ var playerCharacterPop = {
 				subtitle = a.type;
 				htm+= "<div class='subtitle' style='grid-column-start: 1;grid-column-end: 4;'>"+subtitle+"</div>";
 			}
-			var className = "environmental"+a.type+"Chk"+self.playerRow;
-			var onchange = "playerCharacterPop.changeEnvironmental("+self.playerRow+",\""+a.type+"\",this);";
-			htm += ir.format(self.modifierTemplate,"environmental",a.name,className,a.text,a.modifier,"",onchange);
+			var className = "environmental"+a.type+"Chk"+self.player.Row;
+			var onchange = "playerCharacterPop.changeEnvironmental("+self.player.Row+",\""+a.type+"\",this);";
+			htm += ir.format(self.modifierTemplate,"environmental",a.name,className,a.text,a.modifier,"",onchange,self.player.Row);
 		}
 		container.innerHTML = htm;
 	},
@@ -201,6 +324,7 @@ var playerCharacterPop = {
 	buildKnowledgeRoll:function(){
 		var self = playerCharacterPop;
 		var container = ir.get(self.id +"KnowledgeRoll"+self.player.Row);
+		container.innerHTML = "";
 		var template = self.rollTemplate;
 		var knowledge = self.player.Knowledge.sort(function(a,b){
 		    if(a.Name < b.Name)
@@ -218,9 +342,12 @@ var playerCharacterPop = {
 			var a = knowledge[i];
 			if(a.Native)
 			{
-				continue;
+				container.innerHTML+= ir.format(template,a.Name,a.Name +" N + " + a.Attribute+" "+self.player[a.Attribute],self.player[a.Attribute]);
 			}
-			container.innerHTML+= ir.format(template,a.Name,a.Name +" " + a.Rating+" + "+a.Attribute+" "+self.player[a.Attribute],a.Rating+self.player[a.Attribute]);
+			else
+			{
+				container.innerHTML+= ir.format(template,a.Name,a.Name +" " + a.Rating+" + "+a.Attribute+" "+self.player[a.Attribute],a.Rating+self.player[a.Attribute]);			
+			}
 		}
 		ir.show(self.id + "KnowledgeRollRow"+self.player.Row,knowledge.length>0);
 	},
@@ -251,14 +378,24 @@ var playerCharacterPop = {
 	},
 	buildMeleeModifier:function(){
 		var self = playerCharacterPop;
-		var modifiers = sr5.meleeModifier.modifiers;
+		var modifiers = sr5.meleeModifier.modifiers.values;
 		var container = ir.get(self.id +"MeleeModifier"+self.player.Row);
 		var htm = "";
 		for(var i = 0, z= modifiers.length; i < z; i++)
 		{
 			var a = modifiers[i];
-			//<div class='flex detail' style='justify-content:space-between;width:100%;'><div><input type='checkbox' id='{0}_{1}ChkBox' {2}><label for='{0}_{1}ChkBox'><b>{3}</b></label></div><div> <i>[{4}]</i>{5}</div></div>
-			htm += ir.format(self.modifierTemplate,"melee",a.name,"",a.text,a.modifier,"")
+			var input = "";
+			var onchange = "playerCharacterPop.changeMelee("+self.player.Row+",this);";
+			if(a.useInput)
+			{//"<div id='{0}_{1}_InpBoxWrap{5}' style='display:none;' class='inputWrap'><input type='number' id='{0}_{1}_InpBox{5}' name='detailPopRating' tabindex='1' size='2' style='width:6rem;text-align: center;' value='{4}' min='{4}' max='{3}' onfocus='this.select();'><label class='inputLabel'>{2}</label></div>",
+				var value = a.inputMin<0?a.inputMax:a.inputMin;
+				if(a.modifier.indexOf("Wound")>-1)
+				{
+					value = sr5.getCharacterWound(self.player);
+				}
+				input = ir.format(self.modifierInput,"melee",a.name,a.inputLabel,a.inputMax,a.inputMin,value,self.player.Row);
+			}
+			htm += ir.format(self.modifierTemplate,"melee",a.name,"",a.text,a.modifier,input,onchange,self.player.Row);
 		}
 		container.innerHTML = htm;
 	},
@@ -291,7 +428,22 @@ var playerCharacterPop = {
 		var container = ir.get(self.id +"Quality"+self.player.Row);	
 		ir.set(container,sr5.getCharacterQuality(self.player.Quality.values,"playerCharacterPop.showDetail",self.prefix));
 		ir.show(self.id +"QualityRow"+self.player.Row,self.player.Quality!=null && self.player.Quality.size()>0);
-	},		
+	},	
+	buildSituationalModifier:function(){
+		var self = playerCharacterPop;
+		var modifiers = sr5.situationalModifier.modifiers.values;
+		var container = ir.get(self.id +"SituationalModifier"+self.player.Row);
+		var htm = "";		
+		var subtitle = "@#$#@DSF#@";
+		for(var i = 0, z= modifiers.length; i < z; i++)
+		{	
+			var a = modifiers[i];
+			var onchange = "playerCharacterPop.changeSituational("+self.player.Row+",this);";
+			//<div class='flex detail' style='justify-content:space-between;width:100%;'><div><input type='checkbox' id='{0}_{1}ChkBox' {2}><label for='{0}_{1}ChkBox'><b>{3}</b></label></div><div> <i>[{4}]</i>{5}</div></div>
+			htm += ir.format(self.modifierTemplate,"situational",a.name,"",a.text,a.modifier,"",onchange,self.player.Row)
+		}
+		container.innerHTML = htm;
+	},	
 	buildSkill:function()
 	{
 		var self = playerCharacterPop;
@@ -326,13 +478,37 @@ var playerCharacterPop = {
 			{
 				continue;
 			}
+			if(a.Rating == 0)
+			{
+				extraAmount -= 1;
+				extraText += " + Defaulting -1"
+			}			
+			if(self.player.ApplyModifiers)
+			{
+				if(a.Attribute === "Charisma")
+				{
+					//Check Social
+					var soc = self.player.SocialModifier;
+					for(var prop in soc){
+						var mod = sr5.socialModifier.modifiers.get(prop);
+						if(mod!=null)
+						{
+							if(mod.skill.length==0 || mod.skill==a.Name)
+							{
+								extraAmount += ir.n(mod.modifier);
+								extraText += " + " + mod.text + " " + ir.n(mod.modifier);
+							}
+						}
+					}
+				}
+			}	
 			container.innerHTML+= ir.format(template,a.Name,a.Name +" " + a.Rating+" + "+a.Attribute+" "+self.player[a.Attribute] + extraText,a.Rating+self.player[a.Attribute]+extraAmount);
 		}
 		ir.show(self.id + "SkillRollRow"+self.player.Row,skills.length>0);
 	},
 	buildSocialModifier:function(){
 		var self = playerCharacterPop;
-		var modifiers = sr5.socialModifier.modifiers;
+		var modifiers = sr5.socialModifier.modifiers.values;
 		var container = ir.get(self.id +"SocialModifier"+self.player.Row);
 		var htm = "";		
 		var subtitle = "@#$#@DSF#@";
@@ -352,8 +528,9 @@ var playerCharacterPop = {
 			{
 				htm+= "<div style='grid-column-start: 1;grid-column-end: 3;'><label><b style='color:white;'>Character's desired result is::</b></label></div>";
 			}
+			var onchange = "playerCharacterPop.changeSocial("+self.player.Row+",this);";
 			//<div class='flex detail' style='justify-content:space-between;width:100%;'><div><input type='checkbox' id='{0}_{1}ChkBox' {2}><label for='{0}_{1}ChkBox'><b>{3}</b></label></div><div> <i>[{4}]</i>{5}</div></div>
-			htm += ir.format(self.modifierTemplate,"social",a.name,"",a.text,a.modifier,"")
+			htm += ir.format(self.modifierTemplate,"social",a.name,"",a.text,a.modifier,"",onchange,self.player.Row)
 		}
 		container.innerHTML = htm;
 	},
@@ -398,8 +575,7 @@ var playerCharacterPop = {
 		ir.set(container,sr5.getCharacterVehicle(self.player.Vehicle.values,"playerCharacterPop.showDetail",self.prefix));
 		ir.show(self.id +"VehicleRow"+self.player.Row,self.player.Vehicle!=null && self.player.Vehicle.size()>0);
 		self.buildVehicleTrack();
-	},
-	
+	},	
 	buildVehicleTrack:function(){
 		var self = playerCharacterPop;
 		ir.set(self.id+"VehicleContainer"+self.player.Row,"");
@@ -433,6 +609,21 @@ var playerCharacterPop = {
 		ir.show(self.id +"WeaponRow"+self.player.Row,self.player.Weapon!=null && self.player.Weapon.size()>0);
 		self.buildAmmoTrack();
 	},
+	changeDefense:function(row,ele){
+		var self = playerCharacterPop;
+		if(ele.checked)
+		{
+			self.player.DefenseModifier[ele.dataset.name]=ele.checked;
+		}
+		else
+		{
+			delete self.player.DefenseModifier[ele.dataset.name];
+		}
+		if(self.player.ApplyModifiers)
+		{
+			self.rebuildRolls();
+		}
+	},
 	changeEnvironmental:function(row,type,ele){
 		var self = playerCharacterPop;
 		var types = document.getElementsByClassName("environmental"+type+"Chk"+row);
@@ -444,8 +635,80 @@ var playerCharacterPop = {
 				if(ele.id != a.id)
 				{
 					a.checked=false;
+					delete self.player.EnvironmentalModifier[a.dataset.name];
 				}
 			}
+			self.player.EnvironmentalModifier[ele.dataset.name]=ele.checked;
+		}
+		else
+		{
+			delete self.player.EnvironmentalModifier[ele.dataset.name];
+		}
+		if(self.player.ApplyModifiers)
+		{
+			self.rebuildRolls();
+		}
+	},
+	changeMelee:function(row,ele){
+		var self = playerCharacterPop;
+		var mod = sr5.meleeModifier.modifiers.get(ele.dataset.name);
+		if(ele.checked)
+		{
+			if(mod.useInput)
+			{//show the input
+				//input wrap id: {0}_{1}_InpBoxWrap{5}
+				ir.show("melee_"+ele.dataset.name+"_InpBoxWrap"+self.player.Row);
+				//modifier display id: {0}_{1}_ModDisp{7}
+				ir.hide("melee_"+ele.dataset.name+"_ModDisp"+self.player.Row);
+			}
+			else
+			{
+				self.player.MeleeModifier[ele.dataset.name]=ele.checked;
+			}
+		}
+		else
+		{
+			delete self.player.MeleeModifier[ele.dataset.name];
+			if(mod.useInput)
+			{//hide the input
+				ir.hide("melee_"+ele.dataset.name+"_InpBoxWrap"+self.player.Row);
+				//modifier display id: {0}_{1}_ModDisp{7}
+				ir.show("melee_"+ele.dataset.name+"_ModDisp"+self.player.Row);
+			}
+		}
+		if(self.player.ApplyModifiers)
+		{
+			self.rebuildRolls();
+		}
+	},
+	changeSituational:function(row,ele){
+		var self = playerCharacterPop;
+		if(ele.checked)
+		{
+			self.player.SituationalModifier[ele.dataset.name]=ele.checked;
+		}
+		else
+		{
+			delete self.player.SituationalModifier[ele.dataset.name];
+		}
+		if(self.player.ApplyModifiers)
+		{
+			self.rebuildRolls();
+		}
+	},
+	changeSocial:function(row,ele){
+		var self = playerCharacterPop;
+		if(ele.checked)
+		{
+			self.player.SocialModifier[ele.dataset.name]=ele.checked;
+		}
+		else
+		{
+			delete self.player.SocialModifier[ele.dataset.name];
+		}
+		if(self.player.ApplyModifiers)
+		{
+			self.rebuildRolls();
 		}
 	},
 	close:function(row){
@@ -480,11 +743,13 @@ var playerCharacterPop = {
 		self.setAll();
 		self.buildAdeptPower();
 		self.buildArmor();
+		self.buildAttackRoll();
 		self.buildBioware();
 		self.buildContact();
 		self.buildCyberdeck();
 		self.buildCyberware();
 		self.buildDamageTrack();
+		self.buildDefenseModifier();
 		self.buildDrone();
 		self.buildEnvironmentalModifier();
 		self.buildGear();
@@ -494,6 +759,7 @@ var playerCharacterPop = {
 		self.buildNaturalRoll();
 		self.buildPortrait();
 		self.buildQuality();
+		self.buildSituationalModifier();
 		self.buildSkill();
 		self.buildSkillRoll();
 		self.buildSocialModifier();
@@ -538,6 +804,27 @@ var playerCharacterPop = {
 			}
 		}
 	},
+	rebuildRolls:function(){
+		var self = playerCharacterPop;
+		self.buildAttackRoll();
+		self.buildDefenseRoll();
+		self.buildKnowledgeRoll();
+		self.buildNaturalRoll();
+		self.buildSkillRoll();
+		self.buildSpellDefenseRoll();
+	},
+	resetModifiers:function(){
+		var self = playerCharacterPop;
+		var container = ir.get(self.id+"DivModifier"+self.player.Row);
+		var checkboxes = container.getElementsByTagName("input");
+		for(var i =0, z=checkboxes.length;i<z;i++)
+		{
+			var a = checkboxes[i];
+			a.checked = false;
+		}
+		sr5.initPlayerModifiers(self.player);
+		self.rebuildRolls();
+	},
 	save:function(){
 		
 	},
@@ -563,6 +850,7 @@ var playerCharacterPop = {
 		var pop = ir.get(self.id + self.player.Row,true);
 		if(pop==null || forceRefresh)
 		{
+			sr5.initPlayerModifiers(self.player);
 			self.init(self.player);
 			pop = ir.get(self.id + self.player.Row);
 		}

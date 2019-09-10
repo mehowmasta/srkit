@@ -712,6 +712,19 @@ public class AjaxPage extends AppBasePage {
         }
         return responseJson;
     }
+    public String setPlayerApplyModifier() throws Exception
+    {
+    	int playerRow = readInt("row");
+    	boolean apply = readBoolean("apply");
+    	CharacterRec rec = new CharacterRec();
+    	rec.Row = playerRow;
+    	if(db.select(rec))
+    	{
+    		rec.ApplyModifiers = apply;
+    		db.update(rec);
+    	}    	
+		return okOne;
+    }
     public String shareRoll() throws Exception
     {
     	int count = readInt("count");

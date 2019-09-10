@@ -18,9 +18,9 @@ public enum EnvironmentalModifier {
 	Wind_Light("Light Winds","-1","Wind"),
 	Wind_Mod("Moderate Winds","-3","Wind"),
 	Wind_Strong("Strong Winds","-6","Wind"),
-	Range_Med("Medium","-1","Range"),
-	Range_Long("Long","-3","Range"),
-	Range_Extreme("Extreme","-6","Range");
+	Range_Med("Medium Range","-1","Range"),
+	Range_Long("Long Range","-3","Range"),
+	Range_Extreme("Extreme Range","-6","Range");
 	public final String text;
 	public final String type;
 	public final String modifier;
@@ -34,7 +34,7 @@ public enum EnvironmentalModifier {
 	{
 		StringBuilder b = new StringBuilder("{skills:");
 		b.append(StringKit.jsq(skills))
-		 .append(",modifiers:[");
+		 .append(",modifiers:new KeyedArray('name',[");
 		String comma = "";
 		for(EnvironmentalModifier t : EnvironmentalModifier.values())
 		{
@@ -46,6 +46,6 @@ public enum EnvironmentalModifier {
 			 .append("}");
 			comma = ",";
 		}
-		return b.append("]}").toString();
+		return b.append("])}").toString();
 	}
 }

@@ -304,15 +304,19 @@
 					</div>
 				</div>
 				<div id='playerCharacterPopDivRoll{{Row}}' class='flex'
-					style='display: none;'>
+					style='display: none;'>					
 					<div class='pccontainer'>
+						<div style='display:flex;justify-content:center;margin-bottom:0.5rem;'>
+							<input type='checkbox' id='playerCharacterPopApplyModifiers{{Row}}' onchange='playerCharacterPop.applyModifiers(this)'><label for='playerCharacterPopApplyModifiers{{Row}}'>Apply Modifiers</label>
+						</div>
 						<div class='pcrow' style='flex-wrap: wrap;'
-							id='playerCharacterPopSkillRollRow{{Row}}'>
+							id='playerCharacterPopAttackRollRow{{Row}}'>
 							<div>
-								<b>Skills</b>
+								<b>Attack</b>
 							</div>
 							<div class='flexSpacer'></div>
-							<div id='playerCharacterPopSkillRoll{{Row}}' style='width: 100%;'></div>
+							<div id='playerCharacterPopAttackRoll{{Row}}'
+								style='width: 100%;'></div>
 						</div>
 						<div class='pcrow' style='flex-wrap: wrap;'
 							id='playerCharacterPopDefenseRollRow{{Row}}'>
@@ -331,6 +335,14 @@
 							<div class='flexSpacer'></div>
 							<div id='playerCharacterPopSpellDefenseRoll{{Row}}'
 								style='width: 100%;'></div>
+						</div>
+						<div class='pcrow' style='flex-wrap: wrap;'
+							id='playerCharacterPopSkillRollRow{{Row}}'>
+							<div>
+								<b>Skills</b>
+							</div>
+							<div class='flexSpacer'></div>
+							<div id='playerCharacterPopSkillRoll{{Row}}' style='width: 100%;'></div>
 						</div>
 						<div class='pcrow' style='flex-wrap: wrap;'
 							id='playerCharacterPopKnowledgeRollRow{{Row}}'>
@@ -352,8 +364,7 @@
 						</div>
 					</div>
 				</div>
-				<div id='playerCharacterPopDivModifier{{Row}}'
-					class='flex playerCharacterPopModifiers' style='display: none;'>
+				<div id='playerCharacterPopDivModifier{{Row}}' class='flex playerCharacterPopModifiers' style='display: none;'>
 					<div class='pccontainer'>
 						<div class='pcrow' style='flex-wrap: wrap;'
 							id='playerCharacterPopEnvironmentalModifierRow{{Row}}'>
@@ -363,6 +374,16 @@
 							<div class='flexSpacer'></div>
 							<div id='playerCharacterPopEnvironmentalModifier{{Row}}'
 								style='width: 100%; display: grid; grid-template-columns: auto auto auto;'></div>
+						</div>
+					</div>
+					<div class='pccontainer'>
+						<div class='pcrow' style='flex-wrap: wrap;'
+							id='playerCharacterPopSituationalModifierRow{{Row}}'>
+							<div>
+								<b>Situational Modifiers</b>
+							</div>
+							<div class='flexSpacer'></div>
+							<div id='playerCharacterPopSituationalModifier{{Row}}' style='width: 100%; display: grid; grid-template-columns: 1fr 1fr;'></div>
 						</div>
 					</div>
 					<div class='pccontainer'>
@@ -377,6 +398,16 @@
 					</div>
 					<div class='pccontainer'>
 						<div class='pcrow' style='flex-wrap: wrap;'
+							id='playerCharacterPopDefenseModifierRow{{Row}}'>
+							<div>
+								<b>Defense Modifiers</b>
+							</div>
+							<div class='flexSpacer'></div>
+							<div id='playerCharacterPopDefenseModifier{{Row}}' style='width: 100%; display: grid; grid-template-columns: 1fr 1fr;'></div>
+						</div>
+					</div>
+					<div class='pccontainer'>
+						<div class='pcrow' style='flex-wrap: wrap;'
 							id='playerCharacterPopSocialModifierRow{{Row}}'>
 							<div>
 								<b>Social Modifiers</b>
@@ -384,6 +415,10 @@
 							<div class='flexSpacer'></div>
 							<div id='playerCharacterPopSocialModifier{{Row}}' style='width: 100%; display: grid; grid-template-columns: 1fr 1fr;'></div>
 						</div>
+					</div>					
+					<div class='spacer'></div>
+					<div class='container flex'>					
+						<button type='button' onclick='playerCharacterPop.resetModifiers(this)'>Reset</button>
 					</div>
 				</div>
 			</div>
