@@ -134,6 +134,17 @@ var irdate = {
 	monthCodes:function(){
 		  return irdate.mm;	
 	},
+	offsetTimeZone:function(date){
+		try{
+			var n = date.getTimezoneOffset();
+			date.setTime(date.getTime() - n *60000);
+			return date;
+		}
+		catch(e)
+		{
+			return date;
+		}
+	},
 	/**
 	 * Always returns a date; Date(0) if input is not a valid 
 	 * date string in yyyy-mm-dd format.  Will set hours, minutes

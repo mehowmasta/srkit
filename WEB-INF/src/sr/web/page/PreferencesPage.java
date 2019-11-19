@@ -27,6 +27,7 @@ public class PreferencesPage extends AppBasePage {
 	public JControl ctlShortName;
 	public JControl ctlCharacter;
 	public JControl ctlTheme;
+	public JControl ctlAutoRoll;
     public ImageRec image = new ImageRec();
 
 	private void disableIfGuest() throws Exception {
@@ -48,6 +49,7 @@ public class PreferencesPage extends AppBasePage {
 		mapControl(ctlShortName, currentUser, UserRec.SHORTNAME);
 		mapControl(ctlCharacter,currentUser,UserRec.PLAYERCHARACTER);
 		mapControl(ctlTheme,currentUser,UserRec.THEMEROW);
+		mapControl(ctlAutoRoll,currentUser,UserRec.AUTOROLL);
 		disableIfGuest();
 	}
 

@@ -641,7 +641,7 @@ public abstract class AppBasePage implements IWebPage, IValidator {
 			}
 			return;
 		}
-		set("User","{Row:"+currentUser.Row+",Name:"+StringKit.jsq(currentUser.Name)+",PlayerCharacter:"+currentUser.PlayerCharacter+"}");
+		set("User","{Row:"+currentUser.Row+",Name:"+StringKit.jsq(currentUser.Name)+",AutoRoll:"+currentUser.AutoRoll+",PlayerCharacter:"+currentUser.PlayerCharacter+"}");
 		initPlayer();
 		if(db!=null)
 		{

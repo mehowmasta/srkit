@@ -14,8 +14,6 @@ public enum SituationalModifier {
 	PrevAim("Previously aimed with Take Aim","+1",false,"",0,0),
 	WireSmrt("Wireless Smartgun","+1(gear) /+2(implanted)",true,"Mod",2,1),
 	;
-	
-	
 	public final String text;
 	public final String modifier;
 	public final boolean useInput;
@@ -32,7 +30,6 @@ public enum SituationalModifier {
 		this.inputMax = inputMax;
 		this.inputMin = inputMin;
 	}
-
 	public static String toJson()
 	{
 		StringBuilder b = new StringBuilder("{skills:");

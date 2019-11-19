@@ -22,6 +22,7 @@
 <div class='container flex'>
 <div class='pageSubtitle'>Default Character</div>
 	<%=_bean.get("ctlCharacter") %>
+	<%=_bean.get("ctlAutoRoll") %>
 </div>
 <div class='container flex'>
 <div class='pageSubtitle'>Theme</div>

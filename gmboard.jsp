@@ -30,6 +30,7 @@ model.groups = new KeyedArray("Row",<%= _bean.get("Groups")%>);
 			<% } %>
 			<br>
 		</div>
+		<button type='button' id='clearInitBtn' tabindex='1' style='display:none;' onclick='view.clearInitiative()'>Clear</button>
 		<button type='button' id='startCombatBtn' tabindex='1' style='display:none;' onclick='view.startCombat()'>Start Combat</button>
 		<button type='button' id='endCombatBtn' tabindex='1' style='display:none;' onclick='view.endCombat()'>End Combat</button>
 	</div>

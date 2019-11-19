@@ -491,6 +491,46 @@ var sr5 = {
 		getCharacterMaxStun:function(char){
 			return Math.ceil(char.Willpower/2)+8;	
 		},
+		getCharacterModifier:function(char,modifierArray)
+		{
+			var extraAmount = 0;
+			var extraText = "";
+			for(var i=0, z=modifierArray.length;i<z;i++)
+			{
+				var text = "";
+				var amount = 0;
+				var type = modifierArray[i];
+				var charMod = char[type +"Modifier"];
+				for(var prop in charMod){
+					var mod = sr5[type.toLowerCase()+"Modifier"].modifiers.get(prop);
+					if(mod!=null)
+					{						
+						if(mod.useInput)
+						{
+							var value = ir.vn(type.toLowerCase()+"_"+mod.name+"_InpBox"+char.Row);
+							amount += value;
+							text += " + " + mod.text + " " + value;	
+						}
+						else
+						{
+							amount += ir.n(mod.modifier);
+							text += " + " + mod.text + " " + ir.n(mod.modifier);
+						}
+					}
+				}
+				if(type.toLowerCase()==="environmental" && amount <= -10)
+				{
+					extraAmount += -10;
+					extraText += " + Environmental -10";
+				}
+				else
+				{
+					extraAmount += amount;
+					extraText += text;
+				}
+			}			
+			return {extraAmount:extraAmount,extraText:extraText};
+		},
 		getCharacterQuality:function(qualities,onclick,idPrefix)
 		{
 			var htm = "";

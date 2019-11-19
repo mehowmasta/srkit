@@ -29,7 +29,7 @@
 				</div>
 			</div>
 			<div id='playerTabs' class='flex'
-				style='justify-content: flex-end; overflow: hidden;'>
+				style='justify-content: flex-end; overflow: hidden;align-items: flex-end;'>
 				<div class='tabFillLeft'></div>
 				<div id='tabSheet{{Row}}' class='playerTab selected'
 					onclick='playerCharacterPop.pickTab("Sheet",{{Row}});'>Sheet</div>
@@ -380,7 +380,7 @@
 						<div class='pcrow' style='flex-wrap: wrap;'
 							id='playerCharacterPopSituationalModifierRow{{Row}}'>
 							<div>
-								<b>Situational Modifiers</b>
+								<b>Ranged Modifiers</b>
 							</div>
 							<div class='flexSpacer'></div>
 							<div id='playerCharacterPopSituationalModifier{{Row}}' style='width: 100%; display: grid; grid-template-columns: 1fr 1fr;'></div>

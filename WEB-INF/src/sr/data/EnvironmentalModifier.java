@@ -23,6 +23,7 @@ public enum EnvironmentalModifier {
 	Range_Extreme("Extreme Range","-6","Range");
 	public final String text;
 	public final String type;
+	public final boolean useInput = false;
 	public final String modifier;
 	public static final String[] skills = {};
 	private EnvironmentalModifier(String text, String mod, String type) {
@@ -41,6 +42,7 @@ public enum EnvironmentalModifier {
 			b.append(comma)
 			 .append("{name:").append(StringKit.jsq(t.name()))
 			 .append(",text:").append(StringKit.jsq(t.text))
+			 .append(",useInput:").append(t.useInput)
 			 .append(",type:").append(StringKit.jsq(t.type))
 			 .append(",modifier:").append(StringKit.jsq(t.modifier))
 			 .append("}");

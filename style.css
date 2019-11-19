@@ -629,7 +629,7 @@ text-align:left;padding:1rem;font-size:1.4rem;
 .fileWrap:after{	
 	content: '+';
 }
-.flex {display:flex;justify-content:center;flex-wrap:wrap;}
+.flex {display:flex;justify-content:center;flex-wrap:wrap;align-items:baseline;}
 
 .flexDetail .detail b {
 	color: <%=f1%>;
@@ -1086,6 +1086,7 @@ input[type=range]:focus::-ms-fill-upper {
     transition: all 500ms;
     padding:0 0.5rem !important;
     pointer-events:none;
+    white-space:nowrap !important;
 }
 	
 .inputWrap, .checkWrap, .selectWrap, .fileWrap, .dateWrap, .dateTimeWrap{
@@ -1538,7 +1539,7 @@ max-width: calc(100vw - 6rem);
     border:0.2rem solid <%=b3%>;
     overflow-y: auto;
 	overflow-x: hidden;
-	max-height:98%;
+	max-height:100%;
 	-webkit-box-shadow:0.5rem 1rem 0.4rem <%=s1%>;
 	box-shadow: 0.5rem 1rem 0.4rem <%=s1%>;
 	left:50%;

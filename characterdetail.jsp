@@ -64,7 +64,7 @@ model.cyberwareGrade = <%= _bean.get("CyberwareGrade") %>;
 	<div class='characterName' id='characterTypeTagName'></div>
 	<div class='characterImg' id='characterTypeTagPortrait'></div>
 </div>
-<div id='characterTabs' class='flex' style='padding-top:1rem;justify-content:flex-end;overflow:hidden;'>
+<div id='characterTabs' class='flex' style='padding-top:1rem;justify-content:flex-end;overflow:hidden;align-items:flex-end;'>
 	<div class='tabFillLeft'></div>
 	<div id='tabPersonal' class='tab selected' onclick='view.pickTab("Personal");'>Personal</div>
 	<div id='tabAttributes' class='tab' onclick='view.pickTab("Attributes");'>Attributes</div>

@@ -29,7 +29,6 @@ private MeleeModifier(String text, String mod, boolean useInput,String inputLabe
 	this.inputMax = inputMax;
 	this.inputMin = inputMin;
 }
-
 public static String toJson()
 {
 	StringBuilder b = new StringBuilder("{skills:");

@@ -387,7 +387,10 @@ var diceRollPop = {
 		{
 			ir.set("diceCount",roll);
 			self.clear();
-			//window.setTimeout(self.roll,250);
+			if(sr5.user.AutoRoll && roll > 0)
+			{
+				window.setTimeout(self.roll,250);			
+			}
 		}
 		var pop = ir.get(self.id);
 		popup(pop);

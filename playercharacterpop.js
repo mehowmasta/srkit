@@ -1,6 +1,6 @@
 var playerCharacterPop = {
 	id:"playerCharacterPop",
-	modifierInput :"<div id='{0}_{1}_InpBoxWrap{6}' style='display:none;z-index:1;margin:0.2rem 0 0.2rem 0.5rem;' class='inputWrap'><input type='number' id='{0}_{1}_InpBox{6}' name='detailPopRating' tabindex='1' size='2' style='width:5rem;height:3rem;text-align: center;' value='{5}' min='{4}' max='{3}' onfocus='this.select();'><label class='inputLabel'>{2}</label></div>",
+	modifierInput :"<div id='{0}_{1}_InpBoxWrap{6}' style='display:none;z-index:1;margin:0.2rem 0 0.2rem 0.5rem;' class='inputWrap'><input type='number' id='{0}_{1}_InpBox{6}' onchange='playerCharacterPop.rebuildRolls({6})' name='detailPopRating' tabindex='1' size='2' style='width:5rem;height:3rem;text-align: right;' value='{5}' min='{4}' max='{3}' onfocus='this.select();'><label class='inputLabel'>{2}</label></div>",
 	modifierTemplate :"<div class='flex detail' style='width:100%;flex-wrap:nowrap;align-items:center;'><div><input type='checkbox' id='{0}_{1}_ChkBox{7}' data-name='{1}' class='{2}' onchange='{6}'><label for='{0}_{1}_ChkBox{7}'></label></div><div style='flex:3;'><label for='{0}_{1}_ChkBox{7}'>{3}</label></div><div style='text-align:right;flex:1;'><b id='{0}_{1}_ModDisp{7}'>{4}</b>{5}</div></div>",
 	player:null,
 	prefix:"playerCharacter",
@@ -80,32 +80,73 @@ var playerCharacterPop = {
 			}
 			if(player.ApplyModifiers)
 			{
-				//Check Environmental modifiers
-				var env = player.EnvironmentalModifier;
-				for(var prop in env){
-					var mod = sr5.environmentalModifier.modifiers.get(prop);
-					if(mod!=null)
-					{
-						extraAmount += ir.n(mod.modifier);
-						extraText += " + " + mod.text + " " + ir.n(mod.modifier);
-					}
-				}
-				// check Situational modifiers
-				var sit = player.SituationalModifier;
-				for(var prop in sit){
-					var mod = sr5.situationalModifier.modifiers.get(prop);
-					if(mod!=null)
-					{
-						if(!mod.useInput)
+				var modExtra = sr5.getCharacterModifier(self.player,["Environmental","Situational"]);
+				extraAmount += modExtra.extraAmount;
+				extraText += modExtra.extraText;
+				
+				// check Melee modifiers
+				if(a.Skill === "Unarmed Combat" || a.Skill === "Clubs" || a.Skill === "Blades" || a.Skill === "Exotic Melee Weapon (Specific)")
+				{
+					var modExtra = sr5.getCharacterModifier(self.player,["Melee"]);
+					extraAmount += modExtra.extraAmount;
+					extraText += modExtra.extraText;
+					
+					/*
+					var mel = player.MeleeModifier;
+					for(var prop in mel){
+						var mod = sr5.meleeModifier.modifiers.get(prop);
+						if(mod!=null)
 						{
-							extraAmount += ir.n(mod.modifier);
-							extraText += " + " + mod.text + " " + ir.n(mod.modifier);
+							if(mod.useInput)
+							{
+								var value = ir.vn("melee_"+mod.name+"_InpBox"+self.player.Row);
+								extraAmount += value;
+								extraText += " + " + mod.text + " " + value;	
+							}
+							else
+							{
+								extraAmount += ir.n(mod.modifier);
+								extraText += " + " + mod.text + " " + ir.n(mod.modifier);
+							}
 						}
 					}
+					*/
 				}
 			}
 			container.innerHTML+= ir.format(template,a.Name,skill.Name +" " + skill.Rating+" + "+skill.Attribute+" "+self.player[skill.Attribute] + extraText,skill.Rating+self.player[skill.Attribute]+extraAmount);
 		}
+		// Add an extra row unarmed combat
+		extraAmount = 0;
+		extraText = "";
+		skill = player.Skill.get(106)//Skill unarmed combat Skill.Row=106;
+		if(skill.Rating == 0)
+		{
+			extraAmount=-1;
+			extraText = " + Defaulting -1";
+		}
+		if(player.ApplyModifiers)
+		{
+			var modExtra = sr5.getCharacterModifier(self.player,["Environmental","Melee"]);
+			extraAmount += modExtra.extraAmount;
+			extraText += modExtra.extraText;			
+		}
+		container.innerHTML+= ir.format(template,"Melee",skill.Name +" " + skill.Rating+" + "+skill.Attribute+" "+self.player[skill.Attribute] + extraText,skill.Rating+self.player[skill.Attribute]+extraAmount);
+		// Add an extra row for throwing
+		extraAmount = 0;
+		extraText = "";
+		skill = player.Skill.get(105)//Skill throwing weapon Skill.Row=105;
+		if(skill.Rating == 0)
+		{
+			extraAmount=-1;
+			extraText = " + Defaulting -1";
+		}
+		if(player.ApplyModifiers)
+		{
+			var modExtra = sr5.getCharacterModifier(self.player,["Environmental","Situational"]);
+			extraAmount += modExtra.extraAmount;
+			extraText += modExtra.extraText;			
+		}
+		container.innerHTML+= ir.format(template,"Throw",skill.Name +" " + skill.Rating+" + "+skill.Attribute+" "+self.player[skill.Attribute] + extraText,skill.Rating+self.player[skill.Attribute]+extraAmount);
 		
 	},
 	buildAttributes:function()
@@ -165,9 +206,19 @@ var playerCharacterPop = {
 		for(var i = 0, z= modifiers.length; i < z; i++)
 		{	
 			var a = modifiers[i];
+			var input = "";
 			var onchange = "playerCharacterPop.changeDefense("+self.player.Row+",this);";
 			//<div class='flex detail' style='justify-content:space-between;width:100%;'><div><input type='checkbox' id='{0}_{1}ChkBox' {2}><label for='{0}_{1}ChkBox'><b>{3}</b></label></div><div> <i>[{4}]</i>{5}</div></div>
-			htm += ir.format(self.modifierTemplate,"defense",a.name,"",a.text,a.modifier,"",onchange,self.player.Row);
+			if(a.useInput)
+			{//"<div id='{0}_{1}_InpBoxWrap{5}' style='display:none;' class='inputWrap'><input type='number' id='{0}_{1}_InpBox{5}' name='detailPopRating' tabindex='1' size='2' style='width:6rem;text-align: center;' value='{4}' min='{4}' max='{3}' onfocus='this.select();'><label class='inputLabel'>{2}</label></div>",
+				var value = a.inputMin<0?a.inputMax:a.inputMin;
+				if(a.modifier.indexOf("Wound")>-1)
+				{
+					value = sr5.getCharacterWound(self.player);
+				}
+				input = ir.format(self.modifierInput,"defense",a.name,a.inputLabel,a.inputMax,a.inputMin,value,self.player.Row);
+			}
+			htm += ir.format(self.modifierTemplate,"defense",a.name,"",a.text,a.modifier,input,onchange,self.player.Row);
 		}
 		container.innerHTML = htm;
 	},	
@@ -223,6 +274,11 @@ var playerCharacterPop = {
 		var template = self.rollTemplate;
 		if(self.player.ApplyModifiers)
 		{
+			var modExtra = sr5.getCharacterModifier(self.player,["Environmental","Defense"]);
+			extraAmount += modExtra.extraAmount;
+			extraText += modExtra.extraText;
+			
+			/*
 			//Check Environmental
 			var env = self.player.EnvironmentalModifier;
 			for(var prop in env){
@@ -245,6 +301,7 @@ var playerCharacterPop = {
 					}
 				}
 			}
+			*/
 		}	
 		container.innerHTML+= ir.format(template,"Standard Defense","Reaction "+self.player.Reaction+ " + Intuition "+self.player.Intuition+extraText,self.player.Reaction+self.player.Intuition+extraAmount);
 		container.innerHTML+= ir.format(template,"Resist - With Armor","Body "+self.player.Body+ " + Armor "+armor+extraText,self.player.Body+armor+extraAmount);
@@ -438,9 +495,18 @@ var playerCharacterPop = {
 		for(var i = 0, z= modifiers.length; i < z; i++)
 		{	
 			var a = modifiers[i];
+			var input = "";
 			var onchange = "playerCharacterPop.changeSituational("+self.player.Row+",this);";
-			//<div class='flex detail' style='justify-content:space-between;width:100%;'><div><input type='checkbox' id='{0}_{1}ChkBox' {2}><label for='{0}_{1}ChkBox'><b>{3}</b></label></div><div> <i>[{4}]</i>{5}</div></div>
-			htm += ir.format(self.modifierTemplate,"situational",a.name,"",a.text,a.modifier,"",onchange,self.player.Row)
+			if(a.useInput)
+			{//"<div id='{0}_{1}_InpBoxWrap{5}' style='display:none;' class='inputWrap'><input type='number' id='{0}_{1}_InpBox{5}' name='detailPopRating' tabindex='1' size='2' style='width:6rem;text-align: center;' value='{4}' min='{4}' max='{3}' onfocus='this.select();'><label class='inputLabel'>{2}</label></div>",
+				var value = a.inputMin<0?a.inputMax:a.inputMin;
+				if(a.modifier.indexOf("Wound")>-1)
+				{
+					value = sr5.getCharacterWound(self.player);
+				}
+				input = ir.format(self.modifierInput,"situational",a.name,a.inputLabel,a.inputMax,a.inputMin,value,self.player.Row);
+			}
+			htm += ir.format(self.modifierTemplate,"situational",a.name,"",a.text,a.modifier,input,onchange,self.player.Row)
 		}
 		container.innerHTML = htm;
 	},	
@@ -495,8 +561,17 @@ var playerCharacterPop = {
 						{
 							if(mod.skill.length==0 || mod.skill==a.Name)
 							{
-								extraAmount += ir.n(mod.modifier);
-								extraText += " + " + mod.text + " " + ir.n(mod.modifier);
+								if(mod.useInput)
+								{//id of input box: {0}_{1}_InpBox{6}
+									var value = ir.vn("social_"+mod.name+"_InpBox"+self.player.Row);
+									extraAmount += value;
+									extraText += " + " + mod.text + " " + value;									
+								}
+								else
+								{
+									extraAmount += ir.n(mod.modifier);
+									extraText += " + " + mod.text + " " + ir.n(mod.modifier);
+								}
 							}
 						}
 					}
@@ -529,8 +604,17 @@ var playerCharacterPop = {
 				htm+= "<div style='grid-column-start: 1;grid-column-end: 3;'><label><b style='color:white;'>Character's desired result is::</b></label></div>";
 			}
 			var onchange = "playerCharacterPop.changeSocial("+self.player.Row+",this);";
-			//<div class='flex detail' style='justify-content:space-between;width:100%;'><div><input type='checkbox' id='{0}_{1}ChkBox' {2}><label for='{0}_{1}ChkBox'><b>{3}</b></label></div><div> <i>[{4}]</i>{5}</div></div>
-			htm += ir.format(self.modifierTemplate,"social",a.name,"",a.text,a.modifier,"",onchange,self.player.Row)
+			var input = "";
+			if(a.useInput)
+			{//"<div id='{0}_{1}_InpBoxWrap{5}' style='display:none;' class='inputWrap'><input type='number' id='{0}_{1}_InpBox{5}' name='detailPopRating' tabindex='1' size='2' style='width:6rem;text-align: center;' value='{4}' min='{4}' max='{3}' onfocus='this.select();'><label class='inputLabel'>{2}</label></div>",
+				var value = a.inputMin<0?a.inputMax:a.inputMin;
+				if(a.modifier.indexOf("StreetCred")>-1)
+				{
+					value = self.player.StreetCred;
+				}
+				input = ir.format(self.modifierInput,"social",a.name,a.inputLabel,a.inputMax,a.inputMin,value,self.player.Row);
+			}
+			htm += ir.format(self.modifierTemplate,"social",a.name,"",a.text,a.modifier,input,onchange,self.player.Row)
 		}
 		container.innerHTML = htm;
 	},
@@ -611,13 +695,27 @@ var playerCharacterPop = {
 	},
 	changeDefense:function(row,ele){
 		var self = playerCharacterPop;
+		var mod = sr5.defenseModifier.modifiers.get(ele.dataset.name);
 		if(ele.checked)
 		{
 			self.player.DefenseModifier[ele.dataset.name]=ele.checked;
+			if(mod.useInput)
+			{//show the input
+				//input wrap id: {0}_{1}_InpBoxWrap{5}
+				ir.show("defense_"+ele.dataset.name+"_InpBoxWrap"+self.player.Row);
+				//modifier display id: {0}_{1}_ModDisp{7}
+				ir.hide("defense_"+ele.dataset.name+"_ModDisp"+self.player.Row);
+			}
 		}
 		else
 		{
 			delete self.player.DefenseModifier[ele.dataset.name];
+			if(mod.useInput)
+			{//hide the input
+				ir.hide("defense_"+ele.dataset.name+"_InpBoxWrap"+self.player.Row);
+				//modifier display id: {0}_{1}_ModDisp{7}
+				ir.show("defense_"+ele.dataset.name+"_ModDisp"+self.player.Row);
+			}
 		}
 		if(self.player.ApplyModifiers)
 		{
@@ -654,16 +752,13 @@ var playerCharacterPop = {
 		var mod = sr5.meleeModifier.modifiers.get(ele.dataset.name);
 		if(ele.checked)
 		{
+			self.player.MeleeModifier[ele.dataset.name]=ele.checked;
 			if(mod.useInput)
 			{//show the input
 				//input wrap id: {0}_{1}_InpBoxWrap{5}
 				ir.show("melee_"+ele.dataset.name+"_InpBoxWrap"+self.player.Row);
 				//modifier display id: {0}_{1}_ModDisp{7}
 				ir.hide("melee_"+ele.dataset.name+"_ModDisp"+self.player.Row);
-			}
-			else
-			{
-				self.player.MeleeModifier[ele.dataset.name]=ele.checked;
 			}
 		}
 		else
@@ -683,13 +778,27 @@ var playerCharacterPop = {
 	},
 	changeSituational:function(row,ele){
 		var self = playerCharacterPop;
+		var mod = sr5.situationalModifier.modifiers.get(ele.dataset.name);
 		if(ele.checked)
 		{
 			self.player.SituationalModifier[ele.dataset.name]=ele.checked;
+			if(mod.useInput)
+			{//show the input
+				//input wrap id: {0}_{1}_InpBoxWrap{5}
+				ir.show("situational_"+ele.dataset.name+"_InpBoxWrap"+self.player.Row);
+				//modifier display id: {0}_{1}_ModDisp{7}
+				ir.hide("situational_"+ele.dataset.name+"_ModDisp"+self.player.Row);
+			}
 		}
 		else
 		{
 			delete self.player.SituationalModifier[ele.dataset.name];
+			if(mod.useInput)
+			{//hide the input
+				ir.hide("situational_"+ele.dataset.name+"_InpBoxWrap"+self.player.Row);
+				//modifier display id: {0}_{1}_ModDisp{7}
+				ir.show("situational_"+ele.dataset.name+"_ModDisp"+self.player.Row);
+			}
 		}
 		if(self.player.ApplyModifiers)
 		{
@@ -698,13 +807,27 @@ var playerCharacterPop = {
 	},
 	changeSocial:function(row,ele){
 		var self = playerCharacterPop;
+		var mod = sr5.socialModifier.modifiers.get(ele.dataset.name);
 		if(ele.checked)
 		{
 			self.player.SocialModifier[ele.dataset.name]=ele.checked;
+			if(mod.useInput)
+			{//show the input
+				//input wrap id: {0}_{1}_InpBoxWrap{5}
+				ir.show("social_"+ele.dataset.name+"_InpBoxWrap"+self.player.Row);
+				//modifier display id: {0}_{1}_ModDisp{7}
+				ir.hide("social_"+ele.dataset.name+"_ModDisp"+self.player.Row);
+			}
 		}
 		else
 		{
 			delete self.player.SocialModifier[ele.dataset.name];
+			if(mod.useInput)
+			{//hide the input
+				ir.hide("social_"+ele.dataset.name+"_InpBoxWrap"+self.player.Row);
+				//modifier display id: {0}_{1}_ModDisp{7}
+				ir.show("social_"+ele.dataset.name+"_ModDisp"+self.player.Row);
+			}
 		}
 		if(self.player.ApplyModifiers)
 		{
@@ -725,6 +848,7 @@ var playerCharacterPop = {
 		}
 		if(player.User == sr5.user.Row)
 		{
+			self.close(self.player.Row);
 			return sr5.go("characterdetail.jsp?ctlRow="+self.player.Row);
 		}
 		return false;

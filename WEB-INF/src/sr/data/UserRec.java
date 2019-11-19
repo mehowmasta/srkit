@@ -13,6 +13,7 @@ import ir.util.StringKit;
  * UserRec is a data structure of user information
  */
 public class UserRec extends AppRec {
+	public static final String AUTOROLL = "AutoRoll";
 	public static final String CREATEDAT = "CreatedAt";
 	public static final String DEFAULT_PASS = "deck1234";
 	public static final String EMAIL = "EMail";
@@ -26,6 +27,7 @@ public class UserRec extends AppRec {
 	public final static String TABLE = "tUser";
 	public final static String THEMEROW = "ThemeRow";
 	//
+	public boolean AutoRoll = true;
 	public JDateTime CreatedAt = JDateTime.now();
 	public String EMail = "";
 	public boolean Inactive = false;

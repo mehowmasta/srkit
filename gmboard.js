@@ -299,6 +299,25 @@ var view = {
 			image.style.width = (100*zoom) + "%";
 			image.style.height = (100*zoom) + "%";
 		},
+		clearInitiative:function(){
+			var callback = function(yes){
+				if(yes)
+					{
+						model.initBlocks.clear();
+						view.inCombat = false;
+						view.buildInitiative(model.initBlocks.values);
+						view.toggleInitButtons();
+						view.showInitStatus();
+						window.scroll({
+							  top: 0, 
+							  left: 0, 
+							  behavior: 'smooth' 
+							});
+						return;
+					}
+			};
+			confirmPop.show(ir.format("Clear initiative?",name),callback);
+		},
 		closeGridCallback:function(boardId){
 			model.boards.remove(boardId);
 		},
@@ -674,6 +693,7 @@ var view = {
 			ir.show("startCombatBtn",!view.inCombat && model.initBlocks.size()>1);
 			ir.set("startCombatBtn",model.turnCounter>1?"Next Turn":"Start Combat");
 			var defenseBtns = document.getElementsByClassName("initDefenseBtns");
+			ir.show("clearInitBtn",model.initBlocks.size()>0);
 			for(var i =0,z= defenseBtns.length;i<z;i++)
 			{
 				var btn = defenseBtns[i];
