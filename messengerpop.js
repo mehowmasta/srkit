@@ -284,6 +284,18 @@ var messengerPop = {
 			return time;
 		}
 	},
+	initFriends:function(){
+		var self = messengerPop;
+		if(!self.initialized)
+		{
+			var friends = sr5.friends.values;
+			var container = ir.get("messagePopupAddUserList");
+			for(var i=0,z=friends.length;i<z;i++)
+			{
+				container.innerHTML += "<option value='"+friends[i].Login+"'>";
+			}
+		}
+	},
 	initThreads:function(outerCallback){
 		var self = messengerPop;
 		if(self.threads==null)
@@ -725,6 +737,7 @@ var messengerPop = {
 	},
 	show:function(){
 		var self = messengerPop;
+		self.initFriends();	
 		self.initThreads();	
 		if(self.lastState==0)
 		{

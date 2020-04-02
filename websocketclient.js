@@ -43,6 +43,14 @@ WebSocketClient.prototype =
             		{
 	            		messengerPop.receiveShareRoll(res);
             		}
+	            	else if (res.receiveReward)
+            		{
+	            		sr5.receiveReward(res);
+            		} 
+	            	else if(res.notification)
+            		{
+	            		Status.success(res.notification,15000);
+            		}
 	        	}
 	        }
 	        this.webSocket.onclose = function(event) {

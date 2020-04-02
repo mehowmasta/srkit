@@ -649,16 +649,7 @@ public class JDateTime implements java.io.Serializable,Comparable<JDateTime>
   @Override
   public String toString()
   {
-    if (isZero() || !isValid())
-    {
-      return "";
-    }
-    String y = StringKit.right("0000" + year(), 4);
-    String m = StringKit.right("00" + month(), 2);
-    String d = StringKit.right("00" + day(), 2);
-    String mi = StringKit.right("00" + _minute, 2);
-    String s = StringKit.right("00" + _second, 2);
-    return y + "-" + m + "-" + d + " " + _hour + ":" + mi + ":" + s;
+	  return ymdhms();
   }
   /**
    * @return int year
@@ -685,16 +676,17 @@ public class JDateTime implements java.io.Serializable,Comparable<JDateTime>
   }
   public String ymdhms()
   {
-    if (isZero() || !isValid())
-    {
-      return "";
-    }
-    String y = StringKit.right("0000" + year(), 4);
-    String m = StringKit.right("00" + month(), 2);
-    String d = StringKit.right("00" + day(), 2);
-    String h = StringKit.right("00" + _hour, 2);
-    String mi = StringKit.right("00" + _minute, 2);
-    String s = StringKit.right("00" + _second, 2);
-    return y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + s;
+	  if (isZero() || !isValid())
+      {
+          return "";
+      }
+      if (_hour==0 && _minute==0 && _second==0)
+      {
+          return ymd();
+      }
+      String h = StringKit.right("00" + _hour, 2);
+      String mi = StringKit.right("00" + _minute, 2);
+      String s = StringKit.right("00" + _second, 2);
+      return ymd() + " " + h + ":" + mi + ":" + s;
   }
 }

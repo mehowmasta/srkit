@@ -20,7 +20,7 @@ var view = {
 		{
 			var container = ir.get("weaponList");
 			var arr = model.weapons;
-			var prevType="";
+			var prevCategory="";
 			var htm = "";
 			for (var i=0,z=arr.length;i<z;i++)
 			{
@@ -29,15 +29,16 @@ var view = {
 				{
 					continue;
 				}
-				if(prevType != s.Type)
+
+				if(prevCategory != s[model.sortType[0].name])
 				{
 					if(i!=0)
 					{
 						htm += "</div>"
 					}
-					htm += "<div class='divider shadow'>"+s.Type + "</div>"
+					htm += "<div class='divider shadow'>"+s[model.sortType[0].name]+" " +model.sortType[0].suffix + "</div>"
 						+ "<div class='flex' style='flex-wrap:wrap;'>";
-					prevType = s.Type;
+					prevCategory = s[model.sortType[0].name];
 				}
 				htm += sr5.getSectionWeapon(s,view.applySearch,view.searchArg.length>2);
 			}
@@ -85,14 +86,6 @@ var view = {
 			arr.push(arr.shift());
 			var list = model.weapons;
 			list = list.sort(function(a,b){
-			    if(a.Type < b.Type)
-			    {
-			    	return -1;
-			    }
-			    if(a.Type > b.Type)
-			    {
-			    	return 1;
-			    }	
 				if(a[model.sortType[0].name] < b[model.sortType[0].name])
 				{
 					return -1;					
@@ -100,7 +93,15 @@ var view = {
 			    if(a[model.sortType[0].name] > b[model.sortType[0].name])
 		    	{
 			    	return 1;
-		    	}		    
+		    	}	
+			    if(a.Name < b.Name)
+			    {
+			    	return -1;
+			    }
+			    else
+			    {
+			    	return 1;
+			    }	
 			    return 0;
 			});
 			view.buildWeapons();

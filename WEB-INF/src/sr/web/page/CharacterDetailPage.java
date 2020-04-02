@@ -6,6 +6,7 @@ import sr.data.CharacterRow;
 import sr.data.CharacterRec.CharacterType;
 import sr.data.CharacterSettingRec;
 import sr.data.CyberwareGrade;
+import sr.data.GroupRec;
 import sr.data.ProfessionalRating;
 import sr.data.RaceRec;
 
@@ -91,7 +92,7 @@ public class CharacterDetailPage extends AppBasePage {
 				}
 				if(currentCharacter.Character.User != currentUser.Row)
 				{
-					setError("Sneaky sneaky.");
+					setError("Sneaky sneaky. This is not your character.");
 				  	setRedirectBack();
 				  	return;
 				}
@@ -288,17 +289,19 @@ public class CharacterDetailPage extends AppBasePage {
 		set("CyberwareGrade",CyberwareGrade.toJson());
 		set("Character",currentCharacter.toJson());
 		set("CharacterSetting",CharacterSettingRec.selectForCharacter(db,currentCharacter.Character.Row).toString());
+		set("Groups",GroupRec.selectForCharacter(db,currentCharacter.Character.Row,true).toString());
 		writeProfessionalRating();
 		writeButtons();
 		
 	}	
 	private void writeButtons() {
 		StringBuilder btns = new StringBuilder("");
+		StringBuilder defaultBtn = new StringBuilder("");
 		if(currentCharacter.Character.Row>0)
 		{
 			if(currentCharacter.Character.Row != currentUser.PlayerCharacter)
 			{
-				btns.append(submit(setDefaultButton,"Set Default",currentUser.isGuest()?" disabled class='hover' data-hover='Disabled for guest accounts' " : "class='hover' data-hover='Set as default runner for character sheet'"));
+				defaultBtn.append(submit(setDefaultButton,"Set as Primary Character",currentUser.isGuest()?" disabled class='hover' data-hover='Disabled for guest accounts' " : "class='hover' data-hover='Set as default runner for character sheet'"));
 			}
 			btns.append(eventButton(DELETE_BUTTON, "Delete",  "view.deleteCharacter()",currentUser.isGuest()?" disabled class='hover' data-hover='Disabled for guest accounts'" : "class='hover' data-hover='Delete this runner'"));
 			btns.append(eventButton("Preview","Preview","view.showSheet()","class='hover' data-hover='Preview this Runners Sheet'"));
@@ -310,6 +313,7 @@ public class CharacterDetailPage extends AppBasePage {
 			btns.append(eventButton(SUBMIT_BUTTON,"Create","view.submit()",currentUser.isGuest()?" disabled class='hover' data-hover='Disabled for guest accounts'" : "class='hover' data-hover='Save all changes made'"));
 		}
 		set("Buttons", btns.toString());
+		set("DefaultBtn", defaultBtn.toString());
 	}
 	private void writeProfessionalRating() {
 		ctlProfessionalRating.addValues(ProfessionalRating.toNameRows());

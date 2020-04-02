@@ -864,6 +864,7 @@ var playerCharacterPop = {
 			var container = ir.get(self.id + "Container");
 			container.innerHTML += ir.template(self.template,player);
 		}
+		self.player.ForceRefresh=false;
 		self.setAll();
 		self.buildAdeptPower();
 		self.buildArmor();

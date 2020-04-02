@@ -23,6 +23,7 @@ sr5.defenseModifier = <%= DefenseModifier.toJson() %>;
 sr5.deleteButton = "<%= _bean.get("DeleteButton") %>";
 sr5.delimiter = "<%= _bean.get("Delimiter") %>";
 sr5.environmentalModifier = <%= EnvironmentalModifier.toJson() %>;
+sr5.friends = new KeyedArray("Row",<%= _bean.get("Friends") %>);
 sr5.iconPath = "<%= _bean.get("IconPath") %>";
 sr5.isMobile = ir.isTrue(<%= _bean.get("MobileDevice")%>);
 sr5.mapObjectType = new KeyedArray("name",<%= MapDataRec.ObjectType.toJson()%>);
@@ -42,6 +43,8 @@ sr5.statusType = new KeyedArray("name",<%= StatusType.toJson() %>);
 sr5.user = <%= _bean.get("User") %>;
 srMap.blankMapData = <%= new MapDataRec() %>;
 track.scoreBoardType = new KeyedArray("name",<%= ScoreBoardType.toJson() %>);
+journalPop.blankEntry = <%= new JournalRec() %>;
+journalPop.sortType = <%= JournalRec.getSortTypeJson() %>;
 (function()
 		{
 			window.setTimeout(sr5.initWebSocket,1);

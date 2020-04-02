@@ -33,12 +33,14 @@ var detailModPop = {
 		self.initQuantity();
 		self.initRating();
 		self.initGrade();
+		self.initMount();
 		self.initButtons();
 	},
 	initButtons:function(){
 		var self = detailModPop;	
 		var canUpdate = (self.blankCharacterRecord.hasOwnProperty("Equipped")
 					 || self.blankCharacterRecord.hasOwnProperty("Grade")
+					 || self.blankCharacterRecord.hasOwnProperty("Mounted")
 					 || self.blankCharacterRecord.hasOwnProperty("Quantity")
 					 || (self.blankCharacterRecord.hasOwnProperty("Level")  && (self.currentRecord.Max>1 || false))
 					 || (self.blankCharacterRecord.hasOwnProperty("Rating") && (self.currentRecord.MaxRating>1||false))
@@ -62,6 +64,34 @@ var detailModPop = {
 		{
 			ir.set(self.id+"Grade","Standard");
 			ir.show(self.id+"GradeWrap",false);
+		}		
+	},
+	initMount:function(){
+		var self = detailModPop;
+		var slots =["Barrel", "Internal", "Side", "Stock", "Top", "Under"];
+		if(self.blankCharacterRecord.hasOwnProperty("Mounted") && self.currentRecord.Mount.length>0)
+		{
+			var available = self.currentRecord.Mount.replace(/ /g,"").split(",");
+			if(self.currentRecord.Mount== "Any")
+			{
+				available=["Barrel", "Internal", "Side", "Stock", "Top", "Under"];
+			}
+			
+			for(var i=0, z=slots.length;i<z;i++)
+			{
+				ir.show("detailModPopMountType" +slots[i],available.indexOf(slots[i])>-1);
+			}
+			ir.set(self.id+"Mount",self.currentRecord.Mounted || available[0]);
+			ir.show(self.id+"MountWrap");
+		}
+		else
+		{
+			ir.set(self.id+"Mount","");
+			ir.show(self.id+"MountWrap",false);
+			for(var i=0, z=slots.length;i<z;i++)
+			{
+				ir.show("detailModPopMountType" +slots[i]);
+			}
 		}		
 	},
 	initNewRecord:function(){
@@ -140,6 +170,10 @@ var detailModPop = {
 		var self = detailModPop;
 		var blank = self.blankCharacterRecord;
 		var current = self.currentRecord;
+		if(current.Delete)
+		{
+			return true;
+		}
 		if(blank.hasOwnProperty("Rating"))
 		{
 			current.Rating = ir.vn(self.id+"Rating");
@@ -152,6 +186,36 @@ var detailModPop = {
 		{
 			current.Grade = ir.v(self.id+"Grade");
 		}
+		if(blank.hasOwnProperty("Mounted"))
+		{
+			current.Mounted = ir.v(self.id+"Mount");
+			var parent = self.parentRecord;
+			if(parent.Attachments==null)
+			{
+				parent.Attachments = new KeyedArray("ItemRow");
+			}			
+			var attachments = parent.Attachments.values;
+			var callback = function(yes,a){
+				if(yes)
+				{
+					a.Delete=true;
+					a.Mounted="";
+					self.update();
+				}
+			};
+			for(var i =0, z=attachments.length;i<z;i++)
+			{
+				var a = attachments[i];
+				if(a.Mounted !== "NA" && a.Mounted==current.Mounted && a.ItemRow!=current.ItemRow)
+				{
+					confirmPop.show("<span class='over'>" + a.Mounted+ "</span> already has an Attachment.<br>Replace <i>" + a.Name + " (<span class='over'>" + a.Mounted +"</span>)</i> with <i>" + current.Name + " (<span class='over'>" + current.Mounted +"</span>)</i>?",function(yes){callback(yes,a);});
+					return false;
+					
+				}
+				
+			}
+		}
+		return true;
 	},
 	remove:function(){
 		var self = detailModPop;
@@ -159,6 +223,11 @@ var detailModPop = {
 			if(yes)
 			{
 				self.currentRecord.Delete = true;
+
+				if(self.currentRecord.hasOwnProperty("Mounted"))
+				{
+					self.currentRecord.Mounted="";
+				}
 				self.update();
 			}
 		};
@@ -174,19 +243,24 @@ var detailModPop = {
 		{
 			self.blankCharacterRecord = ir.copy(self.blankCyberwareAttachment);
 		}
+		else if(self.parentRecordType==="Weapon")
+		{
+			self.blankCharacterRecord = ir.copy(self.blankWeaponModifier);
+		}
 		self.init();
 		popup(ir.get(self.id));
 	},
 	/** detailModPop.update updates a single record and returns that rcord to the callback */
 	update:function(){
 		var self = detailModPop;
-		self.read();
-		if(self.callback!=null)
+		if(self.read())
 		{
-			self.callback(self.currentRecord);
-			self.close();
+			if(self.callback!=null)
+			{
+				self.callback(self.currentRecord);
+				self.close();
+			}
 		}
-		
 	},
 	zz_detailModPop:0
 };

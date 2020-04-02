@@ -5,7 +5,7 @@ var model = {
 var view = {
 	aaOnLoad:function(){
 		sr5.doneLoading();
-		
+		sr5.initHover();
 	},
 	zz_view:0
 };

@@ -2,6 +2,7 @@ package ir.web;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -621,6 +622,10 @@ public class JControl implements IControl
   {
     return _value != null && _value instanceof Boolean;
   }
+  public boolean isDate()
+  {
+    return _value instanceof JDate;
+  }
   public boolean isDateTime()
   {
     return _value instanceof JDateTime;
@@ -991,6 +996,61 @@ public class JControl implements IControl
       return "<input type='checkbox' " + name() + style + events + tabIndex() + (checked ? " checked " : "") + "><label for="+_name+">"+_title+"</label>";
     }
   }
+
+  /**
+   * get the html string to present the control as an input box
+   */
+  public String toDateTime()
+  {
+	  int len = 20;
+	    boolean bTime = false;
+	    String ds = _value == null ? "" : _value.toString();
+	    if (_value instanceof JDateTime)
+	    {
+	    	_leader = "<div class='dateTimeWrap hidden'>";
+	        len += 10;
+	        bTime = true;        
+	        if (! ((JDateTime)_value).isZero())
+	        {
+	            ds = new SimpleDateFormat(JDateTime.DefaultFormat2).format(((JDateTime)_value).getDate());
+	        }
+	    }
+	    else if (_value instanceof JDate)
+	    {        
+	    	_leader = "<div class='dateWrap hidden'>";
+	        if (! ((JDate)_value).isZero())
+	        {
+	            ds = new SimpleDateFormat(JDate.DefaultFormat).format(((JDate)_value).getDate());
+	        }
+	    }
+	    if (_disabled)
+	    {        
+	        return _leader + JControl.hidden(_name,ds) + JControl.text("",ds,"disabled")
+	            + _trailer;
+	    }
+	    if (_hidden)
+	    {
+	        return _leader + JControl.hidden(_name,_value) + _trailer;
+	    }
+	    String style = "";
+	    StringBuilder sb = new StringBuilder(_leader)
+	     .append("<input type='text' tabindex='1'")
+	     .append(" "+events()+" ")
+	     .append(" style='").append(style).append("'")
+	     .append(" value='").append(ds).append("'")
+	     .append(readonly ? " readonly='readonly'" : "")
+	     .append(" name='").append(_name).append("'")
+	     .append(" id='").append(_name).append("'")
+	     .append(" class='").append(_class).append(bTime ? " jdatetime" : " jdate").append("'")
+	     .append(" maxlength='").append(len).append("'");
+	    if (_placeholder != null && _placeholder.length() > 0)
+	      {
+	        sb.append(" placeholder='").append(_placeholder).append("'");
+	      }
+	     sb.append(">");
+	     sb.append("<label class='inputLabel'>").append(_title).append("</label>");
+	    return sb.toString();
+  }
   /**
    * get the html string to present the control
    */
@@ -1309,6 +1369,11 @@ public class JControl implements IControl
       if (isHidden())
       {
         b.append(toHidden());
+      }
+      else if (isDateTime() || isDate())
+      {
+    	b = new StringBuilder();
+    	b.append(toDateTime());
       }
       else if (isRadio())
       {

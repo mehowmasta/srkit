@@ -3,17 +3,21 @@ var irdate = {
 		
 	dd:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
 	format:"MMM d, yyyy",
+	formatTime:"MMM d, yyyy HH:mm",
 	mm:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+	addDays:function(d,toAdd) {		
+	    return new Date(d.getUTCFullYear(), d.getMonth(), d.getDate() + toAdd);
+	},
 	dayCodes:function(){
 		  return irdate.dd;
 		},
 	daysDiff:function(d1,d2)
 	{
-		var t1 = new Date(d1.getUTCFullYear(),d1.getUTCMonth(),d1.getUTCDate(),0,0,0);
-		var t2 = new Date(d2.getUTCFullYear(),d2.getUTCMonth(),d2.getUTCDate(),0,0,0);
+		var t1 = new Date(d1.getFullYear(),d1.getMonth(),d1.getDate(),0,0,0);
+		var t2 = new Date(d2.getFullYear(),d2.getMonth(),d2.getDate(),0,0,0);
 		var millisDiff = t1.getTime() - t2.getTime();
 		var divisor =  1000 * 60 * 60 * 24;
-		return Math.floor(millisDiff / divisor);
+		return Math.ceil(millisDiff / divisor);
 	},
 	friendly:function(d,showTime)
 	{
@@ -35,7 +39,7 @@ var irdate = {
 	  {
 		return (showTime?irdate.hm(d):"");
 	  }
-	  else if (dd > 0 && dd < 2)
+	  else if (dd >= 1 && dd <2)
 	  { 
 		  return "Yesterday " + (showTime?irdate.hm(d):"");
 	  }
@@ -47,6 +51,10 @@ var irdate = {
 	  	+ (d.getYear() == now.getYear() ? irdate.md(d) : irdate.mdy(d))
 	  	+ " " + (showTime?irdate.hm(d):"");
 	},
+	/**@return the date of the passed date's sunday */
+	getSunday:function(date) {
+	    return irdate.addDays(date, 0 - date.getDay());
+	},	
 	hm:function(d)
 	{	
 		 d = irdate.parse(d || new Date());
@@ -54,13 +62,14 @@ var irdate = {
 		{
 		  return "";
 		}
-		 if (d.getHours()==0 && d.getMinutes()==0)
+		var hr = d.getHours();
+		 if (hr==0 && d.getMinutes()==0)
 		 {
 			 return "";
 		 }
-		 return (d.getHours() < 13 ? d.getHours() : d.getHours() - 12)
+		 return (hr==0? "12" : hr < 13 ? hr : hr - 12)
 		 + ":" + ir.lpad(d.getMinutes(),'0',2)
-		 + " " + (d.getHours() <= 11 ? "am" : "pm");
+		 + " " + (hr <= 11 ? "am" : "pm");
 	},
 	hmn:function(d)
 	{	
@@ -98,6 +107,17 @@ var irdate = {
 			return "hms(" + d + ");";
 		}
 	},
+	m:function(d){		
+		  d = irdate.parse(d || new Date());
+		  if (irdate.isZero(d)) {
+			  return "";
+		  }
+		  return irdate.mm[d.getMonth()];
+		},
+		/** returns whether arg is zero date or string that parses to zero date */
+		isZero:function(d) {
+			return d==null || d=="" || (d.getTime && d.getUTCFullYear()<=1970) || irdate.parse(d).getUTCFullYear()<=1970;
+		},
 	md:function(d)
 	{		
 	  d = irdate.parse(d || new Date());
@@ -203,6 +223,65 @@ var irdate = {
 			}
 			return new Date(0);
 		}
+	},
+	q:function(d){
+		d = irdate.parse(d || new Date());
+		var m = d.getMonth() + 1;
+	    return Math.floor(m / 3 + (m % 3 == 0 ? 0 : 1));
+	},
+	/** irdate.rangeMonth yields {from:?,to:?} where from is the
+	 * first day of the month of the  date passed in and to is the 
+	 * last day of that month */
+	rangeMonth:function(d) {
+		var from = d == null ? new Date() : irdate.parse(d);
+		var to = new Date(from.getTime());
+		from.setDate(1);
+		to.setMonth(from.getMonth() + 1);
+		to.setDate(0);
+		return {from:from,to:to};
+	},	
+	/** irdate.rangeOffset takes in a date range like {from:?,to:?},
+	 * counts the days between from and to, and returns an offset
+	 * range  */
+	rangeOffset:function(rangeIn,offset) {
+		var days = irdate.daysDiff(rangeIn.to,rangeIn.from) + 1;
+		var from = addDays(rangeIn.from,days * offset);
+		var to = addDays(rangeIn.to,days * offset);
+		//ir.log(irdate.md(rangeIn.from) + "-" + irdate.md(rangeIn.to) + (offset>0 ? " + " : " ") + offset + " = " + irdate.md(from) + "-" + irdate.md(to));
+		return {from:from,to:to};
+	},
+	/** irdate.rangeQuarter yields {from:?,to:?} where from is the
+	 * first day of the quarter of the  date passed in and to is the 
+	 * last day of that quarter - using March,June,September,December */
+	rangeQuarter:function(d) {
+		var from = d == null ? new Date() : irdate.parse(d);
+		var to = new Date(from.getTime());
+		from.setDate(1);
+		from.setMonth(Math.floor(from.getMonth() / 3) * 3);
+		to.setMonth(from.getMonth() + 3);
+		to.setDate(0);
+		return {from:from,to:to};
+	},
+	/** irdate.rangeWeek yields {from:?,to:?} where from is the
+	 * nearest Sunday before date passed in and to is the 
+	 * first Saturday after the Sunday */
+	rangeWeek:function(d) {
+		var from = irdate.getSunday(d);
+		var to = new Date(from.getTime());
+		to.setDate(from.getDate() + 6);
+		return {from:from,to:to};
+	},
+	/** rangeYear yields {from:?,to:?} where from is the
+	 * first day of the year of the date passed in and to is the 
+	 * last day of that year */
+	rangeYear:function(d) {
+		var from = d == null ? new Date() : irdate.parse(d);
+		var to = new Date(from.getTime());
+		from.setDate(1);
+		from.setMonth(0);
+		to.setMonth(12);
+		to.setDate(0);
+		return {from:from,to:to};
 	},
 	ymd:function(d)
 	 {

@@ -1,0 +1,39 @@
+<script src="awardpop.js?s=<%=stamp %>" TYPE="text/javascript"></script>
+<div id='awardPop' class='popup awardPop' style='z-index:500;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='awardPop.close()'>X</div>
+		<div class='popupTitle'>Award</div>
+	</div>
+	<div class='popupContent flex awardContent' style=''>
+		<div id='awardPopNuyenWrap' class='flex' style='align-items:center;'>
+			<button type='button' style='width:4rem;min-width:4rem;' onclick='awardPop.minus("Nuyen")'>-</button>
+			<div class='inputWrap'>
+				<input type='number' id='awardPopNuyen' name='awardPopNuyen' tabindex='1' size='2' style='width:6rem;text-align: center;' value='0' min='0' step='100' onfocus='this.select();'>
+				<label class='inputLabel'>nuyen</label>
+			</div>
+			<button type='button' style='width:4rem;min-width:4rem;' onclick='awardPop.plus("Nuyen")'>+</button>
+		</div>
+		<div id='awardPopKarmaWrap' class='flex' style='align-items:center;'>
+			<button type='button' style='width:4rem;min-width:4rem;' onclick='awardPop.minus("Karma")'>-</button>
+			<div class='inputWrap'>
+				<input type='number' id='awardPopKarma' name='awardPopKarma' tabindex='1' size='2' style='width:6rem;text-align: center;' value='0' min='0' step='1' onfocus='this.select();'>
+				<label class='inputLabel'>karma</label>
+			</div>
+			<button type='button' style='width:4rem;min-width:4rem;' onclick='awardPop.plus("Karma")'>+</button>
+		</div>
+		<div>
+			<div class='popupTitle'>Characters</div>
+			<div class='flex' style='padding:1rem 0;text-align: center;width:100%;justify-content:space-between;align-items:flex-end;'>
+				<div id='awardPopCharacterList' class='flex' style='flex:1;justify-content:flex-start;'>
+				</div>
+				<div>
+				<button type='button' class='hover' data-hover='Choose a runner to reward.' onclick='awardPop.pickCharacters()'>Add</button>
+				</div>
+			</div>
+		</div>
+			
+		<div style='padding-top:0.5rem;'>
+			<button type='button' onclick='awardPop.update()'>Send</button>
+		</div>
+	</div>
+</div>

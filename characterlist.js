@@ -14,6 +14,16 @@ var view = {
 			hoverPop.init();
 			sr5.doneLoading();
 		},
+		acceptTransfer:function(characterRow){
+			var callback= function(res){
+				if(res.ok)
+				{
+					sr5.go("characterdetail.jsp?ctlRow="+characterRow);
+					return false;
+				}
+			};
+			sr5.ajaxAsync({fn:"acceptTransfer",characterRow:characterRow},callback);
+		},
 		addCharacter:function(){
 			view.toggleAddTypeButtons();
 		},
@@ -46,6 +56,7 @@ var view = {
 			var arr = model.characters;
 			var top = "";
 			var bottom = "";
+			var transfer = "";
 			var count = 0;
 			for (var i=0,z=arr.length;i<z;i++)
 			{
@@ -58,7 +69,17 @@ var view = {
 				var metatype = model.metatypes.get(s.Metatype).Name;
 				var sex = model.sex.get(s.Sex).Name;
 				var isPc = s.Type.toLowerCase() === "pc";
-				var template = "<div class='section {7} shadow hover' data-hover='Edit Character' onclick='sr5.go(\"characterdetail.jsp?ctlRow={5}\")'>"
+				var onclick = "sr5.go(\"characterdetail.jsp?ctlRow="+s.Row+"\")";
+				var isTransfer = s.Transfer==sr5.user.Row;
+				var transferBtns ="";
+				if(isTransfer)
+				{
+					ir.show("transferDiv");
+					ir.show("characterListTitle");
+					transferBtns = "</div><div class='spacer'><div class='flex'><h3 style='margin:0.5rem;'>This character has been transferred to you...&emsp;</h3><button class='mini' type='button' onclick='view.acceptTransfer("+s.Row+")'>Accept</button><button type='button' class='mini' onclick='view.declineTransfer("+s.Row+")'>Decline</button></div></div><div>";
+					onclick="return false";
+				}
+				var template = "<div class='section {7} shadow hover' data-hover='Edit Character' onclick='{13}'>"
 							 + "<div class='flex' style='align-items:center;justify-content:flex-start;'>"
 							 + "<div class='{12}'>{11}</div>"
 							 + "<div style='display: flex;justify-content: space-between;width: 100%;flex: 1;flex-wrap: wrap;align-items: center;'>"
@@ -81,31 +102,47 @@ var view = {
 				htm = ir.format(template,
 						view.applySearch(s.Name),
 						sex + " " + view.applySearch(metatype),
-						sr5.getCharacterStatsTable(s),
+						sr5.getCharacterStatsTable(s) + transferBtns,
 						s.Nuyen + sr5.nuyen,
 						s.Karma,
 						s.Row,
 						"",
-						s.Type.toLowerCase(),
+						s.Type.toLowerCase() + (isTransfer?" nohover ": ""),
 						view.applySearch(s.Misc),
 						s.Initiative + " + "+s.InitiativeDice+"D6",
 						sr5.getCharacterMaxPhysical(s) + "/"+sr5.getCharacterMaxStun(s),
 						view.getPortrait(s),
-						s.Inactive?"inactive":"");
+						s.Inactive?"inactive":"",
+						onclick);
 				//content = content.replace(new RegExp(view.searchArg, 'gi'),function(v){return "<span class='highlight'>"+v+"</span>"});
-				if(s.Inactive)
+				if(isTransfer)
+				{
+					ir.get("transferList").innerHTML += htm;
+				}				
+				else if(s.Inactive)
 				{
 					bottom += htm;
 				}
+				
 				else
 				{
 					top += htm
 				}
 				count++;
 			}
-			container.innerHTML = top + bottom + "</div>";
+			container.innerHTML = transfer + top + bottom + "</div>";
 			ir.set("characterCount",count!=arr.length?count+" / " + arr.length:count);
 		},	
+		declineTransfer:function(characterRow){
+			var callback= function(res){
+				if(res.ok)
+				{
+					sr5.go("characterlist.jsp");
+					return false;
+				}
+			};
+			sr5.ajaxAsync({fn:"declineTransfer",characterRow:characterRow},callback);
+		},
 		filterCharacter:function(s)
 		{
 			if(view.searchArg.length<3)

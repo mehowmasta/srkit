@@ -8,7 +8,7 @@
 </script>
 <style>
 
-#charactersDiv {
+#listWrap {
 	max-height: calc(100vh - 11rem);
 	overflow-y: auto;
 }
@@ -34,11 +34,23 @@
 #charactersDiv .thumb{
     margin-right:0.2rem;
 }
+#transferDiv .section{
+	width:100%;
+	max-width: 100%;
+	margin-left:2.3rem;
+}
 </style>
 <body onload='view.aaOnLoad()'>
 	<%=_bean.startForm()%>
-	<div class='container' id='charactersDiv'>
-		<div class='flex' id='characterList'></div>
+	<div id='listWrap'>
+		<div class='container' id='transferDiv' style='display:none;'>	
+				<div class="pageSubtitle">Transfer Request</div>
+			<div class='flex' id='transferList'></div>
+		</div>
+		<div class='container' id='charactersDiv'>
+				<div id='characterListTitle' style='display:none;' class="pageSubtitle"></div>
+			<div class='flex' id='characterList'></div>
+		</div>
 	</div>
 	
 <div class='container flex'>

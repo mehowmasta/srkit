@@ -91,7 +91,7 @@ var track = {
 		{
 			if(t.name === "Damage")
 			{
-				wrapper.style.width = "calc("+track.TRACK_BOX_WIDTH+" * "+(t.columns*2)+" + 4rem)";
+				wrapper.style.width = "calc("+track.TRACK_BOX_WIDTH+" * "+(t.columns*2)+" + 4rem);";
 				if(track.showCloseButton)
 				{
 					htm += "<div class='x' onclick='track.closeGrid(this)'>X</div>";
@@ -104,7 +104,7 @@ var track = {
 				{
 					htm += "<div class='inputWrap'><input class='boardName' type='text' value='"+name+"'><label class='inputLabel'>Name</label></div><div class='flexSpacer'></div>";
 				}
-				htm += "<div class='flex' style='align-items:flex-start;'>"
+				htm += "<div class='damageTrackWrap flex'>"
 					+ "<div class='damageTrack physical'>"
 					+ "<div class='subtitle'>Physical Track</div>" 
 					+ track.getCubes(t,arguments[3],arguments[5]) 
@@ -121,7 +121,7 @@ var track = {
 			else if (t.name === "Status")
 			{
 
-				wrapper.style.minWidth = "22rem";
+				//wrapper.style.minWidth = "22rem";
 				if(track.showCloseButton)
 				{
 					htm += "<div class='x' onclick='track.closeGrid(this)'>X</div>";
@@ -219,8 +219,8 @@ var track = {
 	},
 	getControls:function(type)
 	{
-		return "<div class='flex trackControls'><div class='flex trackMinus hover' data-hover='Remove block'onclick='track.boxCount(this,-1)' ondblclick='track.boxCount(this,-5)'>⇦</div>" 
-				+ "<div class='flex hover imgBtn' data-hover='Clear track' style='margin:0;cursor:pointer;width:3rem;height:3rem;align-items:center;padding:0;' onclick='track.clearTrack(this,-1)'><img class='smallIcon' src='"+sr5.iconPath+"bulldozer.svg'></div>" 
+		return "<div class='flex trackControls' style='align-items:center;'><div class='flex trackMinus hover' data-hover='Remove block'onclick='track.boxCount(this,-1)' ondblclick='track.boxCount(this,-5)'>⇦</div>" 
+				+ "<div class='flex hover imgBtn' data-hover='Clear track' style='margin:0;cursor:pointer;width:2.5rem;height:2.5rem;align-items:center;padding:0;' onclick='track.clearTrack(this,-1)'><img class='smallIcon' src='"+sr5.iconPath+"bulldozer.svg'></div>" 
 				+ "<div class='flex trackPlus hover' data-hover='Add block' onclick='track.boxCount(this,1)' ondblclick='track.boxCount(this,5)'>⇨</div></div>";
 	},
 	getCubes:function(type,maxValue,currentValue)

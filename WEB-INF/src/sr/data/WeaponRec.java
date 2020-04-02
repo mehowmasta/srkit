@@ -14,9 +14,11 @@ public class WeaponRec extends SrRec {
 	public static final String AMMO = "Ammo";
 	public static final String ARMORPENETRATION = "ArmorPenetration";
 	public static final String AVAILABILITY = "Availability";
+	public static final String CONTAINER = "Container";
 	public static final String COST = "Cost";
 	public static final String DAMAGEVALUE = "DamageValue";
 	public static final String MODIFIERS = "Modifiers";
+	public static final String MOUNTS = "Mounts";
 	public static final String REACH = "Reach";
 	public static final String RECOILCOMPENSATION = "RecoilCompensation";
 	public final static String SKILL = "Skill";
@@ -30,9 +32,11 @@ public class WeaponRec extends SrRec {
 	public String Ammo = "";
 	public String ArmorPenetration = "";
 	public String Availability = "";
+	public boolean Container = true;
 	public String Cost = "";
 	public String DamageValue = "";
 	public String Modifiers = "";
+	public String Mounts = "";
 	public String Reach = "";
 	public String RecoilCompensation = "";
 	public String Skill = "";
@@ -44,8 +48,8 @@ public class WeaponRec extends SrRec {
 	public static String getSortTypeJson() {
 		StringBuilder b = new StringBuilder("[");
 		String comma = "";
-		String[] t = new String[]{NAME,COST};
-		String[] s = new String[]{"",""};
+		String[] t = new String[]{TYPE,SKILL};
+		String[] s = new String[]{"","Skill"};
 		for(int i=0,z=t.length;i<z;i++)
 		{
 			b.append(comma)

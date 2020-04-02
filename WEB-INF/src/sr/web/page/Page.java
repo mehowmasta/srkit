@@ -19,6 +19,7 @@ public enum Page
   AmmoList("Ammo",Images.Ammo),
   ArmorList("Armor",Images.Armor),
   BiowareList("Bioware",Images.Bioware),
+  Budget("Budget",Images.Report),
   ChangePassword("Change Password",Images.Learning),
   CharacterCreation("Create Runner",Images.Learning),
   CharacterDetail("Character Detail",Images.Learning),
@@ -38,7 +39,7 @@ public enum Page
   Gear("Gear",Images.Gear){
 	    @Override
 	    public Page[] getChildren() {
-	      return new Page[]{WeaponList,ArmorList,CyberwareList,BiowareList,CyberdeckList,DroneList,VehicleList,AmmoList,ElectronicList,SecurityList,DemolitionList,MedicalList,MiscList};
+	      return new Page[]{WeaponList,ArmorList,CyberwareList,BiowareList,CyberdeckList,DroneList,VehicleList,AmmoList,WeaponModifierList,ElectronicList,SecurityList,DemolitionList,MedicalList,MiscList};
 	    }
 	  },
   GmBoard("GM Board",Images.GmBoard),
@@ -47,7 +48,7 @@ public enum Page
   Home("Home",Images.Home){
 	    @Override
 	    public Page[] getChildren() {
-	      return new Page[]{CharacterList,GroupList,SINRegistryList,Database,GmBoard,MapList,PortraitList,Preferences,UserList};
+	      return new Page[]{CharacterList,GroupList,SINRegistryList,Database,GmBoard,MapList,PortraitList,Budget,UserList,Preferences};
 	    }
 	  },
   Magic("Magic",Images.Spell),
@@ -79,6 +80,7 @@ public enum Page
 	  },
   VehicleList("Vehicles",Images.Vehicle),
   WeaponList("Weapons",Images.Weapon),
+  WeaponModifierList("Weapon Mods",Images.WeaponMod),
   Upload("Upload",Images.Upload)
   ;
   private static final Map<String, Page> jspMap = new HashMap<String,Page>();

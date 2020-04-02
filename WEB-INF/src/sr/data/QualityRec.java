@@ -14,6 +14,7 @@ public class QualityRec extends SrRec {
 	public static final String BONUS = "Bonus";
 	public static final String KARMA = "Karma";
 	public static final String MAXRATING = "MaxRating";
+	public static final String OPTIONS = "Options";
 	public static final String PREREQUISITES = "Prerequisites";
 	public static final String REQUIRETEXT = "RequireText";
 	public static final String SKILL = "Skill";
@@ -23,6 +24,7 @@ public class QualityRec extends SrRec {
 	public String Bonus = "";
 	public String Karma = "";
 	public int MaxRating = 1;
+	public String Options = "";
 	public String Prerequisites = "";
 	public boolean RequireText = false;
 	public String Skill = "";

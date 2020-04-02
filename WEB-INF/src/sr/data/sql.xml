@@ -49,7 +49,66 @@
 	]]></selectForCharacter>
 </ArmorRec>
 
+<BudgetRec>
+	<createTable><![CDATA[
+		CREATE TABLE `tbudget` (
+		  `Row` int(11) NOT NULL AUTO_INCREMENT,
+	  	  `User` INT NULL,
+		  `Name` varchar(100) DEFAULT NULL,
+		  `Category` varchar(255) DEFAULT '',
+		  `Note` varchar(2000) DEFAULT NULL,
+		  `Time` date DEFAULT NULL,
+		  `Type` varchar(50) DEFAULT NULL,
+		  `Amount` float(7,2) DEFAULT '0',
+		  PRIMARY KEY (`Row`),
+		  KEY `iUser` (`User`),
+		  KEY `iType` (`Type`),
+		  KEY `iTime` (`Time`),
+		  KEY `iCategory` (`Category`)		  
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8		
+	]]></createTable>
+	<selectList><![CDATA[
+		select b.*, UNIX_TIMESTAMP(b.Time) as ts 
+			from tbudget b
+			where b.user=? and date(b.Time) between date(?) and date(?)
+        union all
+		select b.*, UNIX_TIMESTAMP(b.Time) as ts 
+			from tbudgetshare s
+		    inner join tbudget b on s.Sharer=b.user
+		    where s.Sharee=? and date(b.Time) between date(?) and date(?)
+		group by b.Row
+		order by ts desc,Row desc
+	]]></selectList>
+</BudgetRec>
+
+<BudgetShareRec>
+	<addShare><![CDATA[	
+		insert ignore into tbudgetshare(Sharer,Sharee) values (?,?)
+	]]></addShare>
+	<createTable><![CDATA[
+		CREATE TABLE `tbudgetshare` (
+	  	  `Sharer` INT NULL,
+	  	  `Sharee` INT NULL,
+		  PRIMARY KEY (`Sharer`,`Sharee`)		  
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8		
+	]]></createTable>
+	<deleteShare><![CDATA[
+		delete from tbudgetshare 
+		where (Sharer=? and Sharee=?) 
+		or (Sharee=? and Sharer=?)
+	]]></deleteShare>
+	<selectSharers><![CDATA[
+	select u.*
+	from tbudgetshare s
+	inner join tuser u on s.Sharer=u.Row
+	where s.Sharee=?
+	]]></selectSharers>
+</BudgetShareRec>
+
 <CharacterRec>
+	<addKarma><![CDATA[	
+	update tcharacter set karma=karma+? where Row=?
+	]]></addKarma>
 	<deleteAdeptPowers><![CDATA[
     delete from tCharacterAdeptPower where CharacterRow=?
 	]]></deleteAdeptPowers>
@@ -138,7 +197,7 @@
 	select c.*, ifnull(i.Extension,"") as Extension, ifnull(i.User,0) as UserImage 
 	from tCharacter c
 	left join timage i on (c.user=i.user or i.user=0) and c.Portrait=i.row
-	where c.user = ?	
+	where c.user = ? or c.transfer=?	
 	order by c.Name
 	]]></selectForUser>
 	<selectPlayerCharacter><![CDATA[
@@ -227,6 +286,23 @@
 	where characterRow = ?
 	]]></selectForCharacter>
 </CharacterSettingRec>
+
+<CharacterWeaponModifierRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tcharacterweaponmodifier` (
+	  `Row` int(11) NOT NULL AUTO_INCREMENT,
+	  `CharacterRow` int(11) DEFAULT NULL,
+	  `WeaponModifierRow` int(11) DEFAULT NULL,
+	  `ParentRow` int(11) DEFAULT NULL,
+	  `Mounted` enum('Top','Under','Barrel','Internal','Side','Stock','NA') DEFAULT NULL,
+	  `Rating` int(2) DEFAULT NULL,
+	  `Note` varchar(255) DEFAULT '',
+	  PRIMARY KEY (`Row`),
+	  KEY `iParent` (`ParentRow`),
+	  KEY `iCharacter` (`CharacterRow`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8	
+	]]></createTable>
+</CharacterWeaponModifierRec>
 
 <CritterPowerRec>
 	<selectAll><![CDATA[
@@ -375,6 +451,21 @@
 	select 1 from tgroup
 	where Row<>? and ShareKey=?
 	]]></isDupKey>
+	<selectForCharacter><![CDATA[
+	select g.*, group_concat(if(g.user<>c.User,concat(concat(c.Name,if(gc2.Quantity>1,concat(' x',gc2.Quantity),'')),' [',u.Name,']') ,concat(c.Name,if(gc2.Quantity>1,concat(' x',gc2.Quantity),'')))) as Characters,	
+	group_concat(c.Row) as CharacterRows,
+	group_concat(if(i.Row>0,'thumb_','_'),ifnull(i.User,''),'_',ifnull(i.Row,''),'.',ifnull(i.Extension,'')) as Images,
+	group_concat(gc2.Quantity) as Quantity
+	from tGroupcharacter gc
+	inner join tgroup g on g.Row = gc.GroupRow
+    inner join tGroupCharacter gc2 on gc2.grouprow=gc.grouprow
+	left join tcharacter c on c.Row=gc2.CharacterRow
+	left join tuser u on u.Row=c.User	
+	left join timage i on c.Portrait=i.row and (c.user=i.user or i.user=0) 
+	where gc.characterrow=? and g.inactive<?	
+	group by g.Row
+	order by name
+	]]></selectForCharacter>
 	<selectForUser><![CDATA[
 	select g.*, group_concat(if(g.user<>c.User,concat(concat(c.Name,if(gc.Quantity>1,concat(' x',gc.Quantity),'')),' [',u.Name,']') ,concat(c.Name,if(gc.Quantity>1,concat(' x',gc.Quantity),'')))) as Characters,	
 	group_concat(if(i.Row>0,'thumb_','_'),ifnull(i.User,''),'_',ifnull(i.Row,''),'.',ifnull(i.Extension,'')) as Images,
@@ -437,7 +528,8 @@
 	  `Type` VARCHAR(100) NULL,
 	  `Title` VARCHAR(100) NULL,
 	  `Time` DATETIME NULL,
-	  `Text` LONGTEXT NULL,
+	  `Text` TEXT NULL,
+	  `Tags` varchar(255) NULL,
 	  PRIMARY KEY (`Row`),
 	  INDEX `iUserTime` (`User` ASC, `Time` ASC))
 	ENGINE = MyISAM	
@@ -446,6 +538,7 @@
 	select * 
 	from tjournal 
 	where user=?
+	order by Time desc
 	]]></selectAll>
 </JournalRec>
 
@@ -729,6 +822,14 @@
 </ThemeRec>
 
 <UserRec>
+	<hasFriendRequest><![CDATA[
+	select count(*) from tFriend
+	where friend=? and confirmed=0
+	]]></hasFriendRequest>
+	<hasTransferRequest><![CDATA[
+	select count(*) from tcharacter
+	where transfer=?
+	]]></hasTransferRequest>
 	<isDupLogin><![CDATA[
 	select 1 from tUser where Login=? and Row<>? 
 	]]></isDupLogin>
@@ -816,5 +917,37 @@
 	order by s.Name	
 	]]></selectForCharacter>
 </WeaponRec>
+
+<WeaponModifierRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tweaponmodifier` (
+	  `Row` INT NULL AUTO_INCREMENT,
+	  `Name` VARCHAR(255) NULL,
+	  `Type` ENUM('Any', 'Top', 'Under', 'Barrel', 'Internal', 'Side', 'Stock') NULL,
+	  `Availability` VARCHAR(45) NULL,
+	  `Cost` VARCHAR(45) NULL,
+	  `Description` VARCHAR(2000) NULL,
+	  `Wireless` VARCHAR(45) NULL,
+	  `Source` VARCHAR(45) NULL,
+	  `Bonus` VARCHAR(255) NULL,
+	  `MinRating` INT(1) NULL,
+	  `MaxRating` INT(2) NULL,
+	  `Attachable` TINYINT(1) NULL,
+	  PRIMARY KEY (`Row`),
+	  INDEX `iType` (`Type` ASC),
+	  INDEX `iName` (`Name` ASC))
+	ENGINE = MyISAM
+	DEFAULT CHARACTER SET = utf8
+	COLLATE = utf8_bin
+	]]></createTable>
+	<selectAll><![CDATA[
+	select * from tWeaponModifier
+	order by name
+	]]></selectAll>
+	<selectWeaponModifiers><![CDATA[
+	select * from tweaponmodifier
+	order by name
+	]]></selectWeaponModifiers>
+</WeaponModifierRec>
 
 </sql>

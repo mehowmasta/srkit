@@ -48,6 +48,8 @@ import sr.data.UserRec;
 import sr.web.App;
 import sr.web.Images;
 import sr.web.SessionKeys;
+import sr.web.WebSocketClient;
+import sr.web.WebSocketEndpoint;
 
 /**
  * 
@@ -258,6 +260,10 @@ public abstract class AppBasePage implements IWebPage, IValidator {
 		return uploadFiles;
 	}
 
+	public String getIconPath()
+	{
+		return Images.getIconPath();
+	}
 	public String getImage(String imageName)
 	{
 		return Images.get(imageName);
@@ -290,6 +296,14 @@ public abstract class AppBasePage implements IWebPage, IValidator {
 				.append("</span></a></li>");
 		List<Page> kids = new ArrayList<Page>();
 		kids.addAll(Page.Home.getNonNullChildren());
+		if(currentUser.isWife())
+		{
+			kids.clear();
+			kids.add(Page.CharacterList);
+			kids.add(Page.Budget);
+			kids.add(Page.UserList);
+			kids.add(Page.Preferences);
+		}
 		for (Page kid : kids) {
 			if (kid.sysAdminOnly() && !currentUser.isSysAdmin()) {
 				continue;
@@ -524,9 +538,12 @@ public abstract class AppBasePage implements IWebPage, IValidator {
 					"<div id='navSortBtn' class='imgBtn hover' data-hover='Sort layout' onclick='sr5.sortList();'><img class='medIcon' src='"
 							+ Images.get(Images.Sort) + "'><label>Sort</label></div>");
 		}
-		b.append(
+		if(!currentUser.isWife())
+		{
+			b.append(
 				"<div id='navDiceRollBtn' class='imgBtn hover' data-hover='Roll some dice!' onclick='diceRollPop.show();'><img class='medIcon' src='"
 						+ Images.get(Images.Dice) + "' ><label>Roll!</label></div>");
+		}
 		// b.append("<div class='imgBtn' onclick='sr5.go(\"index.jsp\");'><img
 		// class='medIcon' src='icons/lift.svg'><label>Logout</label></div>")
 		if (!currentUser.isGuest()|| App.isDev()) {
@@ -534,10 +551,11 @@ public abstract class AppBasePage implements IWebPage, IValidator {
 					"<div id='navSearchBtn' class='imgBtn hover' data-hover='Comm Link'  onclick='messengerPop.show();'><img class='medIcon' src='"
 							+ Images.get(Images.Comm) + "'><label>Comm Link</label>").append(getMessageCount()).append("</div>");
 		}
-		/*
-		b.append("<div id='navJournalBtn' class='imgBtn hover' data-hover='Digital Journal' onclick='sr5.showJournal();'><img class='medIcon' src='"
-							+ Images.get(Images.Notebook) + "'><label>Journal</label></div>");
-		*/
+		if(currentUser.UseJournal)
+		{
+			b.append("<div id='navJournalBtn' class='imgBtn hover' data-hover='Journal' onclick='sr5.showJournal();'><img class='medIcon' src='"
+				+ Images.get(Images.Notebook) + "'><label>Journal</label></div>");
+		}
 		if (currentPlayer.Character != null && currentPlayer.Character.Row > 0) {
 			b.append(
 					"<div id='navPcBtn' class='imgBtn hover' data-hover='Character Sheet' onclick='sr5.showPlayerCharacter();'><img class='medIcon' src='"
@@ -614,7 +632,7 @@ public abstract class AppBasePage implements IWebPage, IValidator {
 	}
 
 	public String imageButton(String label, String img, String onclick) {
-		return "<button type='button' class='mainBtn hover' data-hover="+label+" onclick='" + onclick + "'><img src='" + img
+		return "<button type='button' class='mainBtn hover' data-hover='"+label+"' onclick='" + onclick + "'><img src='" + img
 				+ "' class='medIcon'><br>" + label + "</button>";
 	}
 
@@ -647,6 +665,7 @@ public abstract class AppBasePage implements IWebPage, IValidator {
 		{
 			set("Metatypes",RaceRec.selectAll(db).toString());
 		}
+		set("Friends",UserRec.selectFriends(db, currentUser.Row));
 		set("Sex",CharacterRec.CharacterSex.selectJson());
 		set("IconPath",Images.getIconPath());
 	}
@@ -728,7 +747,7 @@ public abstract class AppBasePage implements IWebPage, IValidator {
 		if (inSession()) {
 			testUser.Row = sesGet(SessionKeys.UserRow, 0);
 		}
-		if (testUser == null || testUser.Row == 0) {
+		if (testUser.Row == 0) {
 			return false;
 		}
 		currentUser = testUser;
@@ -1022,6 +1041,14 @@ public abstract class AppBasePage implements IWebPage, IValidator {
 		}
 	}
 
+	public void sendNotification(int userRow, String message) throws Exception
+	{
+		List<WebSocketClient> userWebSocketClients = WebSocketEndpoint.findClientsByUserRow(userRow);
+        for(WebSocketClient c : userWebSocketClients)
+        {
+            c.send("{ok:1,notification:"+jsq(message)+"}");
+        }
+	}
 	protected void sesClose() throws Exception {
 		HttpSession ses = sesGet();
 		if (ses != null) {
@@ -1081,7 +1108,7 @@ public abstract class AppBasePage implements IWebPage, IValidator {
 		this.currentUser = theUsr;
 		this.db = AppDb.open(currentUser);
 		this.session = request.getSession(true);
-		session.setMaxInactiveInterval(2 * 60 * 60);
+		session.setMaxInactiveInterval(12 * 60 * 60); //8hrs
 		if (locationBar == null) {
 			locationBar = new LocationBar(Page.Home.jsp(), Page.Home.titleKey);
 		} else {

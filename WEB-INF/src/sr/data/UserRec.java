@@ -26,6 +26,7 @@ public class UserRec extends AppRec {
 	public final static String SOURCEBOOKS = "SourceBooks";
 	public final static String TABLE = "tUser";
 	public final static String THEMEROW = "ThemeRow";
+	public final static String USEJOURNAL = "UseJournal";
 	//
 	public boolean AutoRoll = true;
 	public JDateTime CreatedAt = JDateTime.now();
@@ -41,6 +42,7 @@ public class UserRec extends AppRec {
 	public String ShortName = "";
 	public String SourceBooks = "Core";
 	public int ThemeRow = 1;
+	public boolean UseJournal = true;
 	
 	//
 	public static List<UserRec> selectAll(Database db) throws Exception
@@ -137,7 +139,12 @@ public class UserRec extends AppRec {
 		}
 		return false;
 	}
-
+	public int hasFriendRequest(Database db) throws Exception {
+		return db.selectScalar("UserRec.hasFriendRequest", 0, this.Row); 
+	}
+	public int hasTransferRequest(Database db) throws Exception {
+		return db.selectScalar("UserRec.hasTransferRequest", 0, this.Row); 
+	}
 	public boolean isAdmin() {
 		return Role == UserRole.Admin || Role == UserRole.SysAdmin;
 	}
@@ -159,6 +166,10 @@ public class UserRec extends AppRec {
 	{
 		return 0 < db.selectScalar("UserRec.isFriendsWith", 0,Row, userRow);
 	}
+
+	public boolean isFamily() {
+		return Role == UserRole.Wife || Role == UserRole.SysAdmin;
+	}
 	public boolean isGuest() {
 		return Role == UserRole.Guest;
 	}
@@ -168,7 +179,9 @@ public class UserRec extends AppRec {
 	public boolean isSysAdmin() {
 		return Role == UserRole.SysAdmin;
 	}
-
+	public boolean isWife() {
+		return Role == UserRole.Wife;
+	}
 	public boolean selectByLogon(Database db, String lo) throws Exception {// note this is not limited to current
 																			// company
 		return db.selectFirst(Sql.get("UserRec.selectByLogin"), this, lo);

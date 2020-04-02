@@ -72,7 +72,7 @@ select s.*, cs.Quantity, cs.Rating, cs.Row as ItemRow, cs.CharacterRow
 	order by s.Name;
 #
 # select Knowledge
-select s.Description, s.Row, s.Source, s.Attribute,cs.CharacterRow, cs.Rating,cs.Native, cs.Name as Name,cs.Type as Type, cs.Row as ItemRow
+select s.Description, s.Row, s.Source, s.Attribute,cs.CharacterRow, cs.Rating,cs.Native, cs.Name as Name,cs.Type as Type, cs.Row as ItemRow, cs.Note
 	from tcharacterknowledge cs
 	inner join tSkill s on s.Name = cs.Type
 	where cs.characterrow=in_characterRow
@@ -98,7 +98,7 @@ select s.*,  cs.Row as ItemRow, cs.CharacterRow, cs.ProgramRow, cs.ParentRow
 	order by s.Name;
 #
 # select Quality
-select q.*, cq.Rating , cq.Row as ItemRow, cq.CharacterRow
+select q.*, cq.Rating , cq.Row as ItemRow, cq.CharacterRow, cq.Note
 	from tcharacterquality cq 
 	inner join tquality q on q.Row = cq.QualityRow 
 	where cq.characterrow=in_characterRow
@@ -125,12 +125,19 @@ select s.*, cs.Quantity, cs.Equipped, cs.CurrentAmount, cs.Row as ItemRow, cs.Ch
 	order by s.craft, s.Name;
 #
 # select Weapons
-select s.*, cs.Quantity, cs.Equipped , cs.CurrentAmount, cs.Row as ItemRow, cs.CharacterRow
+select s.*, cs.Quantity, cs.Equipped , cs.CurrentAmount, cs.Row as ItemRow, cs.CharacterRow, cs.Note as Note
 	from tcharacterweapon cs
 	inner join tweapon s on s.Row = cs.WeaponRow 
 	where cs.characterrow=in_characterRow
 	order by s.Name;	
 # 
+# select WeaponsModifers
+select wm.*,  cm.Row as ItemRow, cm.CharacterRow, cm.WeaponModifierRow, cm.ParentRow, cm.Mounted, cm.Rating
+	from tcharacterweaponmodifier cm 
+	inner join tweaponmodifier wm on wm.Row = cm.WeaponModifierRow 
+	where cm.characterrow=in_characterRow
+	order by wm.attachable desc, wm.Mount, wm.Name;
+#
 END $$
 
 DELIMITER ;

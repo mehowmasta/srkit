@@ -1,5 +1,6 @@
 "use strict";
 var model={
+	awardCharacters:new KeyedArray("Row"),
 	boards:new KeyedArray("id"),
 	currentMap:null,
 	groups:null,
@@ -84,6 +85,7 @@ var model={
 var view = {
 		currentBlock:null,
 		inCombat:false,
+		interval:null,
 		TRACK_BOX_WIDTH:"3rem",
 		aaOnLoad:function(){
 			view.addResizeEvent();
@@ -91,6 +93,24 @@ var view = {
 			view.buildAddInitGroupButtons();
 			sr5.doneLoading();
 		},
+		addAwardCharacter:function(){
+			pickCharacterPop.setFilter("PC");
+			pickCharacterPop.show(null,false,view.afterAwardSelectCharacters);
+		},
+		addAwardItem:function(){
+			Status.info("coming soon...");
+		},
+		addCard:function(character){
+			/*
+			var container = ir.get("charactersContainer");	
+			var image = view.getPortrait(character);
+			var template = "<div class='cardContainer' style='display:flex;'>"
+							+ "<div class='imgWrap'>{0}</div>"
+						 + "</div>";
+			container.innerHTML += ir.format(template,image);
+			*/
+			
+		},		
 		addGrid:function(){
 			view.toggleTypeButtons();
 		},
@@ -101,6 +121,7 @@ var view = {
 				for(var j =1,y=a.Quantity;j<=y;j++)
 				{
 					view.addInitiative(a,a.Name + (a.Quantity>1?" (" + j +")":""));
+					view.addCard(a);
 					if(a.Type.toLowerCase()!=="pc")
 					{
 						var initBlock = ir.get("initBlock"+(model.initBlockCounter-1));
@@ -110,7 +131,6 @@ var view = {
 						initValue.value = sr5.getRoll(a.Initiative,a.InitiativeDice);
 					}
 				}
-				
 			}
 			view.toggleAddButtons();
 			sr5.initHover();
@@ -129,17 +149,17 @@ var view = {
 			var template = "<div class='x' onclick='view.closeInitiative(this)'>X</div>"
 						 + "<div class='flex' style='justify-content:flex-start;align-items:inherit;'>"
 						 + "<div style='flex:0;display:flex;justify-content:flex-start;max-height:11rem;align-items:center;'><div>{1}</div><div class='flex' style='flex-direction:column;justify-content:flex-start;'>";
-						 
+			
 			if(character.Row != null && character.Row>0)
 			{
-				template += "<div class='imgBtn hover' data-hover='Character Sheet' style='cursor:pointer;' onclick='view.openCharacterSheet("+character.Row+")'><img src='"+sr5.iconPath+"passport.svg' class='medIcon'></div>";
+				template += "<button type='button' class='mini hover' data-hover='Character Sheet' style='cursor:pointer;' onclick='view.openCharacterSheet("+character.Row+")'><img src='"+sr5.iconPath+"passport.svg' class='smallIcon'></button>";
 			}			 
-			template += "<div class='imgBtn hover' data-hover='Toggle Damage Track'  style='cursor:pointer;' onclick='view.toggleDamageGrid(this)'>"
-					 + "<img src='"+sr5.iconPath+"stethoscope.svg' class='medIcon'>" 
-					 + "</div>"
-					 + "<div class='imgBtn hover' data-hover='Toggle Status Track'  style='cursor:pointer;' onclick='view.toggleStatusGrid(this)'>"
-					 + "<img src='"+sr5.iconPath+"customer.svg' class='medIcon'>" 
-					 + "</div>"
+			template += "<button type='button' class='mini toggle hover' data-hover='Toggle Damage Track'  style='cursor:pointer;' onclick='view.toggleDamageGrid(this)'>"
+					 + "<img src='"+sr5.iconPath+"stethoscope.svg' class='smallIcon'>" 
+					 + "</button>"
+					 + "<button type='button' class='mini toggle hover' data-hover='Toggle Status Track'  style='cursor:pointer;' onclick='view.toggleStatusGrid(this)'>"
+					 + "<img src='"+sr5.iconPath+"customer.svg' class='smallIcon'>" 
+					 + "</button>"
 					 + "</div>"
 					 + "</div>"
 					 + "<div class='flex' style='flex:20;justify-content:flex-start;align-items:flex-start;'>"
@@ -159,9 +179,9 @@ var view = {
 			template += "</select><label class='inputLabel'>Type</label></div>"
 							 + "<div class='inputWrap'><input type='number' tabindex='1' class='initiative' value='0' onchange='view.onInitChange(this)' onclick='this.select()' style='width:5rem;text-align:center;'><label class='inputLabel'>Initiative</label></div></div>";
 
-			template += "</div>"
-			template += "<div class='initGridWrap flex' style='flex:3;flex-basis:30%;display:none;margin-right:2rem;'></div>";
-			template += "<div class='initGridWrap flex' style='flex:6;flex-basis:40%;display:none;margin-right:2rem;'></div><div class='spacer'></div>";
+			template += "</div><div class='spacer'></div>"
+			template += "<div class='initGridWrap flex' style='flex:3;flex-basis:30%;display:none;'></div>";
+			template += "<div class='initGridWrap flex' style='flex:6;flex-basis:40%;display:none;'></div><div class='spacer'></div>";
 			
 			template += "<div style='flex: 1;text-align: right;white-space: nowrap;padding:1rem;align-self:flex-end;'>"
 								 + "<button type='button' class='mini initTurnBtns hover' data-hover='Delay characters turn' style='display:none;' onclick='view.delayTurn()'>Delay</button>"
@@ -170,7 +190,6 @@ var view = {
 								 + "<button type='button' class='mini initDefenseBtns hover' data-hover='Reduce initiative by 10<br>Full Defense...' onclick='view.minusTen(this)'>-10</button>"
 							 + "</div>"
 						 + "</div>";
-			
 			var div = document.createElement("DIV");
 			div.className = "initBlock " + type.toLowerCase();
 			div.id = "initBlock"+model.initBlockCounter++;
@@ -178,16 +197,22 @@ var view = {
 			model.initBlocks.add(div);
 			container.appendChild(div);
 			var gridWrap = div.getElementsByClassName("initGridWrap");
-			var type = track.scoreBoardType.get("Damage");
+			var trackType = track.scoreBoardType.get("Damage");
 			track.showNamePlate=false;
 			track.showCloseButton=false;
 			track.showTitle=true;
 			var physicalMax = character.Row>0?Math.ceil(character.Body/2)+8:9;
 			var stunMax = character.Row>0?Math.ceil(character.Willpower/2)+8:9;
-			gridWrap[0].appendChild(track.buildGrid(type,name,view.closeGridCallback,physicalMax,stunMax,character.PhysicalCurrent,character.StunCurrent))
-			type = track.scoreBoardType.get("Status");
-			gridWrap[1].appendChild(track.buildGrid(type,""));			
+			gridWrap[0].appendChild(track.buildGrid(trackType,name,view.closeGridCallback,physicalMax,stunMax,character.PhysicalCurrent,character.StunCurrent))
+			trackType = track.scoreBoardType.get("Status");
+			gridWrap[1].appendChild(track.buildGrid(trackType,""));			
 			view.toggleInitButtons();
+			if(type==="PC" && character.Row>0)
+			{
+				var charRowArray = [];
+				charRowArray.push(character)
+				view.afterAwardSelectCharacters(charRowArray);
+			}
 		},
 		addResizeEvent:function(){
 			if(window.attachEvent) {
@@ -199,6 +224,64 @@ var view = {
 			    window.addEventListener('resize', function() {
 			        view.drawGrid();
 			    });
+			}
+		},
+		afterAwardSelectCharacters:function(list){
+			for(var i =0, z=list.length;i<z;i++)
+			{
+				var a = list[i];
+				model.awardCharacters.set(a);
+			}
+			ir.disable("awardSendBtn",model.awardCharacters.size()<1);
+			view.buildAwardCharacterList();
+		},
+		afterSendAward:function(res,req){
+			var errors = [];
+			if(res.errors)
+			{
+				if (res.errors.splice)
+				{
+					errors = errors.concat(res.errors);
+				}
+				else
+				{
+					errors.push(res.errors);
+				}
+				if (errors.length>0)
+				{
+					Status.error(errors.join("<br>"),7000);
+				}
+			}
+			if(res.ok)
+			{
+				view.resetAward();
+				var msg= "";
+				if(res.karma>0)
+				{
+					msg+= res.karma + " Karma ";
+				}
+				if(msg.length>0 && res.nuyen>0)
+				{
+					msg+= "and "
+				}
+				if(res.nuyen>0)
+				{
+					msg+= res.nuyen + sr5.nuyen;
+				}
+				msg+= " sent to " + res.names.replace(/,([^,]*)$/, ' and ' + '$1').replace(/"/g,'').replace(/,/g,', ');
+				Status.success(msg,9000);
+				var rows = req.characterRows.split(sr5.splitter);
+				for(var i=0,z=rows.length;i<z;i++)
+				{
+					var r = ir.n(rows[i]);
+					var c = sr5.characters.get(r);
+					if(c!=null)
+					{
+						c.Nuyen += res.nuyen;
+						c.Karma += res.karma;
+						c.ForceRefresh=true;
+					}
+				}
 			}
 		},
 		autoRollInitiative:function(){
@@ -215,7 +298,7 @@ var view = {
 		buildAddInitGroupButtons:function(){
 			var groups = model.groups.values;
 			var container = ir.get("addInitBtnSelector");
-			var template = "<button class='childBtn' type='button' onclick='view.pickGroup(\"{0}\")'>{1}</button>";
+			var template = "<button class='childBtn hover' type='button' data-hover='Add your team \"{1}\"' onclick='view.pickGroup(\"{0}\")'>{1}</button>";
 			var htm = "";
 			for(var i=0,z=groups.length;i<z;i++)	
 			{
@@ -223,6 +306,23 @@ var view = {
 				htm += ir.format(template,t.Row,t.Name);
 			}
 			container.innerHTML += htm;
+		},
+		buildAwardCharacterList:function(){
+			var container = ir.get("awardCharacterList");
+			container.innerHTML = "";
+			var template = "<div id='awardCharacter{1}' class='awardCharacter'><div class='x hover' data-hover='Remove this character' onclick='view.removeAwardCharacter({1})'>X</div><div class='awardThumbWrap' onclick='view.toggleAwardCharacter(this,{1})'>{0}<div class='overlay'></div></div><label class='thumbLabel' >{2}</label></div>";
+			var list = model.awardCharacters.values;
+			for(var i =0, z=list.length;i<z;i++)
+			{
+				var a = list[i];
+				/*
+				if(a.Type !== "PC")
+				{
+					continue;
+				}
+				*/
+				container.innerHTML+= ir.format(template,view.getPortrait(a),a.Row,a.Name);
+			}
 		},
 		buildInitiative:function(blocks){
 			var container = ir.get("initiativeContainer");
@@ -478,12 +578,6 @@ var view = {
 				return 0;
 			}
 		},
-		minusFive:function(btn){
-			 view.minus(btn,5);
-		},
-		minusTen:function(btn){
-			 view.minus(btn,10);
-		},
 		minus:function(btn,amount)
 		{
 			var block = btn.parentNode.parentNode;
@@ -496,6 +590,24 @@ var view = {
 				view.buildInitiative(model.initBlocks.sort(view.initBlockComparator));
 				view.showCurrentBlock(true);
 			}
+		},
+		minusAward:function(type){
+			var ele = ir.get("award" + type);
+			ele.value = Math.max(0,ir.n(ele.value) - ir.n(ele.step));
+		},
+		minusHoldAward:function(type){
+			view.interval = setInterval(function(){
+				view.minusAward(type);
+			},200);
+		},
+		minusReleaseAward:function(type){
+			clearInterval(view.interval);
+		},
+		minusFive:function(btn){
+			 view.minus(btn,5);
+		},
+		minusTen:function(btn){
+			 view.minus(btn,10);
 		},
 		nextPass:function(){
 			var blocks = model.initBlocks.values;
@@ -542,7 +654,7 @@ var view = {
 			}
 			else
 			{
-				sr5.showPlayerCharacter(player);
+				sr5.showPlayerCharacter(player,player.ForceRefresh);
 			}
 		},
 		pickCharacter:function()
@@ -571,6 +683,48 @@ var view = {
 			view.rebuildBoard();
 			view.toggleTypeButtons();
 		},
+		plusAward:function(type){
+			var ele = ir.get("award" + type);
+			ele.value = ir.n(ele.value) + ir.n(ele.step);
+		},
+		plusHoldAward:function(type){
+			view.interval = setInterval(function(){
+				view.plusAward(type);
+			},200);
+		},
+		plusReleaseAward:function(type){
+			clearInterval(view.interval);
+		},
+		readAward:function(req){
+			var list = model.awardCharacters.values;
+			var characterRows = "";
+			var splitter = "";
+			for(var i =0, z=list.length;i<z;i++)
+			{
+				var a = list[i];
+				if(a.Off)
+				{
+					continue;
+				}
+				characterRows+=splitter+a.Row;
+				splitter=sr5.splitter;
+			}
+			if(characterRows.length < 1)
+			{
+				Status.error("Choose Runners to send rewards to.")
+				return false;
+			}
+			
+			req.characterRows = characterRows;
+			req.nuyen = ir.vn("awardNuyen");
+			req.karma = ir.vn("awardKarma");
+			if(req.nuyen + req.karma == 0)
+			{
+				Status.error("Nuyen? Karma?")
+				return false;
+			}
+			return req;
+		},	
 		rebuildBoard:function(){
 			var container = ir.get("boardContainer");
 			var boards = model.boards.sort(view.sortBoardComparator);
@@ -579,9 +733,27 @@ var view = {
 				container.appendChild(boards[i]);
 			}
 			hoverPop.init();
+		},		
+		removeAwardCharacter:function(characterRow){
+			model.awardCharacters.remove(characterRow);
+			var div = ir.get("awardCharacter"+characterRow,true);
+			ir.deleteNode(div);		
+			ir.disable("awardSendBtn",model.awardCharacters.size()<1);	
+		},
+		resetAward:function(){
+			ir.set("awardNuyen",0);
+			ir.set("awardKarma",0);
 		},
 		saveMapData:function(){
 			model.updateMap();
+		},
+		sendAward:function(){
+			var req = {fn:"award",characterRows:null};
+			req = view.readAward(req);
+			if(req)
+			{
+				sr5.ajaxAsync(req,function(res){view.afterSendAward(res,req);});			
+			}
 		},
 		setBlockInitiative:function(block,value){
 			block.getElementsByClassName("initiative")[0].value = Math.max(0,value);
@@ -667,8 +839,22 @@ var view = {
 		{
 			sr5.toggleChildButtons("addInitBtn");
 		},
+		toggleAwardCharacter:function(ele,characterRow){
+			var c = model.awardCharacters.get(characterRow)
+			if(ele.classList.contains("off"))
+			{
+				ele.classList.remove("off");
+				c.Off = false;
+			}
+			else
+			{
+				ele.classList.add("off");
+				c.Off = true;
+			}
+		},
 		toggleDamageGrid:function(ele){
 			var grid = ele.parentNode.parentNode.parentNode.getElementsByClassName("initGridWrap")[0];
+			ele.classList[!ir.visible(grid)?"add":"remove"]("on");
 			ir.show(grid,!ir.visible(grid));
 		},
 		toggleGrid:function(){
@@ -705,6 +891,7 @@ var view = {
 		},
 		toggleStatusGrid:function(ele){
 			var grid = ele.parentNode.parentNode.parentNode.getElementsByClassName("initGridWrap")[1];
+			ele.classList[!ir.visible(grid)?"add":"remove"]("on");
 			ir.show(grid,!ir.visible(grid));
 		},
 		toggleTypeButtons:function()

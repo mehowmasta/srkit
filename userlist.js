@@ -98,7 +98,12 @@ var view = {
 			view.buildUsers();
 			view.buildRequests();
 			sr5.initHover();
+			if(model.requests.size()>0)
+			{
+				view.pickTab("Requests");
+			}
 			sr5.doneLoading();
+			
 		},
 		accept:function(row){
 			model.accept(row,view.afterAccept);

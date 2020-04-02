@@ -186,6 +186,7 @@ var pickQualityPop = {
 				cl = ir.copy(q);
 				cl.Rating = 1;
 				cl.Delete = false;
+				cl.Note = "";
 				cl.CharacterRow = self.characterRow;
 				cl.ItemRow = self.tempItemRow--;
 				self.currentList.add(cl);

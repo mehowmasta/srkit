@@ -22,6 +22,10 @@ public class GroupRec extends AppRec{
 	public String ShareKey = "";
 	public int User = 0;
 	//
+	public static List<GroupRec> selectForCharacter(Database db,int character,boolean showInactive) throws Exception
+	{
+		return db.selectList("GroupRec.selectForCharacter",GroupRec.class,character,showInactive?2:1);
+	}
 	public static List<GroupRec> selectForUser(Database db,int user,boolean showInactive) throws Exception
 	{
 		return db.selectList("GroupRec.selectForUser",GroupRec.class,user,user,showInactive?2:1);

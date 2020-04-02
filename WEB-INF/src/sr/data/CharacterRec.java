@@ -162,6 +162,7 @@ public class CharacterRec extends AppRec {
 	public static final String STUNMAX = "StunMax";
 	public final static String TABLE = "tCharacter";
 	public static final String TOTALKARMA = "TotalKarma";
+	public static final String TRANSFER = "Transfer";
 	public static final String TYPE = "Type";
 	public final static String USER = "User";
 	public static final String WEIGHT = "Weight";
@@ -231,8 +232,21 @@ public class CharacterRec extends AppRec {
 	public boolean IsImport = false;
 	public String ImportNotes = "";
 	public boolean Register = false;
+	/* hold the UserRec.Row for the user that is transferring this character 
+	 * once the character transfer is accepted set transfer back to 0*/ 
+	public int Transfer = 0;
 	//
 
+	public static void addKarma(Database db, int user, int karma) throws Exception
+	{
+		db.execute("CharacterRec.addKarma", karma,user);
+		return;
+	}
+	public static void addNuyen(Database db, int user, int nuyen) throws Exception
+	{
+		db.execute("CharacterRec.addNuyen", nuyen,user);
+		return;
+	}
 	public static List<AdeptPowerRec> selectCharacterAdeptPowers(Database db, int characterRow) throws Exception {
 		return AdeptPowerRec.selectForCharacter(db, characterRow);
 	}
@@ -293,7 +307,7 @@ public class CharacterRec extends AppRec {
 		return db.selectList("CharacterRec.selectForPicker", CharacterRec.class, user,user);
 	}
 	public static List<CharacterRec> selectForUser(Database db, int user) throws Exception {
-		return db.selectList("CharacterRec.selectForUser", CharacterRec.class, user);
+		return db.selectList("CharacterRec.selectForUser", CharacterRec.class, user,user);
 	}
 
 	public static CharacterRec selectPlayerCharacter(Database db, int user, int characterRow) throws Exception {
@@ -301,7 +315,6 @@ public class CharacterRec extends AppRec {
 		db.selectFirst("CharacterRec.selectPlayerCharacter", c, user, characterRow);
 		return c;
 	}
-	
 	public CharacterRec() {
 	}
 
@@ -410,6 +423,13 @@ public class CharacterRec extends AppRec {
 		return Resonance > 0;
 	}
 
+	public UserRec selectUser(Database db) throws Exception
+	{
+		UserRec user = new UserRec();
+		user.Row = this.User;
+		db.select(user);
+		return user;
+	}
 	@Override
 	public boolean validate(IValidator iv) throws Exception {
 		return iv.isOK();

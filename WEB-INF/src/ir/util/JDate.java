@@ -17,7 +17,7 @@ public class JDate implements java.io.Serializable,Comparable<JDate>
       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
   private static final JDate dateMax = new JDate(3001, 12, 31);
   private static final JDate dateMin = new JDate(1970, 1, 1);
-  public final static String DefaultFormat = "MMM d yyyy";
+  public final static String DefaultFormat = "MMM d, yyyy";
   public static final String[] Dow = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
   public static final String[] DowAbbr = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
   private static ThreadLocal<Integer> HoursOffset = new ThreadLocal<Integer>();

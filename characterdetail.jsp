@@ -4,6 +4,7 @@
 model.characterSetting = <%= _bean.get("CharacterSetting") %>;
 model.character = <%= _bean.get("Character") %>;
 model.cyberwareGrade = <%= _bean.get("CyberwareGrade") %>;
+model.groups = <%= _bean.get("Groups") %>;
 </script>
 <style>
 	.characterHeader{
@@ -248,12 +249,25 @@ model.cyberwareGrade = <%= _bean.get("CyberwareGrade") %>;
 			<div class='spacer'></div>
 			<%=_bean.get("ctlNote") %>	
 		</div>
-	<div class='section panelWrap show' id='containerContact'>	
-		<div class='pageSubtitle'>Contacts</div>
-		<div class='container flex' style='justify-content: flex-start;'>	
-			<div id='contactDetail' class='flexDetail'></div>
-			<div class='flex' style='justify-content:flex-end;width:100%;'>
-				<button type='button' class='hover' data-hover='Add "Contacts" for runner'  onclick='return view.addContact()'>Add</button>
+	<div class='pageSubtitle'>Contacts</div>
+	<div class='container flex' style='justify-content: flex-start;'>	
+		<div id='contactDetail' class='flexDetail'></div>
+		<div class='flex' style='justify-content:flex-end;width:100%;'>
+			<button type='button' class='hover' data-hover='Add "Contacts" for runner'  onclick='return view.addContact()'>Add</button>
+		</div>
+	</div>
+	<div class='pageSubtitle'>Teams</div>
+	<div class='container flex' style='justify-content: flex-start;'>	
+		<div id='groupsDiv' class='flexDetail' style='width:100%;'></div>
+		<div class='flex' style='justify-content:flex-end;width:100%;'>
+			<button id='btnJoinTeam' type='button' style='display:none;' class='parentBtn hover' data-hover='Join this runner to a to an existing team using the Team Key.' onclick='view.toggleJoinTeam()' >Join Team</button>
+			<div class='childBtnContainer flex' id='btnJoinTeamSelector' style='align-items:center;'>
+				<div class='x' style='top:-2rem;' onclick='view.toggleJoinTeam()'>X</div>
+				<div class='inputWrap childBtn'>
+					<input type='text' id='groupKey' size='6' maxlength='6' class='hover' data-hover='Join team that matches input Team Key' onkeydown='view.joinTeamKeydown(event);' style='text-transform:uppercase;'>
+					<label class='inputLabel'>Team Key</label>
+				</div>
+				<button type='button' class='childBtn' style='max-height:3.75rem' onclick='view.joinTeam()'>Join</button>
 			</div>
 		</div>
 	</div>
@@ -271,18 +285,29 @@ model.cyberwareGrade = <%= _bean.get("CyberwareGrade") %>;
 		<%=_bean.get("ctlImportNotes") %>
 		<div class='spacer'></div>
 		<button type='button' onclick='view.calculateEssence()'>Re-calc Essence</button>
+		<%=_bean.get("DefaultBtn") %><br>
+		<div class='spacer'></div>
+		<div id='transferBtnWrap'>
+			<button id='btnTransfer' type='button' style='' class='parentBtn hover' data-hover='Send this character to a friend.' onclick='view.toggleTransfer()' >Transfer Character</button>
+			<div class='childBtnContainer flex' id='btnTransferSelector' style='align-items:center;'>
+				<div class='x' style='top:-2rem;' onclick='view.toggleTransfer()'>X</div>
+				<div class='selectWrap childBtn'>
+					<select id='transferSelect' class='hover' data-hover='Transfer character to...'>
+					</select>
+					<label class='inputLabel'>Transfer to...</label>
+				</div>
+				<button type='button' class='childBtn' style='max-height:3.75rem' onclick='view.transfer()'>Transfer</button>
+			</div>
+		</div>
+		<div id='transferRequestWrap' style='width:100%;'>
+			<div class="pageSubtitle">Transfer</div>
+			<div class='section message flex' style='justify-content: flex-end;flex:1;'>
+				<h3 id='transferTo' style='margin:0.5rem;width:100%;'></h3><div class='spacer'></div><button class='mini' type='button' onclick='view.cancelTransfer()'>Cancel Transfer</button>
+			</div>
+		</div>
 	</div>
 </div>
-<div class='container flex footer' style='align-items:center;'>
-	<button id='btnJoinTeam' type='button' style='display:none;' class='parentBtn hover' data-hover='Join this runner to a to an existing team using the Team Key.' onclick='view.toggleJoinTeam()' >Join Team</button>
-	<div class='childBtnContainer flex' id='btnJoinTeamSelector' style='align-items:center;'>
-		<div class='x' style='top:-2rem;' onclick='view.toggleJoinTeam()'>X</div>
-		<div class='inputWrap childBtn'>
-			<input type='text' id='groupKey' size='6' maxlength='6' class='hover' data-hover='Join team that matches input Team Key' onkeydown='view.joinTeamKeydown(event);' style='text-transform:uppercase;'>
-			<label class='inputLabel'>Team Key</label>
-		</div>
-		<button type='button' class='childBtn' style='max-height:3.75rem' onclick='view.joinTeam()'>Join</button>
-	</div>	
+<div class='container flex footer' style='align-items:center;'>		
 	<%=_bean.get("Buttons") %>
 </div>
 <%=_bean.endForm() %>
@@ -299,6 +324,7 @@ model.cyberwareGrade = <%= _bean.get("CyberwareGrade") %>;
 <%@include  file="pickskillpop.jspf"%>
 <%@include  file="pickspellpop.jspf"%>
 <%@include  file="pickvehiclepop.jspf"%>
+<%@include  file="pickweaponmodifierpop.jspf"%>
 <%@include  file="pickweaponpop.jspf"%>
 <%@include  file="contactpop.jspf"%>
 <%@include  file="detailpop.jspf"%>

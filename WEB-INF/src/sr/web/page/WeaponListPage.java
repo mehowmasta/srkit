@@ -17,12 +17,12 @@ public class WeaponListPage extends AppBasePage {
 	{
 		return true;
 	}
+	 */
 	@Override
 	public boolean hasSort()
 	{
 		return true;
 	}
-	*/
 	@Override
 	public boolean hasSearch()
 	{

@@ -7,48 +7,68 @@
 		<div class='title' id='journalPopTitle' >Journal</div>
 	</div>
 	<div class='popupContent'>
+		<!--  
+		<div id='journalTabs' class='flex' style='padding-top:1rem;justify-content:flex-end;overflow:hidden;align-items:flex-end;'>
+			<div class='tabFillLeft'></div>
+			<div id='journalTabDetail' class='tab selected' onclick='journal.pickTab("Detail");'>Entry</div>
+			<div id='journalTabList' class='tab' onclick='journal.pickTab("List");'>List</div>
+		</div>
+		-->	
 		<div class='flex journalWrap' style='align-items:center;height: calc(100vh - 4rem);' >
-			<div class='flex' style='min-width:15rem;flex:2;max-width:25rem;justify-content:flex-start;flex-direction:column;'>
-				<div id='journalPopList' class='flex' style='height:calc(100vh - 12rem);'>				
+			<div id='journalPopListWrap' class='journalPopListWrap flex transition open' >
+				<div id='journalPopList' class='flex'>				
 					
 				</div>
-				<div class="flex" style="align-items:center;">
-					<button id='journalPopNewBtn' type="button" tabindex="1" name="journalPopNewBtn" onclick="journalPop.newEntry()" class="hover" data-hover="Add New Journal Entry">New</button>			
+				<div class="flex footer" style="align-items:center;margin-top:0;flex:1;justify-content:space-evenly;">
+					<button id='journalPopCloseListBtn' type="button" tabindex="1" name="journalPopCloseListBtn" onclick="journalPop.closeList()" class="hover mini" data-hover="Show journal entry">Entry</button>			
+					<button id='journalPopSortBtn' type="button" tabindex="1" name="journalPopSortBtn" onclick="journalPop.changeSort()" class="hover mini" data-hover="Change sorting criteria">Sort</button>			
+					<button id='journalPopNewBtn' type="button" tabindex="1" name="journalPopNewBtn" onclick="journalPop.newEntry()" class="hover mini" data-hover="Add New Journal Entry">New</button>			
 				</div>
 			</div>
-			<div id='journalPopEntry' class='transition' style=''></div>
+			<div id='journalPopEntry' class='transition' style=''>
+				<div id='journalPopEntryWrap' ></div>
+				<div class="flex footer" style="align-items:center;flex:1;margin-top:0;justify-content:space-evenly;">
+					<button id="journalPopPrevBtn"  tabindex="1" type="button" onclick="journalPop.prevEntry()" class="hover mini" data-hover="Previous entry">&lt;</button>
+					<button id="journalPopListBtn"  tabindex="1" type="button" onclick="journalPop.toggleList()" class="hover mini" data-hover="show journal entry list">List</button>					
+					<button id='journalPopDeleteBtn' type="button" tabindex="1" name="journalPopDeleteBtn" onclick="journalPop.deleteEntry()" class="hover mini" data-hover="Delete journal entry">Delete</button>		
+					<button id='journalPopEditBtn' type="button" tabindex="1" name="journalPopEditBtn" onclick="journalPop.editEntry()" class="hover mini" data-hover="Edit journal entry">Edit</button>		
+					<button id="journalPopNextBtn"  tabindex="1" type="button" onclick="journalPop.nextEntry()" class="hover mini" data-hover="Next entry">&gt;</button>	
+				</div>
+			</div>
 			<div id='journalPopEntryEdit' class='transition open' style='flex-direction:column;'>
-				<div class='flex' style='justify-content:flex-start;flex:1;flex-direction:column;height:calc(100vh - 12rem);'>				
+				<div id='journalPopEntryEditWrap' class='flex'>				
 					<div class='flex' style='justify-content:space-between;width:100%;flex:0;'>
 						<div class="selectWrap">
-							<input type='text' id='jounralPopType' name='jounralPopType' tabindex='1' onfocus='this.select();' list='jounralPopTypeList'>
+							<input type='text' id='journallPopType' name='journalPopType' tabindex='1' onfocus='this.select();' list='journalPopTypeDataList'>
 							<label class="inputLabel">Type</label>
-							<datalist id="jounralPopTypeList">
-								<option>Brainstorming</option>
-								<option>Note</option>
-								<option>Session</option>							
-								<option>Story</option>
+							<datalist id="journalPopTypeDataList">
 							</datalist>
 						</div>
-						<div class="dateTimeWrap">
-							<input class='jdatetime' type='text' id='jounralPopTime' name='jounralPopTime' tabindex='1' onfocus='this.select();'>
+						<div class="dateTimeWrap" style='max-width:calc(100% - 2rem);'>
+							<input class='jdatetime' type='text' id='journalPopTime' name='journalPopTime' tabindex='1' onfocus='this.select();'>
 							<label class="inputLabel">Time</label>
 						</div>						
 					</div>
 					<div class='spacer'></div>
-					<div class="inputWrap" style='width:35rem;flex:0;'>
-						<input type='text' id='jounralPopTitle' name='jounralPopTitle' tabindex='1' onfocus='this.select();'>
+					<div class="selectWrap" style='width:35rem;flex:0;max-width:calc(100% - 2rem);'>
+						<input type='text' id='journalPopTitleText' name='journalPopTitleText' tabindex='1' onfocus='this.select();' list='journalPopTitleDataList'>
 						<label class="inputLabel">Title</label>
+							<datalist id="journalPopTitleDataList">
+							</datalist>
 					</div>
 					<div class='spacer'></div>
-					<div class="inputWrap" style='flex:10;'>
+					<div class="inputWrap" style='flex:10;max-width:calc(100% - 2rem);'>
 						<textarea tabindex="1" style="height:100%;width:100%;resize:none;" class="hover" name="journalPopText" id="journalPopText"></textarea>
 						<label class="inputLabel">Text</label>
 					</div>
+					<div class='checkWrap'>
+						<input type='checkbox' id='journalPopArchive'>
+						<label for='journalPopArchive'>Archive</label>
+					</div>	
 				</div>
-				<div class="flex footer" style="align-items:center;flex:1;">
-					<button id='journalPopUpdateBtn' type="button" tabindex="1" name="journalPopUpdateBtn" onclick="journalPop.updateEntry()" class="hover" data-hover="Update journal entry">Update</button>
-					<button id="journalPopCancelBtn"  tabindex="1" type="button" onclick="journalPop.cancelEntry()" class="hover" data-hover="Cancel editting journal entry">Cancel</button>					
+				<div class="flex footer" style="align-items:center;flex:1;margin-top:0;justify-content:space-evenly;">
+					<button id="journalPopCancelBtn"  tabindex="1" type="button" onclick="journalPop.cancelEntry()" class="hover mini" data-hover="Cancel editting journal entry">Cancel</button>					
+					<button id='journalPopUpdateBtn' type="button" tabindex="1" name="journalPopUpdateBtn" onclick="journalPop.updateEntry()" class="hover mini" data-hover="Update journal entry">Update</button>
 				</div>
 			</div>
 		</div>

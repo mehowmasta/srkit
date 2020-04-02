@@ -30,7 +30,7 @@ model.groups = new KeyedArray("Row",<%= _bean.get("Groups")%>);
 			<% } %>
 			<br>
 		</div>
-		<button type='button' id='clearInitBtn' tabindex='1' style='display:none;' onclick='view.clearInitiative()'>Clear</button>
+		<button type='button' id='clearInitBtn' style='display:none;' onclick='view.clearInitiative()'>Clear</button>
 		<button type='button' id='startCombatBtn' tabindex='1' style='display:none;' onclick='view.startCombat()'>Start Combat</button>
 		<button type='button' id='endCombatBtn' tabindex='1' style='display:none;' onclick='view.endCombat()'>End Combat</button>
 	</div>
@@ -40,6 +40,37 @@ model.groups = new KeyedArray("Row",<%= _bean.get("Groups")%>);
 <div class='container flex' style='padding:1rem 0;'>
 		<button class='parentBtn' id='addGridBtn' type='button' onclick='view.addGrid()'>Add Track</button>
 		<div class='childBtnContainer' id='addGridBtnSelector'></div>	
+</div>
+<div class='pageSubtitle'>Award</div>
+<div class='awardContainer' id='awardContainer'></div>
+<div class='container flex' style='padding-bottom:1rem;'>
+	<div class='flex' style='padding:1rem 0;text-align: center;justify-content:space-between;align-items:flex-end;'>
+		<div id='awardCharacterList' class='flex' style='flex:1;justify-content:flex-start;'>
+		</div>
+	</div>
+	<div class='spacer'></div>
+	<div id='awardNuyenWrap' class='flex' style='align-items:center;margin:0 1rem;'>
+		<button type='button' class='mini' onclick='view.minusAward("Nuyen")'  onmousedown='view.minusHoldAward("Nuyen")' onmouseup='view.minusReleaseAward("Nuyen")'>-</button>
+		<div class='inputWrap'>
+			<input type='number' id='awardNuyen' name='awardNuyen' tabindex='1' size='2' style='width:10rem;text-align: right;' value='0' min='0' step='500' onfocus='this.select();'>
+			<label class='inputLabel'>nuyen</label>
+		</div>
+		<button type='button' class='mini' onclick='view.plusAward("Nuyen")'  onmousedown='view.plusHoldAward("Nuyen")'  onmouseup='view.plusReleaseAward("Nuyen")'>+</button>
+	</div>
+	<div id='awardKarmaWrap' class='flex' style='align-items:center;margin:0 1rem;'>
+		<button type='button' class='mini' onclick='view.minusAward("Karma")' onmousedown='view.minusHoldAward("Karma")'  onmouseup='view.minusReleaseAward("Karma")'>-</button>
+		<div class='inputWrap'>
+			<input type='number' id='awardKarma' name='awardKarma' tabindex='1' size='2' style='width:6rem;text-align: right;' value='0' min='0' step='1' onfocus='this.select();'>
+			<label class='inputLabel'>karma</label>
+		</div>
+		<button type='button' class='mini' onclick='view.plusAward("Karma")'   onmousedown='view.plusHoldAward("Karma")'  onmouseup='view.plusReleaseAward("Karma")'>+</button>
+	</div>
+	<div class='spacer'></div>
+	<div  style='text-align: center;'>
+		<button type='button'  onclick='view.addAwardCharacter()'>Add Runners</button>
+		<button type='button' style='display:none;'  onclick='view.addAwardItem()'>Add Item</button>
+		<button type='button' id='awardSendBtn' disabled tabindex='1' onclick='view.sendAward()'>Send</button>
+	</div>
 </div>
 <div class='pageSubtitle'>Map</div>
 <div class='container flex' style='padding:1rem 0;align-items:center;'>

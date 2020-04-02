@@ -72,6 +72,7 @@ public abstract class Images
   public static String Quality = "rating.svg";
   public static String Rating = "review.svg";
   public static String Recoil = "recoil.svg";
+  public static String Report = "report.svg";
   public static String Rigging = "mars-rover.svg";
   public static String Security = "cctv.svg";
   public static String Search = "footprints.svg";
@@ -91,6 +92,7 @@ public abstract class Images
   public static String Trash = "trash.svg";
   public static String Users = "teamwork.svg";
   public static String Weapon = "shooting.svg";
+  public static String WeaponMod = "weaponMod.svg";
   public static String Vehicle = "jeep.svg";
   public static String Upload = "upload.svg";
   

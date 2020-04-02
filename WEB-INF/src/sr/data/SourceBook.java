@@ -14,6 +14,7 @@ public enum SourceBook {
 	RunAndGun("Run & Gun","SR5:R&G"),
 	RunFaster("Run Faster","SR5:RF"),
 	SailAwaySweetSister("Sail Away Sweet Sister","SR5:SASS"),
+	ShadowSpells("Shadow Spells","SR5:SSp"),
 	StolenSouls("Stolen Souls","SR5:SSo"),
 	StreetGrimoire("Street Grimoire","SR5:SG")
 	;

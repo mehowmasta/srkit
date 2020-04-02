@@ -17,6 +17,19 @@
 					<label class="inputLabel">Grade</label>
 				</div>
 			</div>
+			<div id='detailModPopMountWrap' class='flex'>
+				<div class="selectWrap">
+					<select name="detailModPopMount" id="detailModPopMount">
+						<option id='detailModPopMountTypeBarrel' value='Barrel'>Barrel</option>
+						<option id='detailModPopMountTypeInternal' value='Internal'>Internal</option>
+						<option id='detailModPopMountTypeSide' value='Side'>Side</option>
+						<option id='detailModPopMountTypeStock' value='Stock'>Stock</option>
+						<option id='detailModPopMountTypeTop' value='Top'>Top</option>
+						<option id='detailModPopMountTypeUnder' value='Under'>Under</option>
+					</select>
+					<label class="inputLabel">Mount</label>
+				</div>
+			</div>
 			<div id='detailModPopRatingWrap' class='flex' style='align-items:center;'>
 				<!-- <div class='subtitle spacer'>Rating</div> -->
 				<button id='detailModPopRatingMinus' type='button' style='width:4rem;min-width:4rem;' onclick='detailModPop.ratingChange(-1)'>-</button>
@@ -47,5 +60,5 @@
 </div>
 <script>
 detailModPop.blankCyberwareAttachment = <%= (new CharacterCyberwareAttachmentRec()).toString()%>;
-
+detailModPop.blankWeaponModifier = <%= (new CharacterWeaponModifierRec()).toString()%>;
 </script>

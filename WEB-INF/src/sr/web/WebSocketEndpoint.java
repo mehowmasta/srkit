@@ -37,6 +37,18 @@ public static List<WebSocketClient> findClientsByUser(UserRec user)
     }
     return lst;
 }
+public static List<WebSocketClient> findClientsByUserRow(int userRow)
+{
+    List<WebSocketClient> lst = new ArrayList<WebSocketClient>();
+    for (WebSocketClient client : App.webSocketClients.values())
+    {
+        if (client.userId == userRow)
+        {
+            lst.add(client);
+        }
+    }
+    return lst;
+}
 public static WebSocketClient getClientKey(String machineKey)
 {
     WebSocketClient client = App.webSocketClients.get(machineKey);

@@ -28,6 +28,7 @@ public class PreferencesPage extends AppBasePage {
 	public JControl ctlCharacter;
 	public JControl ctlTheme;
 	public JControl ctlAutoRoll;
+	public JControl ctlUseJournal;
     public ImageRec image = new ImageRec();
 
 	private void disableIfGuest() throws Exception {
@@ -50,6 +51,7 @@ public class PreferencesPage extends AppBasePage {
 		mapControl(ctlCharacter,currentUser,UserRec.PLAYERCHARACTER);
 		mapControl(ctlTheme,currentUser,UserRec.THEMEROW);
 		mapControl(ctlAutoRoll,currentUser,UserRec.AUTOROLL);
+		mapControl(ctlUseJournal,currentUser,UserRec.USEJOURNAL);
 		disableIfGuest();
 	}
 
@@ -89,6 +91,8 @@ public class PreferencesPage extends AppBasePage {
 	@Override
 	protected void write() throws Exception {
 		writeSourceBooks();
+		ctlUseJournal.setTitle("Use Journal");
+		//ctlUseJournal.addData("hover", "Enable and disable Journal Icon from top right header.");
 		ctlCharacter.addValue(0,"[none]");
 		ctlTheme.addValues(ThemeRec.selectNameRows(db));
 		List<CharacterRec> characters = CharacterRec.selectForUser(db, currentUser.Row);
@@ -100,11 +104,11 @@ public class PreferencesPage extends AppBasePage {
 	}
 	private void writeSourceBooks() throws Exception
 	{
-		StringBuilder b = new StringBuilder();
+		StringBuilder b = new StringBuilder("<div style='display:grid;width:100%;grid-template-columns: repeat(auto-fill, minmax(20rem,1fr));'>");
 		for(SourceBook sb : SourceBook.values())
 		{
 			b.append(JControl.check("ctl" + sb.name(),sb.text,currentUser.SourceBooks.indexOf(sb.code)>-1,currentUser.isGuest()?"disabled":""));
 		}
-		set("SourceBooks",b.toString());
+		set("SourceBooks",b.append("</div>").toString());
 	}
 }

@@ -15,9 +15,19 @@ var detailPop = {
 	},
 	addMod:function(){
 		var self = detailPop;
-		pickCyberwareAttachmentPop.attachmentList = self.currentAttachments;
-		pickCyberwareAttachmentPop.callback = self.afterPickAttachment;
-		pickCyberwareAttachmentPop.show(self.currentRecord);
+
+		if(self.currentRecordType === "Weapon")
+		{
+			pickWeaponModifierPop.attachmentList = self.currentAttachments;
+			pickWeaponModifierPop.callback = self.afterPickWeaponModifier;
+			pickWeaponModifierPop.show(self.currentRecord);
+		}
+		else
+		{
+			pickCyberwareAttachmentPop.attachmentList = self.currentAttachments;
+			pickCyberwareAttachmentPop.callback = self.afterPickAttachment;
+			pickCyberwareAttachmentPop.show(self.currentRecord);
+		}		
 	},
 	addProgram:function(){
 		var self = detailPop;
@@ -32,6 +42,15 @@ var detailPop = {
 		}
 		self.buildAttachments();
 	},
+	afterWeaponModifierUpdate:function(attachmentRec){
+		var self = detailPop;
+		self.currentAttachments.set(attachmentRec);
+		if(sr5.isShown(pickWeaponModifierPop.id))
+		{
+			popup(pickWeaponModifierPop.id);
+		}
+		self.buildWeaponModifiers();
+	},
 	afterPickAttachment:function(record){
 		var self = detailPop;
 		detailModPop.show(record,self.currentRecord,detailPop.afterAttachmentUpdate);
@@ -41,6 +60,10 @@ var detailPop = {
 		self.currentPrograms.clear();
 		self.currentPrograms.add(programList);
 		self.buildPrograms();
+	},
+	afterPickWeaponModifier:function(record){
+		var self = detailPop;
+		detailModPop.show(record,self.currentRecord,detailPop.afterWeaponModifierUpdate);
 	},
 	afterUpdate:function(res){
 		var self = detailPop;
@@ -78,6 +101,10 @@ var detailPop = {
 			{
 				if(self.currentAttachments.size()>0)
 				{
+					if(self.currentRecordType=== "Weapon")
+					{
+						return self.updateWeaponModifier();
+					}					
 					return self.updateAttachments();
 				}
 			}
@@ -125,6 +152,22 @@ var detailPop = {
 			}
 			self.currentRecord.Programs = self.currentPrograms;
 			
+		}
+		if(self.callback!=null)
+		{
+			self.callback(self.currentRecord);
+		}
+		self.close();
+	},
+	afterUpdateWeaponModifier:function(res){
+		var self = detailPop;
+		if(res.ok)
+		{
+			if(res.newRows && res.newRows.length>0)
+			{
+				sr5.applyNewRows(res.newRows,self.currentAttachments);
+			}
+			self.currentRecord.Attachments = self.currentAttachments;
 		}
 		if(self.callback!=null)
 		{
@@ -183,6 +226,54 @@ var detailPop = {
 		}
 		ir.set(self.id+"ProgramList",htm);
 	},
+	buildWeaponModifiers:function(){
+		var self = detailPop;	
+		var weapon = self.currentRecord;
+		if(self.currentAttachments == null)
+		{
+			ir.set(self.id+"ModList","");
+			return;
+		}	
+		var slots =["Barrel", "Internal", "Side", "Stock", "Top", "Under"];
+		var availableSlots = self.currentRecord.Mounts.replace(/ /g,"").split(",");
+		if(self.currentRecord.Mount== "Any")
+		{
+			available=["Barrel", "Internal", "Side", "Stock", "Top", "Under"];
+		}
+		var usedSlots = [];
+		var attachments = self.currentAttachments.values;
+		var capacitySum = 0;
+		var htm = "";
+		var template = "<div class='detail' id='detailPopAttachment{0}' onclick='detailPop.showAttachmentDetail({0})'>{1}</div>";
+		if(attachments!=null && attachments.length>0)
+		{
+			for(var i=0,z=attachments.length;i<z;i++)
+			{
+				var p = attachments[i];
+				if(p.Delete)
+				{
+					continue;
+				}
+				if(!usedSlots.indexOf(p.Mounted)>-1)
+				{
+					usedSlots.push(p.Mounted);
+				}
+				htm += ir.format(template,p.ItemRow,sr5.getWeaponModifier(p));
+			}
+		}
+		var modListSum = "";
+		var comma = "";
+		for(var i=0,z=slots.length;i<z;i++)
+		{
+			var a = slots[i];
+			var available = availableSlots.indexOf(a)>-1;
+			var used = usedSlots.indexOf(a)>-1;
+			modListSum +=  comma + "<span class='"+ (!available?"disabled":"") + (used?" over ":"")+"'>"+a+"</span>"
+			comma = ", ";
+		}
+		ir.set(self.id+"ModListSums", modListSum.length>0? "[" + modListSum + "]":"");
+		ir.set(self.id+"ModList",htm);
+	},
 	close:function(){
 		var self = detailPop;
 		self.currentRecord=null;
@@ -213,6 +304,7 @@ var detailPop = {
 		ir.set(self.id+"Section",sr5.getSection(self.currentRecord,null,true));
 		self.initNewRecord();
 		self.initTitle();
+		self.initNote();
 		self.initQuantity();
 		self.initRating();
 		self.initLevel();
@@ -230,6 +322,7 @@ var detailPop = {
 					 || self.blankCharacterRecord.hasOwnProperty("Grade")
 					 || self.blankCharacterRecord.hasOwnProperty("Quantity")
 					 || (self.blankCharacterRecord.hasOwnProperty("Level")  && (self.currentRecord.Max>1 || false))
+					 || (self.blankCharacterRecord.hasOwnProperty("Note"))
 					 || (self.blankCharacterRecord.hasOwnProperty("Rating") && (self.currentRecord.MaxRating>1||false))
 					 || self.blankCharacterRecord.hasOwnProperty("SkillRow") 
 					 || self.currentRecordType === "CharacterKnowledge" )
@@ -333,7 +426,14 @@ var detailPop = {
 			{
 				self.currentAttachments = new KeyedArray("ItemRow");
 			}
-			self.buildAttachments();
+			if(self.currentRecordType === "Weapon")
+			{
+				self.buildWeaponModifiers();
+			}
+			else
+			{
+				self.buildAttachments();
+			}
 			ir.show(self.id+"ModWrap");
 		}
 		else
@@ -351,6 +451,31 @@ var detailPop = {
 		{
 			record.ItemRow=0;
 			self.isNew=true;
+		}
+	},
+	initNote:function(){
+		var self = detailPop;
+		var record = self.currentRecord;
+		if(self.blankCharacterRecord.hasOwnProperty("Note"))
+		{
+			ir.set(self.id+"Note",record.Note || "");
+			ir.show(self.id+"NoteWrap",true);
+			if(self.currentRecord.hasOwnProperty("Options"))
+			{
+				var options = self.currentRecord.Options.split(",");
+				var list = ir.get(self.id+"NoteList");
+				list.innerHTML = "";
+				for(var i=0,z=options.length;i<z;i++)
+				{
+					list.innerHTML+="<option value='"+options[i]+"'>";
+				}
+			}
+		}
+		else
+		{
+			ir.set(self.id+"Note","");
+			ir.set(self.id+"NoteList","");
+			ir.hide(self.id+"NoteWrap");
 		}
 	},
 	initPrograms:function(){
@@ -501,6 +626,7 @@ var detailPop = {
 		var blank = self.blankCharacterRecord;
 		var current = self.currentRecord;
 		var isKnowledge = self.currentRecordType === "CharacterKnowledge";
+		var hasError=false;
 		if(blank.hasOwnProperty("Equipped"))
 		{
 			current.Equipped = ir.v(self.id+"Equip");			
@@ -516,6 +642,15 @@ var detailPop = {
 		if(blank.hasOwnProperty("Grade"))
 		{
 			current.Grade = ir.v(self.id+"Grade");
+		}
+		if(blank.hasOwnProperty("Note"))
+		{
+			current.Note = ir.escapeHtml(ir.v(self.id+"Note"));
+			if(current.Note.length==0 && current.RequireText)
+			{
+				Status.error("Extra note is required. Re-read the description.");
+				hasError = true;
+			}
 		}
 		if(blank.hasOwnProperty("Special"))
 		{
@@ -533,7 +668,7 @@ var detailPop = {
 				if(current.Name.length==0)
 				{
 					Status.error("Knowledge must have a name.");
-					return false;
+					hasError = true;
 				}
 			}
 			if(blank.hasOwnProperty("Type"))
@@ -542,7 +677,7 @@ var detailPop = {
 				if(current.Type.length==0)
 				{
 					Status.error("Knowledge must have a type.");
-					return false;
+					hasError = true;
 				}
 			}
 			if(blank.hasOwnProperty("Native"))
@@ -550,7 +685,7 @@ var detailPop = {
 				current.Native = ir.v(self.id+"KnowledgeNative");
 			}
 		}
-		return true;
+		return !hasError;
 	},
 	remove:function(){
 		var self = detailPop;
@@ -579,7 +714,12 @@ var detailPop = {
 	showAttachmentDetail:function(row){
 		var self = detailPop;
 		var record = self.currentAttachments.get(row);
-		detailModPop.show(record,self.currentRecord,detailPop.afterAttachmentUpdate);
+		var callback = detailPop.afterAttachmentUpdate;
+		if(self.currentRecordType==="Weapon")
+		{
+			callback = detailPop.afterWeaponModifierUpdate;
+		}
+		detailModPop.show(record,self.currentRecord,callback);
 	},
 	showProgramDescription:function(row){
 		var self = detailPop;
@@ -608,6 +748,10 @@ var detailPop = {
 	updatePrograms:function(){
 		var self = detailPop;
 		sr5["updateCharacter"+self.currentRecordType+"Program"](self.characterRow,self.currentRecord.ItemRow,self.currentPrograms.values,self.afterUpdatePrograms);
+	},
+	updateWeaponModifier:function(){
+		var self = detailPop;
+		sr5["updateCharacter"+self.currentRecordType+"Modifier"](self.characterRow,self.currentRecord.ItemRow,self.currentAttachments.values,self.afterUpdateWeaponModifier);
 	},
 	zz_detailPop:0
 };

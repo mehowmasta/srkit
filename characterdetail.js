@@ -1,6 +1,17 @@
 "use strict";
 var model = {
 		character:null,
+		transferCharacter:function(toUser){
+			var callback = function(res)
+			{
+				if(res.ok)
+				{
+					model.character.Transfer=toUser;
+					view.afterTransfer();
+				}
+			};
+			sr5.ajaxAsync({fn:"transferCharacter",characterRow:model.character.Row,toUser:toUser},callback);
+		},
 		updateCharacterSetting:function(togglePanel){
 			var callback = function(res)
 			{
@@ -19,7 +30,9 @@ var view = {
 		var lastTab = sesGet(view.prefix + model.character.Row + "tab","Personal");
 		view.pickTab(lastTab);
 		ir.show("btnJoinTeam",model.character.Row>0);
+		view.initFriendSelect();
 		view.initTogglePanel();
+		view.initTransfer();
 		view.initAttachments();
 		view.toggleProfessionalRating();
 		ir.disable("tabAbilities",model.character.Row==0);
@@ -50,6 +63,7 @@ var view = {
 		view.buildSpell(model.character.Spell.values);
 		view.buildVehicle(model.character.Vehicle.values);
 		view.buildWeapon(model.character.Weapon.values);
+		view.buildTeams();
 		view.changeMagic();
 		sr5.doneLoading();
 	},
@@ -133,8 +147,26 @@ var view = {
 		}
 		view["build"+table]();		
 	},
-	afterJoinTeam:function(){
-		
+	afterJoinTeam:function(res){
+		if(res.ok)
+		{
+			Status.success("Joined Team: "+ res.teamName ,5000);
+			model.groups = res.groups;
+			view.buildTeams();
+			ir.set("groupKey","");
+			view.toggleJoinTeam();
+		}
+	},
+	afterLeaveTeam:function(res){
+		if(res.ok)
+		{
+			Status.success("Left Team" ,5000);
+			model.groups = res.groups;
+			view.buildTeams();
+		}
+	},
+	afterTransfer:function(){
+		view.initTransfer();
 	},
 	buildAdeptPower:function(powers){
 		if(powers==null)
@@ -237,6 +269,33 @@ var view = {
 		}
 		ir.set("spellDetail",sr5.getCharacterSpell(spells,"view.showDetail",view.prefix));
 	},
+	buildTeams:function(){
+		var template = "<div class='flex' style='align-items:center;justify-content:space-between;'>"
+			 + "<div>"
+			 + "<div class='title'><b>{0}</b></div>"
+			 + "</div>"
+			 + "<div>" 
+			 + "<div class='subtitle'><b>{1}</b></div>"
+			 + "</div>"
+			 + "<div class='spacer'></div>"
+			 + "<div class='flex {2}' style='justify-content:flex-start;'>{3}</div>"
+			 + "<div style='align-self:flex-start;'><button type='button' class='mini' onclick='view.leaveTeam({4});'>Leave Team</button></div>"
+			 + "</div>"
+			 + "</div><div class='spacer'></div>";
+		var teams = model.groups;
+		var container = ir.get("groupsDiv");
+		container.innerHTML = "";
+		for(var i =0,z=teams.length;i<z;i++)
+		{
+			var s = teams[i];
+			container.innerHTML += ir.format(template,
+					s.Name + (s.User==sr5.user.Row?"":" <span class='subtitle'>(Joined)</span>"),
+					s.Inactive?"Inactive":(s.Private?"Private":"Team Key: " + s.ShareKey),
+					s.Inactive?"inactive":"",
+					view.getTeamPortraits(s),
+					s.Row);
+		}
+	},
 	buildVehicle:function(vehicles){
 		if(vehicles==null)
 		{
@@ -276,6 +335,10 @@ var view = {
 		essenceTotal = 6 - essenceTotal;
 		ir.set("ctlEssence",essenceTotal.toFixed(2));
 		Status.info("Essence has been set to " + (essenceTotal.toFixed(2)) + "<br>"+sr5.updateReminder,6000);
+	},
+	cancelTransfer:function(){
+		ir.set("transferSelect",0);
+		view.transfer();
 	},
 	changeAgility:function(){
 		var agility = ir.vn("ctlAgility");
@@ -359,8 +422,44 @@ var view = {
 		};
 		confirmPop.show("Are you sure you want to delete this character?",callback);
 	},
+	getTeamPortraits:function(group)
+	{
+		var htm ="";
+		if(group.Characters.length==0 || group.Images.length==0)
+		{
+			return htm;
+		}
+		var template = "<div class='thumbWrap clickable' onclick='view.showTeamSheet({2})'><img src='images/Face/{0}' class='thumb'><label class='thumbLabel'>{1}</label></div>";
+		var sources = group.Images.split(",");
+		var names = group.Characters.split(",");
+		var characterRows = group.CharacterRows.split(",");
+		for(var i=0,z=sources.length;i<z;i++)
+		{
+			var s = sources[i];
+			if(s.charAt(0)=='t')
+			{
+				htm += ir.format(template,s,ir.ellipsis(names[i],12),characterRows[i]);
+			}
+			else
+			{
+				htm += ir.format(template,"thumb_0_"+sr5.unknownFaces[parseInt(Math.random()*sr5.unknownFaces.length)]+".jpg",ir.ellipsis(names[i],12),characterRows[i]);
+			}
+			
+		}
+		return htm;			
+	},
 	initAttachments:function(){
 		sr5.initPlayerAttachments(model.character);
+	},
+	initFriendSelect:function(){
+		var selectBox = ir.get("transferSelect");
+		var friends = sr5.friends.values;
+		addOption(selectBox,0,"[select user]");
+		for(var i=0,z=friends.length;i<z;i++)
+		{
+			var a =friends[i];
+			addOption(selectBox,a.Row,a.Name);
+		}
 	},
 	initTogglePanel:function(){
 		var panels = document.getElementsByClassName("panelWrap");
@@ -386,22 +485,24 @@ var view = {
 		}
 		return false;
 	},
+	initTransfer:function(){
+		ir.show("btnTransfer",model.character.Row>0);
+		ir.show("transferBtnWrap",model.character.Transfer==0);
+		ir.show("transferRequestWrap",model.character.Transfer>0);
+		if(model.character.Transfer>0)
+		{
+			var friend = sr5.friends.get(model.character.Transfer);
+			var name = friend!=null?friend.Name + " ":"UserID: "+model.character.Transfer;
+			ir.set("transferTo", "Transfer request sent to <i>" + name + "</i>, pending user's acceptance...");		
+		}
+	},
 	joinTeam:function(){
 		var key = ir.v("groupKey");
 		if(key.length!=6)
 		{
 			return Status.error("Incorrect key length. Group keys are 6 digit alpha numeric. Found on Teams page.",6000);
 		}
-		var callback=function(res){
-			if(res.ok)
-			{
-				Status.success("Joined Team: "+ res.teamName ,5000);
-				ir.set("groupKey","");
-				view.afterJoinTeam();
-				view.toggleJoinTeam();
-			}
-		};
-		sr5.ajaxAsync({fn:"joinTeam",groupKey:key,characterRow:model.character.Row},callback);
+		sr5.ajaxAsync({fn:"joinTeam",groupKey:key,characterRow:model.character.Row},view.afterJoinTeam);
 	},
 	joinTeamKeydown:function(event){
 		if (typeof event == 'undefined' && window.event)
@@ -424,8 +525,15 @@ var view = {
 				break;
 		}
 	},
-	leaveTeam:function(){
-		
+	leaveTeam:function(groupRow){
+		var callback = function(yes)
+		{
+			if(yes)
+			{
+				sr5.ajaxAsync({fn:"leaveTeam",groupRow:groupRow,characterRow:model.character.Row},view.afterLeaveTeam);
+			}
+		};
+		confirmPop.show("Are you sure you want to leave this team?",callback);
 	},
 	nameKeyup:function(e){
 
@@ -591,6 +699,22 @@ var view = {
 	showSheet:function(){
 		playerCharacterPop.show(model.character,true);
 	},
+	showTeamSheet:function(row)
+	{
+		row = ir.n(row);
+		if(row>0)
+		{
+			var player = sr5.characters.get(row);
+			if(player==null)
+			{
+				sr5.selectPlayer(row,sr5.showPlayerCharacter);
+			}
+			else
+			{
+				sr5.showPlayerCharacter(player);
+			}
+		}
+	},
 	submit:function(){
 		document.forms[0].submit();
 	},
@@ -644,6 +768,23 @@ var view = {
 		{
 			ir.show(prWrap);
 			ir.show(registerWrap);
+		}
+	},
+	toggleTransfer:function()
+	{
+		sr5.toggleChildButtons("btnTransfer");
+		var selector = ir.get("btnTransferSelector");
+		if(selector.classList.contains("open"))
+		{
+			ir.focus("transferSelect");
+		}
+	},
+	transfer:function(){
+		model.transferCharacter(ir.vn("transferSelect"));
+		var selector = ir.get("btnTransferSelector");
+		if(selector.classList.contains("open"))
+		{
+			view.toggleTransfer();
 		}
 	},
 	zz_view:0

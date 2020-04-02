@@ -14,6 +14,8 @@
 	<%=_bean.get("ctlName") %>
 	<%=_bean.get("ctlShortName") %>
 	<%=_bean.get("ctlEMail") %>
+		<div class='spacer'></div>
+	<%=_bean.get("ctlUseJournal") %>
 </div>
 <div class='container flex'>	
 <div class='pageSubtitle'>Source Books</div>

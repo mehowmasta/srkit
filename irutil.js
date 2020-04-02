@@ -2029,6 +2029,14 @@ trim : function(s) {
     var rs = ir.rtrim(ls);
     return rs;
 },
+unescapeHtml:function(ret){
+	    var ret = ret.replace(/&gt;/g, '>');
+	    ret = ret.replace(/&lt;/g, '<');
+	    ret = ret.replace(/&quot;/g, '"');
+	    ret = ret.replace(/&apos;/g, "'");
+	    ret = ret.replace(/&amp;/g, '&');
+	    return ret;
+},
 /**
  * returns the value or checked property or innerHTML of the passed id or element
  */
@@ -2061,11 +2069,18 @@ v : function(idOrElement) {
     }
     return (o.value != null ? o.value : o.innerHTML) || "";
 },
+/** ir.vdt will read the value of the passed element and parse it as a date */
 vdt : function(id) {
 	var date = ir.v(id);
 	if(date && date.length>0) {
-		return irdate.parse(date);	
-	}
+		var dt = irdate.parse(date);
+		if (dt.getTime==0) {
+			ir.log("failed to parse [" + date + "] from element '" + id + "' as date.");
+		}
+		return dt;
+	} else {
+		return new Date(0);
+	}    		
 	return date;
 },
 /** returns ir.n(ir.v(idOrElement)) */ 
@@ -2124,6 +2139,13 @@ function addOption(selectObj, value, text) {
     opt.text = text;
     selectObj.options.add(opt);
     return opt;
+}
+function addOptionGroup(selectObj, label)
+{
+	var optGroup = document.createElement("OPTGROUP");
+	optGroup.label = label;
+	selectObj.appendChild(optGroup);
+	return optGroup;
 }
 function brightness(r, g, b) {
     if (arguments.length == 1) {// {r:?,g:?,b:?}
@@ -2308,7 +2330,14 @@ function formatDate(date, format) {
     if (typeof (date) == "string") {
         date = ir.parseYmd(date);
     }
-    format = format + "";
+    if(format==null)
+	{
+    	format = irdate.formatTime;
+	}
+    else
+	{
+        format = format + "";
+	}
     var result = "";
     var i_format = 0;
     var c = "";

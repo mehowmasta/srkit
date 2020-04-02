@@ -55,7 +55,8 @@ var sr5 = {
 								{
 									if(supressError != true)
 									{
-										Status.error("sr5.ajaxAsync:" + url + ":callback error:" + exc,7000);		
+										Status.error("sr5.ajaxAsync:" + url + ":callback error:" + exc,7000);
+										ir.log("sr5.ajaxAsync:" + url + ":callback error:" + exc);
 									}							
 								}
 							}
@@ -65,6 +66,7 @@ var sr5 = {
 							if(supressError != true)
 							{
 								Status.error("sr5.ajaxAsync:Unexpected error submitting request.",7000);
+								ir.log("sr5.ajaxAsync:Unexpected error submitting request.");
 							}
 						}
 					}
@@ -177,12 +179,117 @@ var sr5 = {
 			}
 			return errors.length==0;
 		},	
+		/** 
+		 * app.dateRangerInit fills a container with buttons to load named date ranges to a pair of date picker boxes.
+		 */
+		dateRangerInit:function(buttonContainerId,fromDateId,toDateId) {
+			var container = ir.get(buttonContainerId);
+			if (container.innerHTML > "") {
+				return;
+			}
+			var thisWeek=true,thisMonth=true,thisQuarter=false,thisYear=true;
+			var lastWeek=true,lastMonth=true,lastQuarter=false,lastYear=true;
+			if (container.dataset) {
+				if (container.dataset.noMonth) {
+					thisMonth = lastMonth = false;
+				}
+				if (container.dataset.noQuarter) {
+					thisQuarter = lastQuarter = false;
+				}
+				if (container.dataset.noWeek) {
+					thisWeek = lastWeek = false;
+				}
+				if (container.dataset.noYear) {
+					thisYear = lastYear = false;
+				}
+				if (container.dataset.noLast) {
+					yesterday = lastMonth = lastWeek = lastQuarter = lastYear = false;
+				}
+			}
+			var btn = function(text,code) {
+				return "<button type='button'" 
+				+ " onclick=\"sr5.dateRangerClick('" + fromDateId + "','" + toDateId + "','" + code + "')\">"+text+"</button>";
+				};
+			var htm="";
+			var curDate = new Date();			
+			if (lastWeek) {
+				htm += btn("Last Week","lw"); 
+			}
+			if (thisWeek) {
+				htm += btn("This Week","w"); 
+			}
+			if (lastMonth) {
+				var lm = new Date();
+				lm.setMonth(lm.getMonth()-1);
+				htm += btn(irdate.m(lm),"lm"); 
+			}
+			if (thisMonth) {
+				htm += btn(irdate.m(curDate),"m"); 
+			}
+			if (lastYear) {
+				htm += btn(curDate.getUTCFullYear()-1,"ly"); 
+			}
+			if (thisYear) {
+				htm += btn(curDate.getUTCFullYear(),"y"); 
+			}
+			if (lastQuarter) {
+				var lq = new Date();
+				lq.setMonth(lq.getMonth()-3);
+				htm += btn("Q" + irdate.q(lq),"lq"); 
+			}
+			if (thisQuarter) {
+				htm += btn("Q" + irdate.q(curDate),"q"); 
+			}
+			container.innerHTML = htm;
+		},
+		dateRangerClick:function(fromDateId,toDateId,code) {
+			var range = {from:new Date(),to:new Date()};
+			switch (code)
+			{
+			case "w":
+				range = irdate.rangeWeek(range.from);
+				break;
+			case "m":
+				range = irdate.rangeMonth(range.from);
+				break;
+			case "q":
+				range = irdate.rangeQuarter(range.from);
+				break;
+			case "y":
+				range = irdate.rangeYear(range.from);
+				break;
+			case "ld":
+				range.from.setDate(range.from.getDate() - 1);
+				range.to = range.from;
+				break;
+			case "lw":
+				range.from.setDate(range.from.getDate() - 7);
+				range = irdate.rangeWeek(range.from);
+				break;
+			case "lm":
+				range.from.setMonth(range.from.getMonth() - 1);
+				range = irdate.rangeMonth(range.from);
+				break;
+			case "lq":
+				range.from.setMonth(range.from.getMonth() - 3);
+				range = irdate.rangeQuarter(range.from);
+				break;
+			case "ly":
+				range.from.setYear(range.from.getFullYear() - 1);
+				range = irdate.rangeYear(range.from);
+				break;
+			default:
+			case "t":
+				break; 
+			}
+			ir.set(fromDateId,irdate.mdy(range.from));
+			ir.set(toDateId,irdate.mdy(range.to));
+		},
 		doneLoading:function(){
 			var form = ir.get("f1",true);
 			if(form!=null)
 			{
-				//window.setTimeout(function(){form.classList.remove("loading")},5);
-				window.setTimeout(function(){form.classList.remove("loading")},980);
+				window.setTimeout(function(){form.classList.remove("loading")},480);
 			}
 		},
 		equip:function(ele)
@@ -829,7 +936,8 @@ var sr5 = {
 				+ " ("
 				+ s.Type
 				+ ") "
-				+ (s.Native?"N":s.Rating);
+				+ (s.Native?"N":s.Rating)
+				+ (s.Note.length>0? " - <i>" + s.Note + "</i>" : "");
 		},
 		getMatrixCondition:function(obj){			
 			return 8 + Math.ceil(obj.DeviceRating/2);
@@ -845,7 +953,8 @@ var sr5 = {
 		getQuality:function(s){
 			return "&bull;"
 				+ s.Name 
-				+ (s.MaxRating>1 ? " [" + s.Rating + "]" : "");
+				+ (s.MaxRating>1 ? " [" + s.Rating + "]" : "")
+				+ (s.Note && s.Note.length>0? " - <i>" + s.Note + "</i>" : "");
 		},
 		getRecordSection:function(tableName,obj)
 		{
@@ -1291,6 +1400,28 @@ var sr5 = {
 					showDesc?"show":"",
 					s.Source);
 		},
+		getSectionWeaponModifier:function(s, searchFunction,showDesc){
+			var template = "<div class='section' onclick='view.toggleWeaponModifier({3})'>"
+				 + "<div class='title titleUnderline'><b>{0}</b></div>"
+				 + "<div class='subtitle'><b>{1}</b></div>"
+				 + sr5.getTable(s,false,false)
+				 + "<div class='desc {4}' id='desc{3}'>{2}</div>"
+				 + "<div class='source'>{5}</div>"
+				 + "</div>";
+			var description =  "";
+			if(s.Wireless.length>0)
+			{
+				description +="<b>Wireless Bonus</b><br><div class='feat'>"+searchFunction(s.Wireless)+"</div><br>"
+			}			
+			description += "&emsp;" + searchFunction(s.Description);
+			return  ir.format(template,
+					searchFunction(s.Name),
+					s.Cost,
+					description,
+					s.Row,
+					showDesc?"show":"",
+					s.Source);
+		},
 		getSkill:function(s){
 			var bonus = 0;
 			var hoverText = "";
@@ -1599,6 +1730,27 @@ var sr5 = {
 					(s.Availability.length>0?"":"hide"),s.Availability,
 					(showCost?"":"hide"),s.Cost);
 		},
+		getTableWeaponModifier:function(s,showName,showCost){
+			var template = "<table class='table show'>"
+				 + "<thead><tr>"
+				 + "<td class='tdl {0}'>NAME</td>"
+				 + "<td class='tdc {2}'>MOUNT</td>"
+				 + "<td class='tdc {4}'>AVAIL</td>"
+				 + "<td class='tdr {6}'>COST</td>"
+				 + "</tr></thead>"
+				 + "<tbody><tr>"
+				 + "<td class='tdl {0}'>{1}</td>"
+				 + "<td class='tdc {2}'>{3}</td>"
+				 + "<td class='tdc {4}'>{5}</td>"
+				 + "<td class='tdc {6}'>{7}</td>"
+				 + "</tr></tbody>"
+				 + "</table>";
+	return  ir.format(template,
+			(showName?"":"hide"),s.Name,
+			(""),(s.Mount.length>0?s.Mount:"-"),
+			(s.Availability.length>0?"":"hide"),s.Availability,
+			(showCost?"":"hide"),s.Cost);
+},
 		getThumb:function(i){
 			var template ="<img class='thumb' src='{0}'>"
 			return ir.format(template,sr5.getImagePath(i,true));
@@ -1628,6 +1780,22 @@ var sr5 = {
 			return 8 + Math.ceil(veh.Body/2);
 		},
 		getWeapon:function(s){
+			var internal = "";
+			if(s.Attachments !=null && s.Attachments.values!=null)
+			{
+				var attachments = s.Attachments.values;
+				var comma = "";
+				for(var i =0,z=attachments.length;i<z;i++)
+				{
+					var a = attachments[i];
+					if(a.Delete)
+					{
+						continue;
+					}
+					internal += comma + a.Name + (a.MaxRating>1?" " + a.Rating:"");
+					comma =", ";
+				}
+			}
 			return  (s.Equipped ? sr5.star : "&bull;")
 				+ s.Name 
 				+ " - "
@@ -1640,7 +1808,14 @@ var sr5 = {
 				+ (s.ArmorPenetration.length>0?", <span class='noWrap'>AP: " + s.ArmorPenetration+ "</span>":"")
 				+ (s.Ammo.length>0?", <span class='noWrap'>Ammo: " + s.Ammo+ "</span>":"")
 				+"]"
+				+ (internal.length>0?" ("+internal+")":"")
 				+ (s.Quantity >1? " x"+s.Quantity:"");
+		},
+		getWeaponModifier:function(s){
+			return "&bull;"
+				+ s.Name
+				+ (s.Mounted.length>0 && s.Mounted!=="NA"?" (<span class='over'>"+s.Mounted+"</span>)":"")
+				+ (s.MaxRating>1?" ["+ s.Rating +"]":"");
 		},
 		go:function(url){
 			var callback = function(yes){
@@ -1741,6 +1916,25 @@ var sr5 = {
 					if(cyber!=null)
 					{
 						cyber.Attachments.add(p);
+					}
+				}
+			}
+			//WeaponModifiers
+			var weapons = char.Weapon.values;
+			for(var i =0, z=weapons.length;i<z;i++)
+			{
+				weapons[i].Attachments = new KeyedArray("ItemRow");
+			}
+			if(char.WeaponModifier.size()>0)
+			{
+				var weaponMod = char.WeaponModifier.values;
+				for(var i =0, z=weaponMod.length;i<z;i++)
+				{
+					var p = weaponMod[i];
+					var weap = char.Weapon.get(p.ParentRow);
+					if(weap!=null)
+					{
+						weap.Attachments.add(p);
 					}
 				}
 			}
@@ -1870,6 +2064,42 @@ var sr5 = {
 				quickBtns.classList.remove("fixed");
 			}
 		},
+		receiveReward:function(res){
+			if(res.ok)
+			{
+				var chars = res.characterRows;
+				var names = res.characterNames;
+				for(var i=0, z=chars.length;i<z;i++)
+				{
+					var row = chars[i];
+					var name = names[i];
+					var c = sr5.characters.get(row);
+					if(res.karma>0)
+					{
+						Status.success(name + ": " + res.karma+  " karma points received",7000);
+					}
+					if(res.nuyen>0)
+					{
+						Status.success(name + ": " + res.nuyen + sr5.nuyen + " deposited into account",7000);
+					}
+					sr5.refreshCharacter(row);					
+				}
+			}
+		},
+		refreshCharacter:function(row){
+			if(sr5.characters.get(row)!=null)
+			{
+				var callback = function(player){
+					player.ForceRefresh=true;
+					if(sr5.isShown("playerCharacterPop"+player.Row))
+					{
+						playerCharacterPop.close(player.Row);	
+						playerCharacterPop.show(player,true);
+					}
+				};
+				sr5.selectPlayer(row,callback);				
+			}
+		},
 		selectImage:function(row,callback){
 			if(row>0)
 			{
@@ -1911,7 +2141,7 @@ var sr5 = {
 					sr5.initPlayerAttachments(res.player);
 					sr5.initPlayerModifiers(res.player);
 					sr5.initPlayerSkillBonus(res.player);
-					sr5.characters.add(res.player);
+					sr5.characters.set(res.player);
 					if(callback!=null)
 					{
 						callback(res.player);
@@ -1990,16 +2220,16 @@ var sr5 = {
 			}
 			
 		},
-		showPlayerCharacter:function(player){
+		showPlayerCharacter:function(player,forceRefresh){
 			if(playerCharacterPop.show)
 			{
 				if(player!=null)
 				{
-					playerCharacterPop.show(player);
+					playerCharacterPop.show(player,forceRefresh);
 				}
 				else
 				{
-					playerCharacterPop.show(sr5.characters.get(sr5.user.PlayerCharacter));
+					playerCharacterPop.show(sr5.characters.get(sr5.user.PlayerCharacter),forceRefresh);
 				}
 			}
 		},
@@ -2050,6 +2280,15 @@ var sr5 = {
 		 */
 		type: function(id,text)
 		{
+			if(sr5.typingTimeout != null)
+			{
+				clearTimeout(sr5.typingTimeout);
+			}
+			sr5.typeLoop(id,text);
+			
+		},
+		typeLoop: function(id,text)
+		{
 			if(text==null || text.length == 0)
 			{
 				return false;
@@ -2065,7 +2304,8 @@ var sr5 = {
 			{
 		    	return false;
 			}
-		    return window.setTimeout(function(){sr5.type(id,text.substring(1,text.length));},Math.floor(Math.random() * 80) + 20);  // returns a random integer from 20-100);
+		    sr5.typingTimeout = window.setTimeout(function(){sr5.typeLoop(id,text.substring(1,text.length));},Math.floor(Math.random() * 60) + 5);  // returns a random integer from 20-100);
+			return;  // returns a random integer from 20-100);
 		},
 		updateCharacterAdeptPower:function(characterRow,array,callback){
 			var value = "";
@@ -2213,7 +2453,7 @@ var sr5 = {
 				{
 					continue;
 				}
-				value += delim + a.ItemRow + sr5.splitter + a.Rating + sr5.splitter + a.Name + sr5.splitter + a.Type+ sr5.splitter + a.Native + sr5.splitter + (a.Delete || false);
+				value += delim + a.ItemRow + sr5.splitter + a.Rating + sr5.splitter + a.Name + sr5.splitter + a.Type + sr5.splitter + a.Native + sr5.splitter + a.Note + sr5.splitter + (a.Delete || false);
 				delim= sr5.delimiter;
 			}
 			sr5.ajaxAsync({fn:"updateCharacterKnowledge",characterRow:characterRow,updateString:value},callback);
@@ -2228,7 +2468,7 @@ var sr5 = {
 				{
 					continue;
 				}
-				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Rating + sr5.splitter + (a.Delete || false);
+				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Rating + sr5.splitter + a.Note + sr5.splitter + (a.Delete || false);
 				delim= sr5.delimiter;
 			}
 			sr5.ajaxAsync({fn:"updateCharacterQuality",characterRow:characterRow,updateString:value},callback);
@@ -2289,11 +2529,26 @@ var sr5 = {
 				{
 					continue;
 				}
-				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Quantity + sr5.splitter + a.Equipped + sr5.splitter + (a.Delete || false);
+				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Quantity + sr5.splitter + a.Equipped + sr5.splitter + a.Note + sr5.splitter+ (a.Delete || false);
 				delim= sr5.delimiter;
 			}
 			sr5.ajaxAsync({fn:"updateCharacterWeapon",characterRow:characterRow,updateString:value},callback);
 		},	
+		updateCharacterWeaponModifier:function(characterRow,parentRow,array,callback){
+			var value = "";
+			var delim = "";
+			for(var i=0,z=array.length;i<z;i++)
+			{
+				var a = array[i];
+				if(a.ItemRow <= 0 && a.Delete)
+				{
+					continue;
+				}
+				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Rating + sr5.splitter + a.Mounted + sr5.splitter + (a.Delete || false);
+				delim= sr5.delimiter;
+			}
+			sr5.ajaxAsync({fn:"updateCharacterWeaponModifier",characterRow:characterRow,parentRow:parentRow,updateString:value},callback);
+		},
 		uploadFile:function(fileField,type,callback){
 			var fileField = ir.get(fileField);
 			var files = fileField.files;

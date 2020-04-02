@@ -28,7 +28,7 @@
 			</div>
 		</div>
 		<div class='container'>
-			<div class='tableWrap' style='margin:0.5rem;width:calc(100% - 2rem);'>
+			<div class='tableWrap' style='margin:0.5rem;width:calc(100% - 1rem);display:block;'>
 				<div class='tableTitle'>Characters</div>
 				<table class='table show' id='pickCharacterPopTable' style='max-height: calc(100vh - 25rem);'>
 					<tr><td style='text-align:center;'>Loading...</td></tr>

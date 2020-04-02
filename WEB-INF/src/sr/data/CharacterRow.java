@@ -51,6 +51,7 @@ public class CharacterRow
 	public List<SpellRec> Spells = new ArrayList<SpellRec>();
 	public List<VehicleRec> Vehicles = new ArrayList<VehicleRec>();
 	public List<WeaponRec> Weapons = new ArrayList<WeaponRec>();
+	public List<WeaponModifierRec> WeaponModifiers = new ArrayList<WeaponModifierRec>();
 	//
 	@SuppressWarnings("unchecked")
 	public static CharacterRow selectCharacter(Database db, int characterRow) throws Exception
@@ -75,7 +76,8 @@ public class CharacterRow
 						SkillRec.class,
 						SpellRec.class,
 						VehicleRec.class,
-						WeaponRec.class), 
+						WeaponRec.class,
+						WeaponModifierRec.class), 
 				characterRow);
 		int set =0;
 		r.Character = (CharacterRec) result.get(set++).get(0);
@@ -103,6 +105,7 @@ public class CharacterRow
         r.Spells = new ArrayList<SpellRec>((Collection<? extends SpellRec>) result.get(set++));
         r.Vehicles = new ArrayList<VehicleRec>((Collection<? extends VehicleRec>) result.get(set++));
         r.Weapons = new ArrayList<WeaponRec>((Collection<? extends WeaponRec>) result.get(set++));
+        r.WeaponModifiers = new ArrayList<WeaponModifierRec>((Collection<? extends WeaponModifierRec>) result.get(set++));
         calculateBonus(r);
         calculateSkill(r);
         return r;
@@ -281,6 +284,7 @@ public class CharacterRow
 		 .append(",").append(StringKit.jsq("Spell")).append(":").append("new KeyedArray('ItemRow',"+Spells.toString()+")")
 		 .append(",").append(StringKit.jsq("Vehicle")).append(":").append("new KeyedArray('ItemRow',"+Vehicles.toString()+")")
 		 .append(",").append(StringKit.jsq("Weapon")).append(":").append("new KeyedArray('ItemRow',"+Weapons.toString()+")")
+		 .append(",").append(StringKit.jsq("WeaponModifier")).append(":").append("new KeyedArray('ItemRow',"+WeaponModifiers.toString()+")")
 		 .append("}");
 		return b.toString();
 	}

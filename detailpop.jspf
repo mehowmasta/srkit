@@ -105,6 +105,15 @@ text-align:left;padding:1rem;font-size:1.4rem;
 				</div>
 				<button id='detailPopQuantityPlus' type='button' style='width:4rem;min-width:4rem;' onclick='detailPop.quantityChange(1)'>+</button>
 			</div>
+			<div id='detailPopNoteWrap' class='flex'>
+				<div class="inputWrap">
+					<input type='text' id='detailPopNote' name='detailPopNote' tabindex='1' onfocus='this.select();' list='detailPopNoteList'>
+					<label class="inputLabel">Note</label>
+					<datalist id="detailPopNoteList">
+					
+					</datalist>
+				</div>
+			</div>
 			<div id='detailPopEquipWrap'>
 				<div class="checkWrap" style='text-align:center;'>
 					<input name="detailPopEquip" id="detailPopEquip" tabindex="1" type="checkbox">
@@ -138,5 +147,6 @@ detailPop.blankSkill = <%= (new CharacterSkillRec()).toString()%>;
 detailPop.blankSpell = <%= (new CharacterSpellRec()).toString()%>;
 detailPop.blankVehicle = <%= (new CharacterVehicleRec()).toString()%>;
 detailPop.blankWeapon = <%= (new CharacterWeaponRec()).toString()%>;
+detailPop.blankWeaponModifier = <%= (new CharacterWeaponModifierRec()).toString()%>;
 
 </script>

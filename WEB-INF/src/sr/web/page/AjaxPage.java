@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import ir.util.Coerce;
+import ir.util.JDate;
 import ir.util.JDateTime;
 import ir.util.StringKit;
 import sr.data.AdeptPowerRec;
 import sr.data.ArmorRec;
+import sr.data.AwardType;
+import sr.data.BudgetRec;
 import sr.data.CharacterAdeptPowerRec;
 import sr.data.CharacterArmorRec;
 import sr.data.CharacterBiowareRec;
@@ -30,6 +33,7 @@ import sr.data.CharacterSettingRec;
 import sr.data.CharacterSkillRec;
 import sr.data.CharacterSpellRec;
 import sr.data.CharacterVehicleRec;
+import sr.data.CharacterWeaponModifierRec;
 import sr.data.CharacterWeaponRec;
 import sr.data.CyberdeckRec;
 import sr.data.CyberwareGrade;
@@ -56,7 +60,11 @@ import sr.data.SrRec;
 import sr.data.UserRec;
 import sr.data.UserRole;
 import sr.data.VehicleRec;
+import sr.data.WeaponModifierRec;
+import sr.data.WeaponModifierRec.MountType;
 import sr.data.WeaponRec;
+import sr.data.BudgetRec.BudgetCategory;
+import sr.data.BudgetRec.BudgetType;
 import sr.web.App;
 import sr.web.WebSocketClient;
 import sr.web.WebSocketEndpoint;
@@ -74,6 +82,25 @@ public class AjaxPage extends AppBasePage {
 	private final boolean _security = false;
 	private String fromPage = "";
 	//
+	public String acceptTransfer() throws Exception
+	{
+		CharacterRec rec = new CharacterRec();
+		rec.Row = readInt("characterRow");
+		if(!db.select(rec))
+		{
+			return eeJson("Failed to find character, sorry.");
+		}
+		if(rec.Transfer != currentUser.Row)
+		{
+			return eeJson("This character isn't for you! Get outta here.");
+		}
+		int oldUser= rec.User;
+		rec.User = currentUser.Row;
+		rec.Transfer = 0;
+		db.update(rec);
+		sendNotification(oldUser,"<i>" + currentUser.Name + "</i> has accepted your character transfer");
+		return okOne;
+	}
 	public String addMapData() throws Exception
 	{
 		if(currentUser.isGuest())
@@ -147,6 +174,90 @@ public class AjaxPage extends AppBasePage {
         }
         return okOneComma + "user:"+user.toJson() + "}"; 	
     }
+    public String award() throws Exception
+    {
+		String characterRows = readString("characterRows",200);
+		Map<Integer,List<CharacterRec>> userCharacters = new HashMap<Integer,List<CharacterRec>>(); 
+		String[] rows = characterRows.split(SPLITTER);
+		int nuyen = readInt("nuyen");
+		int karma = readInt("karma");
+		CharacterRec c = null;
+		for(String r : rows)
+		{
+			try {
+				c = new CharacterRec();
+				c.Row = Integer.parseInt(r);
+				if(db.select(c))
+				{
+					c.Nuyen += nuyen;
+					c.Karma += karma;
+					db.update(c);
+					List<CharacterRec> list = userCharacters.get(c.User);
+					if(list==null)
+					{
+						list = new ArrayList<CharacterRec>();
+						list.add(c);
+						userCharacters.put(c.User, list );
+					}
+					else
+					{
+						list.add(c);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				addPageError(e.getMessage());
+				continue;
+			}
+		}    
+		String responseJson = ""; 
+		String names = "";
+		String comma2= "";
+        for(int u : userCharacters.keySet())
+        {
+        	
+        	List<CharacterRec> list = userCharacters.get(u);
+        	String characters = "";
+        	String characterNames = "";
+        	String comma = "";
+        	for(CharacterRec r : list)
+        	{
+        		characters += comma + r.Row;
+        		characterNames += comma + jsq(r.Name);
+        		comma=",";
+                names+=comma2 + characterNames;
+                comma2=",";
+        	}
+        	if(u != currentUser.Row)
+        	{
+	        	responseJson = "{ok:1,receiveReward:1,karma:"+karma+",nuyen:"+nuyen+",items:[],characterNames:["+characterNames+"],characterRows:["+characters+"]}";
+	            List<WebSocketClient> userWebSocketClients = WebSocketEndpoint.findClientsByUserRow(u);
+	            for(WebSocketClient ws : userWebSocketClients)
+	            {
+	                ws.send(responseJson);
+	            }
+	    	}
+        }
+    	return okOneComma + "names:"+jsq(names)+",errors:"+getErrorListJson()+ ",nuyen:"+nuyen+",karma:"+karma+"}";
+    }
+	public String declineTransfer() throws Exception
+	{
+		CharacterRec rec = new CharacterRec();
+		rec.Row = readInt("characterRow");
+		if(!db.select(rec))
+		{
+			return eeJson("Failed to find character, sorry.");
+		}
+		if(rec.Transfer != currentUser.Row)
+		{
+			return eeJson("This character isn't for you! Get outta here.");
+		}
+		rec.Transfer = 0;
+		db.update(rec);
+		sendNotification(rec.User,"<i>" + currentUser.Name + "</i> has declined your character transfer.");
+		return okOne;
+	}
     public String deleteMessageThread() throws Exception
     {
         int threadId = readInt("threadId");
@@ -262,6 +373,7 @@ public class AjaxPage extends AppBasePage {
 		else
 		{
 			db.insert(friend);
+			sendNotification(friend.Friend,"<i>" + currentUser.Name + "</i> has sent you a friend request, <a href='userlist.jsp'>Click Here</a>.");
 		}
 		return okOneComma + "user:" + rec.toString() + ",friend:"+friend.toString()+"}";
 	}
@@ -315,7 +427,7 @@ public class AjaxPage extends AppBasePage {
 				gc.Quantity =1;
 				db.insert(gc);
 			}
-			return "{ok:1,teamName:"+jsq(group.Name)+"}";
+			return "{ok:1,teamName:"+jsq(group.Name)+",groups:"+GroupRec.selectForCharacter(db, characterRow, true)+"}";
 		}
 		else
 		{
@@ -359,8 +471,9 @@ public class AjaxPage extends AppBasePage {
     }
 	public String leaveTeam() throws Exception
 	{
-		GroupCharacterRec.deleteGroupCharacter(db, readInt("groupRow"), readInt("characterRow"));
-		return okOne;
+		int characterRow = readInt("characterRow");
+		GroupCharacterRec.deleteGroupCharacter(db, readInt("groupRow"), characterRow);
+		return "{ok:1,groups:"+GroupRec.selectForCharacter(db, characterRow, true)+"}";		
 	}
 	@Override
 	protected boolean process() throws Exception {
@@ -476,6 +589,10 @@ public class AjaxPage extends AppBasePage {
 	public String selectBioware() throws Exception
 	{
 		return okOneComma + "list:" + CyberwareRec.selectBioware(db).toString() + ",grades:"+CyberwareGrade.toJson()+"}";
+	}
+	public String selectBudgetList() throws Exception
+	{
+		return okOneComma + "list:" + BudgetRec.selectList(db,currentUser.Row,read("from",JDate.zero()),read("to",JDate.zero())).toString() + "}";
 	}
 	public String selectCharacterDetail() throws Exception
 	{
@@ -606,6 +723,10 @@ public class AjaxPage extends AppBasePage {
 	public String selectVehicles() throws Exception
 	{
 		return okOneComma + "list:" + SrRec.selectAll(db,VehicleRec.class).toString() + "}";
+	}
+	public String selectWeaponModifiers() throws Exception
+	{
+		return okOneComma + "list:" + WeaponModifierRec.selectWeaponModifiers(db).toString() + "}";
 	}
 	public String selectWeapons() throws Exception
 	{
@@ -753,6 +874,32 @@ public class AjaxPage extends AppBasePage {
     	}
 		return okOne;
     }
+    public String transferCharacter() throws Exception
+    {
+    	CharacterRec rec = new CharacterRec();
+    	rec.Row = readInt("characterRow");
+    	if(!db.select(rec))
+    	{
+			return eeJson("Transfer failed, charcter record not found.");
+    	}
+    	if(rec.User != currentUser.Row)
+    	{
+			return eeJson("Woh buddy, you can't transfer someone elses character!?");
+    	}
+    	rec.Transfer = readInt("toUser");
+    	if(rec.User == rec.Transfer)
+    	{
+
+			return eeJson("Sorry but, you can't transfer your character to yourself. You already own this character, think about it.");
+    	}
+    	db.update(rec);
+    	if(rec.Transfer>0)
+    	{
+    		String message = "<i>" + currentUser.Name + "</i> would like to transfer a character to you. <a href='characterlist.jsp'>Click Here</a> to view request.";
+    		sendNotification(rec.Transfer, message);
+    	}
+    	return okOne;
+    }
 	public String updateAmmo() throws Exception
 	{
 		CharacterWeaponRec rec = new CharacterWeaponRec();
@@ -769,8 +916,55 @@ public class AjaxPage extends AppBasePage {
 		db.update(rec);
 		return okOne;
 	}
+
+	public String updateBudget() throws Exception
+	{
+		if(currentUser.isGuest())
+		{
+
+			return eeJson("Sorry Brah! Registered users only.");
+		}
+		BudgetRec rec = new BudgetRec();
+		rec.Row = readInt("Row");
+		if(rec.Row> 0)
+		{
+			if(!db.select(rec))
+			{
+				return eeJson("Budget entry not found, could not update.");
+			}
+		}
+		if(readBoolean("Delete"))
+		{
+			db.delete(rec);
+			rec.setTemp("Delete",true);
+		}
+		else
+		{
+			rec.Amount = readFloat("Amount");
+			rec.Note = readString("Note",500);
+			rec.User = currentUser.Row;
+			//rec.Name = readString("Name",255);
+			rec.Category = BudgetCategory.lookup(readString("Category",255));
+			rec.Type = rec.Category.isExpense?BudgetType.Expense:BudgetType.Income;
+	        rec.Time = read("Time",JDate.zero());
+			if(rec.Row>0)
+			{
+				db.update(rec);
+			}
+			else
+			{
+				db.insert(rec);
+			}
+			rec.setTemp("ts", rec.Time.getTime()/1000);
+		}
+		return "{ok:1,budget:"+rec.toString()+"}";
+	}
 	public String updateCharacterAdeptPower() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -820,6 +1014,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterArmor() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -871,6 +1069,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterBioware() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -922,6 +1124,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterContact() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		CharacterContactRec rec = new CharacterContactRec();
 		rec.Row = readInt("Row");
 		if(rec.Row> 0)
@@ -961,6 +1167,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterCyberdeck() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -1012,6 +1222,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterCyberdeckProgram() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		int parentRow = readInt("parentRow");
@@ -1061,6 +1275,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterCyberware() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -1113,6 +1331,10 @@ public class AjaxPage extends AppBasePage {
 
 	public String updateCharacterCyberwareAttachment() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		int parentRow = readInt("parentRow");
@@ -1166,6 +1388,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterDrone() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -1217,6 +1443,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterGear() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -1269,6 +1499,10 @@ public class AjaxPage extends AppBasePage {
 
 	public String updateCharacterKnowledge() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String knowledge = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -1281,12 +1515,12 @@ public class AjaxPage extends AppBasePage {
 			{
 				boolean toDelete = false;
 				String[] data = q.split(SPLITTER);
-				if(data.length==6)
+				if(data.length==7)
 				{
 					CharacterKnowledgeRec cq = new CharacterKnowledgeRec();						
 					cq.CharacterRow = characterRow;
 					cq.Row = Integer.parseInt(data[0]);
-					toDelete = Boolean.parseBoolean(data[5]);
+					toDelete = Boolean.parseBoolean(data[6]);
 					if(toDelete)
 					{
 						db.delete(cq);
@@ -1305,6 +1539,7 @@ public class AjaxPage extends AppBasePage {
 						{
 							cq.Native = Boolean.parseBoolean(data[4]);
 						}
+						cq.Note = data[5];
 						db.update(cq);
 					}
 					else
@@ -1323,6 +1558,7 @@ public class AjaxPage extends AppBasePage {
 						{
 							cq.Native = Boolean.parseBoolean(data[4]);
 						}
+						cq.Note = data[5];
 						skill = SrRec.selectByName(db, SkillRec.class, cq.Type.name());
 						db.insert(cq);
 						b.append(cq.Row);
@@ -1339,6 +1575,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterQuality() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -1350,12 +1590,12 @@ public class AjaxPage extends AppBasePage {
 			{
 				boolean toDelete = false;
 				String[] data = q.split(SPLITTER);
-				if(data.length==4)
+				if(data.length==5)
 				{
 					CharacterQualityRec cq = new CharacterQualityRec();						
 					cq.CharacterRow = characterRow;
 					cq.Row = Integer.parseInt(data[0]);
-					toDelete = Boolean.parseBoolean(data[3]);
+					toDelete = Boolean.parseBoolean(data[4]);
 					if(toDelete)
 					{
 						db.delete(cq);
@@ -1364,6 +1604,7 @@ public class AjaxPage extends AppBasePage {
 					{	
 						db.select(cq);
 						cq.Rating = Integer.parseInt(data[2]);
+						cq.Note = data[3];
 						db.update(cq);
 					}
 					else
@@ -1373,6 +1614,7 @@ public class AjaxPage extends AppBasePage {
 						cq.Row = 0;
 						cq.QualityRow = Integer.parseInt(data[1]);
 						cq.Rating = Integer.parseInt(data[2]);
+						cq.Note = data[3];
 						db.insert(cq);
 						b.append(cq.Row);
 						delim = DELIMITER;
@@ -1388,6 +1630,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterSetting() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return "{ok:1,setting:{}}";
+		}
 		String togglePanel = readString("togglePanel",200);
 		CharacterSettingRec rec = new CharacterSettingRec();
 		rec.CharacterRow = readInt("characterRow");
@@ -1405,6 +1651,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterSkill() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -1456,6 +1706,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterSpell() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -1503,6 +1757,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterVehicle() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -1554,6 +1812,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateCharacterWeapon() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		String qualities = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
@@ -1565,12 +1827,12 @@ public class AjaxPage extends AppBasePage {
 			{
 				boolean toDelete = false;
 				String[] data = q.split(SPLITTER);
-				if(data.length==5)
+				if(data.length==6)
 				{
 					CharacterWeaponRec cq = new CharacterWeaponRec();						
 					cq.CharacterRow = characterRow;
 					cq.Row = Integer.parseInt(data[0]);
-					toDelete = Boolean.parseBoolean(data[4]);
+					toDelete = Boolean.parseBoolean(data[5]);
 					if(toDelete)
 					{
 						db.delete(cq);
@@ -1580,6 +1842,7 @@ public class AjaxPage extends AppBasePage {
 						db.select(cq);
 						cq.Quantity = Integer.parseInt(data[2]);
 						cq.Equipped = Boolean.parseBoolean(data[3]);
+						cq.Note = data[4];
 						db.update(cq);
 					}
 					else //new record
@@ -1590,6 +1853,7 @@ public class AjaxPage extends AppBasePage {
 						cq.WeaponRow = Integer.parseInt(data[1]);
 						cq.Quantity = Integer.parseInt(data[2]);
 						cq.Equipped = Boolean.parseBoolean(data[3]);
+						cq.Note = data[4];
 						db.insert(cq);
 						b.append(cq.Row);
 						delim = DELIMITER;
@@ -1603,8 +1867,69 @@ public class AjaxPage extends AppBasePage {
 		}
 		return "{ok:1,newRows:"+jsq(b.toString())+"}";
 	}
+	public String updateCharacterWeaponModifier() throws Exception
+	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
+		String modifier = readString("updateString",2000);
+		int characterRow = readInt("characterRow");
+		int parentRow = readInt("parentRow");
+		StringBuilder b = new StringBuilder();
+		String delim = "";
+		if(modifier.length()>0)
+		{
+			String[] qs = modifier.split(DELIMITER);			
+			for(String q : qs)
+			{
+				boolean toDelete = false;
+				String[] data = q.split(SPLITTER);
+				if(data.length==5)
+				{
+					CharacterWeaponModifierRec wm = new CharacterWeaponModifierRec();						
+					wm.CharacterRow = characterRow;
+					wm.Row = Integer.parseInt(data[0]);
+					toDelete = Boolean.parseBoolean(data[4]);
+					if(toDelete)
+					{
+						db.delete(wm);
+					}
+					else if(wm.Row>0)
+					{	
+						db.select(wm);
+						wm.Rating = Integer.parseInt(data[2]);
+						wm.Mounted = MountType.lookup(data[3]);
+						db.update(wm);
+					}
+					else //new record
+					{
+						//build string to return old row number matched with new row number
+						b.append(delim).append(wm.Row).append(SPLITTER);	
+						wm.Row = 0;
+						wm.ParentRow = parentRow;
+						wm.WeaponModifierRow = Integer.parseInt(data[1]);
+						wm.Rating = Integer.parseInt(data[2]);
+						wm.Mounted = MountType.lookup(data[3]);
+						db.insert(wm);
+						b.append(wm.Row);
+						delim = DELIMITER;
+					}
+				}
+				else
+				{
+					return eeJson("Incorrect amount of parameters for updating weapon modifier.");
+				}
+			}
+		}
+		return "{ok:1,newRows:"+jsq(b.toString())+"}";
+	}
 	public String updateDrone() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		CharacterDroneRec rec = new CharacterDroneRec();
 		rec.Row = readInt("droneRow");
 		if(!db.select(rec))
@@ -1673,17 +1998,27 @@ public class AjaxPage extends AppBasePage {
 		{
 			j.User = currentUser.Row;
 		}
-		j.Time = new JDateTime(readString("Time", 30));
-		j.Text = readString("Text",5000);
-		j.Title = readString("Title",100);
-		j.Type = readString("Type",100);
-		if(j.Row==0)
+		boolean toDelete = readBoolean("deleteEntry");
+		if(toDelete)
 		{
-			db.insert(j);
+			db.delete(j);
+			j.setTemp("deleteEntry", true);
 		}
 		else
 		{
-			db.update(j);
+			j.Time = new JDateTime(readString("Time", 30));
+			j.Text = readString("Text",5000);
+			j.Title = readString("Title",100);
+			j.Type = readString("Type",100);
+			j.Archive = readBoolean("Archive");
+			if(j.Row==0)
+			{
+				db.insert(j);
+			}
+			else
+			{
+				db.update(j);
+			}
 		}
 		return okOneComma + "journal:" +j.toString() + "}";
 	}
@@ -1856,6 +2191,10 @@ public class AjaxPage extends AppBasePage {
 	}
 	public String updateVehicle() throws Exception
 	{
+		if(currentUser.isGuest())
+		{
+			return eeJson("Access denied, registered users only.");
+		}
 		CharacterVehicleRec rec = new CharacterVehicleRec();
 		rec.Row = readInt("vehicleRow");
 		if(!db.select(rec))
