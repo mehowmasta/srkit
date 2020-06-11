@@ -1,0 +1,33 @@
+<div class='tableWrap'>
+		<div class='tableTitle'>Asthma Table</div>
+		<table class='table' id='asthmaTable'>
+			<thead>
+				<tr>
+					<td class='tdl'>Damage</td>
+					<td class='tdl'>All Effect Are Cumulative</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class='tdl'>1 box</td>
+					<td class='tdl'>Wheezing; -1 dice pool modifier to all
+					Physical Actions; Social Limit decreased by 1</td>
+				</tr>
+				<tr>
+					<td class='tdl'>2 boxes</td>
+					<td class='tdl'>Shortness of breath; -1 dice pool modifier to all
+					Actions; Social Limit decreased by 1 additional point</td>
+				</tr>
+				<tr>
+					<td class='tdl'>4 boxes</td>
+					<td class='tdl'>Chest tightness; further Fatigue damage resisted
+					with only Willpower</td>
+				</tr>
+				<tr>
+					<td class='tdl'>8 boxes</td>
+					<td class='tdl'>Wracking cough; -1 dice pool modifier to all
+					Actions; Social Limit decreased by 1 additional point</td>
+				</tr>				
+			</tbody>
+		</table>
+	</div>

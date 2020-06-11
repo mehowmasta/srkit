@@ -84,7 +84,14 @@ body{
 	<a style='cursor:pointer;' href='https://www.reddit.com/r/ShadowrunKit/' ><img src="icons/reddit.svg" style='height:2.5rem;width:2.5rem;' class='hover' data-hover='Follow development on Reddit: r/ShadowrunKit'></a>
 	<br>
 	<br>
+	<a style='cursor:pointer;' href='https://twitter.com/MastaMehow' ><img src="icons/twitter.svg" style='height:2.5rem;width:2.5rem;' class='hover' data-hover='Talk about it on Twitter'></a>
+	<br>
+	<br>
+	<a style='cursor:pointer;' href='https://www.youtube.com/channel/UCQSqckU5m9gXWiVvaCrPXQg' ><img src="icons/youtube.svg" style='height:2.5rem;width:2.5rem;' class='hover' data-hover='Watch the latest videos YouTube'></a>
+	<br>
+	<br>
 	<a style='cursor:pointer;' href='https://github.com/mehowmasta/srkit' ><img src="icons/github.svg" style='height:2.5rem;width:2.5rem;' class='hover' data-hover='Contribute to development on GitHub'></a>
+
 </div>
 <div id='license' style='position:absolute;left:0;bottom:2rem;padding:0.25rem;transition:all 200ms;'>
 	<a style='cursor:pointer;' href='license.jsp' ><img src="icons/gpl3.svg" style='height:2.5rem;width:2.5rem;' class='hover' data-hover='Free Software License'></a>

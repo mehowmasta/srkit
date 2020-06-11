@@ -1,0 +1,69 @@
+<div class='tableWrap'>
+	<div class='tableTitle'>Reloading Weapons</div>
+	<table class='table' id='reloadWeaponTable'>
+		<thead>
+			<tr>
+				<td class='tdl'>Reloading Method</td>
+				<td class='tdl'>Result</td>
+				<td class='tdc'>Type of Action</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class='tdl'>Removable Clip (c)</td>
+				<td class='tdl'>Remove or insert clip</td>
+				<td class='tdc'>Simple</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Speed Loader</td>
+				<td class='tdl'>Use speed loader to completely load gun</td>
+				<td class='tdc'>Complex</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Fill Clip</td>
+				<td class='tdl'>Insert (Agility) rounds into clip</td>
+				<td class='tdc'>Complex</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Break Action (b)</td>
+				<td class='tdl'>Insert 2 rounds</td>
+				<td class='tdc'>Complex</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Belt Fed (belt)</td>
+				<td class='tdl'>Remove or insert belt</td>
+				<td class='tdc'>Complex</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Fill Belt/Drum</td>
+				<td class='tdl'>Insert (Agility) rounds into belt/drum</td>
+				<td class='tdc'>Complex</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Internal Magazine (m)</td>
+				<td class='tdl'>Insert (Agility) rounds</td>
+				<td class='tdc'>Complex</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Muzzle-Loader (ml)</td>
+				<td class='tdl'>Load 1 muzzle tube</td>
+				<td class='tdc'>Complex</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Cylinder (cy)</td>
+				<td class='tdl'>Insert (Agility) rounds into belt</td>
+				<td class='tdc'>Complex</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Drum (d)</td>
+				<td class='tdl'>Remove or insert drum</td>
+				<td class='tdc'>Complex</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Bow</td>
+				<td class='tdl'>Nock 1 arrow</td>
+				<td class='tdc'>Simple</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

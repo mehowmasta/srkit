@@ -80,6 +80,10 @@ public class CharacterRow
 						WeaponModifierRec.class), 
 				characterRow);
 		int set =0;
+		if(result.size()==0 || result.get(0).size()==0)
+		{
+			return r;
+		}
 		r.Character = (CharacterRec) result.get(set++).get(0);
         r.AdeptPowers = new ArrayList<AdeptPowerRec>((Collection<? extends AdeptPowerRec>) result.get(set++));
         r.Armor = new ArrayList<ArmorRec>((Collection<? extends ArmorRec>) result.get(set++));

@@ -1,5 +1,6 @@
 "use strict";
 var pickCharacterPop = {
+		allowMulti:true,
 		callback:null,
 		id:"pickCharacterPop",
 		currentList:new KeyedArray("Row"),

@@ -325,11 +325,38 @@ var sr5 = {
 			};
 			sr5.ajaxAsync({fn:"updateEquip",type:type,itemRow:itemRow,equipped:equipped},callback);
 		},
+		fire:function(amount,container){
+			if(amount<3 || amount==null)
+			{
+				amount=1;
+			}
+			else if(amount <5)
+			{
+				amount=3
+			}
+			else if(amount <10)
+			{
+				amount=5;
+			}
+			else if (amount <30)
+			{
+				amount=10;
+			}
+			else{
+				amount=30;
+			}
+			ir.get(container).classList.add("fire");
+			if(amount>0)
+			{
+				window.setTimeout(function(){ir.get(container).classList.remove("fire");},25 + 50*amount);
+			}			
+		},
 		getAdeptPower:function(s)
 		{
 			return "&bull;"
 				+ s.Name 
-				+ (s.Level>1 ? " [" + s.Level + "]" : "");
+				+ (s.Level>1 ? " [" + s.Level + "]" : "")
+				+ (s.Note && s.Note.length>0? " - <i>" + s.Note + "</i>" : "");
 		},
 		getAmmoCount:function(w){
 			if(w.Ammo.indexOf("/")>-1 || w.Ammo.toLowerCase().indexOf("or")>-1)
@@ -337,6 +364,50 @@ var sr5 = {
 				return ir.n(w.Ammo.substring(0,3).replace(/\D+/g, ''));
 			}
 			return ir.n(w.Ammo.replace(/\D+/g, ''));
+		},
+		getAmmoTypeSelect:function(record,prefix){
+			var type = record._t.substring(1,record._t.length);
+			var current = record.CurrentFireMode;
+			var htm = "<div class='selectWrap'>"
+					+ "<select name='"+prefix+"AmmoTypeSel"+type+record.ItemRow+"' id='"+prefix+"AmmoTypeSel"+type+record.ItemRow+"' data-characterrow='"+record.CharacterRow+"' data-itemrow='"+record.ItemRow+"' data-type='"+type+"' tabindex='1' onchange='sr5.setAmmoType(this,\""+prefix+"\")'>"
+					+ "<option value='0'>Empty</option>";
+			var ammo = sr5.selectPlayerAmmo(record.CharacterRow);
+			var onlyGrenade = record.DamageValue.indexOf("Grenade")>-1;
+			var onlyMissile = record.DamageValue.indexOf("Missile")>-1;
+			var onlyArrow = record.Type==="Bow";
+			var isCannon = record.Type.indexOf("Cannons")>-1;
+			var hasGrenade = sr5.hasGrenadeAttachment(record);
+			for(var i = 0, z=ammo.length;i<z;i++)
+			{
+				var a= ammo[i];
+				var cannonAmmo = a.Name.indexOf("Cannon")>-1;
+				if(a.SubType==="Arrow" && !onlyArrow)
+				{
+					continue;
+				}
+				if(a.SubType==="Grenade" && !hasGrenade && !onlyGrenade)
+				{
+					continue;
+				}				
+				if(a.SubType==="Rocket" && !onlyMissile)
+				{
+					continue;
+				}
+				if((onlyMissile||onlyGrenade||onlyArrow) && a.SubType==="Ammo")
+				{
+					continue;
+				}
+				if(isCannon && !onlyGrenade && !onlyMissile && !cannonAmmo)
+				{
+					continue;
+				}
+				if(cannonAmmo && !isCannon)
+				{
+					continue;
+				}
+				htm += "<option value='"+a.ItemRow+"'>"+a.Name+"</option>";
+			}
+			return htm +" </select><label class='inputLabel'>Ammo</label></div>";
 		},
 		getArmor:function(s){
 
@@ -347,7 +418,8 @@ var sr5 = {
 				+ " [" 
 				+ "<span class='noWrap'>AR: " + s.ArmorRating+ "</span>"
 				+"]"
-				+ (s.Quantity >1? " x"+s.Quantity:"");
+				+ (s.Quantity >1? " x"+s.Quantity:"")
+				+ (s.Note && s.Note.length>0? " - <i>" + s.Note + "</i>" : "");
 		},
 		getArmorSum:function(armorArray){
 			var sum = 0;
@@ -398,6 +470,25 @@ var sr5 = {
 					+ (onclick?" onclick='"+onclick+"(\""+type+"\","+s.ItemRow+","+s.CharacterRow+")'":"")
 					+ ">" 
 					+ sr5.getAdeptPower(s)
+					+ "</div>";
+			}
+			return htm;
+		},
+		getCharacterAmmo:function(gear,onclick,idPrefix)
+		{
+			var htm = "";
+			for(var i =0,z=gear.length;i<z;i++)
+			{
+				var s = gear[i];
+				if(s.Delete || s.Type!=="Ammunition")
+				{
+					continue;
+				}
+				var type = s._t.substring(1,s._t.length);
+				htm += "<div class='detail' id='"+idPrefix+type+s.CharacterRow+"-"+s.ItemRow+"' "
+					+ (onclick?"onclick='"+onclick+"(\""+type+"\","+s.ItemRow+","+s.CharacterRow+")'":"")
+					+ ">" 
+					+ sr5.getGear(s)
 					+ "</div>";
 			}
 			return htm;
@@ -547,7 +638,7 @@ var sr5 = {
 			for(var i =0,z=gear.length;i<z;i++)
 			{
 				var s = gear[i];
-				if(s.Delete)
+				if(s.Delete || s.Type==="Ammunition" && idPrefix!=="characterDetail")
 				{
 					continue;
 				}
@@ -882,7 +973,8 @@ var sr5 = {
 				+ ", <span class='noWrap'>Pilot: " + s.Pilot+ "</span>"
 				+ ", <span class='noWrap'>Sensor: " + s.Sensor+ "</span>"
 				+"]"
-				+ (s.Quantity >1? " x"+s.Quantity:"");
+				+ (s.Quantity >1? " x"+s.Quantity:"")
+				+ (s.Note && s.Note.length>0? " - <i>" + s.Note + "</i>" : "");
 		},
 		getDroneCondition:function(drone){
 			return 6 + Math.ceil(ir.n(drone.Body.substring(0,1))/2);
@@ -912,12 +1004,38 @@ var sr5 = {
 			}
 			return ir.n((obj.Essence.replace(/[^0-9.,]+/g, '') * grade.essenceMultiplier).toFixed(2));	
 		},
+		getFireModeRadio:function(record){
+			var type = record._t.substring(1,record._t.length);
+			var current = record.CurrentFireMode;
+			var htm= "<div class='flex'><label class='spacer'>Fire Mode</label>";
+			if(!record.Modes)
+			{
+				return "";
+			}
+			var modes = record.Modes.split("/");
+			if(modes.length==0)
+			{
+				return "";	
+			}
+			for(var i = 0, z=modes.length;i<z;i++)
+			{
+				var a= modes[i];
+				var checked = (current == a?"checked":"");
+				htm	+= "<div class='radioWrap'>"
+					+ "<input name='fireModeRdo"+type+record.ItemRow+"' id='fireModeRdo"+type+record.ItemRow+a+"' "+checked+" data-row='"+record.Row+"' data-mode='"+a+"' data-characterrow='"+record.CharacterRow+"' data-itemrow='"+record.ItemRow+"' data-type='"+type+"' tabindex='1' type='radio' onclick='sr5.setFireMode(this)'>"
+					+ "<label for='fireModeRdo"+type+record.ItemRow+a+"'>"
+					+ a
+					+ "</label></div>";
+			}
+			return htm +"</div>";
+		},
 		getGear:function(s){
 			return "&bull;"
 				+ s.Name 
 				+ (s.MaxRating>1 ? " [R" + s.Rating + "]" : "")
 				+ " "
-				+ (s.Quantity >1? " x"+s.Quantity:"");
+				+ (s.Quantity >1? " x"+s.Quantity:"")
+				+ (s.Note && s.Note.length>0? " - <i>" + s.Note + "</i>" : "");
 		},
 		getImage:function(i){
 			var template ="<img class='fullImage' src='{0}' title='{1}'>"
@@ -937,7 +1055,7 @@ var sr5 = {
 				+ s.Type
 				+ ") "
 				+ (s.Native?"N":s.Rating)
-				+ (s.Note.length>0? " - <i>" + s.Note + "</i>" : "");
+				+ (s.Note && s.Note.length>0? " - <i>" + s.Note + "</i>" : "");
 		},
 		getMatrixCondition:function(obj){			
 			return 8 + Math.ceil(obj.DeviceRating/2);
@@ -979,7 +1097,7 @@ var sr5 = {
 			return sr5["getSection"+table](s,searchFunction,showDesc);
 		},
 		getSectionAdeptPower:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleAdeptPower({5})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'>{1}</div>"
 				 + "<div>"
@@ -1009,7 +1127,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionArmor:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleArmor({3})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'><b>{1}</b></div>"
 				 + sr5.getTable(s,false,false)
@@ -1051,7 +1169,7 @@ var sr5 = {
 					"show");
 		},
 		getSectionBioware:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleBioware({6})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 			 	+ "<div class='title titleUnderline'><b>{0}</b></div>"
 			 	+ "<div class='subtitle'>{1}</div>"
 			 	+ sr5.getTable(s,false,false)
@@ -1076,7 +1194,7 @@ var sr5 = {
 		},
 		getSectionCharacterContact:function(s,searchFunction,showDesc)
 		{
-			var template = "<div class='section' onclick='view.toggleContact({8})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'>{1}</div>"
 				 + "<div class='flex'>"
@@ -1106,7 +1224,7 @@ var sr5 = {
 			{
 				return "";
 			}
-			var template = "<div class='section' onclick='view.toggleKnowledge({2})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 			 	+ "<div class='title titleUnderline'><b>{0}</b></div>"
 				+ "<div class='desc {3}' id='desc{2}'>{1}</div>"
 				+ "<div class='source'>{4}</div>"
@@ -1119,7 +1237,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionCritterPower:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleCritterPower({8})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'>{1}</div>"
 				 + "<div>"
@@ -1142,7 +1260,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionCyberdeck:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleCyberdeck({3})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'><b>{1}</b></div>"
 				 + sr5.getTable(s,false,false)
@@ -1159,7 +1277,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionCyberware:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleCyberware({6})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 			 	+ "<div class='title titleUnderline'><b>{0}</b></div>"
 			 	+ "<div class='subtitle'>{1}</div>"
 			 	+ sr5.getTable(s,false,false)
@@ -1184,7 +1302,7 @@ var sr5 = {
 					);
 		},
 		getSectionDrone:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleDrone({3})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'><b>{1}</b></div>"
 				 + sr5.getTable(s,false,false)
@@ -1210,7 +1328,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionGear:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleGear({3})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'><b>{1}</b></div>"
 				 + sr5.getTable(s,false,false)
@@ -1232,7 +1350,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionMatrixAction:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleAction({5})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'>{1}</div>"
 				 + "<div><b>Marks Required:</b> {2}</div>"
@@ -1251,7 +1369,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionMentorSpirit:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleSpirit({7})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'>{5}</div>"
 				 + "<div class='bold caps' style='margin-top:1rem;'>Advantages</div>"
@@ -1277,7 +1395,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionProgram:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleProgram({3})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'>{1}</div>"
 				 + "<div class='desc {4}' id='desc{3}'>{2}</div>"
@@ -1292,7 +1410,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionQuality:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleQuality({5})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 			 	+ "<div class='title titleUnderline'><b>{0}</b></div>"
 			 	+ "<div class='subtitle'>{1}</div>"
 			 	+ "<div class='info'>{3}</div>"
@@ -1311,7 +1429,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionSkill:function(s,searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleSkill({6})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 			 	+ "<div class='title titleUnderline'><b>{0}</b></div>"
 			 	+ "<div class='subtitle'>{1}</div>"
 			 	 + "<div>"
@@ -1332,7 +1450,7 @@ var sr5 = {
 				"Core");
 		},
 		getSectionSpell:function(s, searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleSpell({8})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'>{1}</div>"
 				 + "<div>"
@@ -1355,7 +1473,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionVehicle:function(s, searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleVehicle({3})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'><b>{1}</b></div>"
 				 + sr5.getTable(s,false,false)
@@ -1371,7 +1489,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionWeapon:function(s, searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleWeapon({3})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'><b>{1}</b></div>"
 				 + sr5.getTable(s,false,false)
@@ -1401,7 +1519,7 @@ var sr5 = {
 					s.Source);
 		},
 		getSectionWeaponModifier:function(s, searchFunction,showDesc){
-			var template = "<div class='section' onclick='view.toggleWeaponModifier({3})'>"
+			var template = "<div class='section' onclick='sr5.toggleSection(this)'>"
 				 + "<div class='title titleUnderline'><b>{0}</b></div>"
 				 + "<div class='subtitle'><b>{1}</b></div>"
 				 + sr5.getTable(s,false,false)
@@ -1586,7 +1704,7 @@ var sr5 = {
 					  + "<td class='tdl {0}'>NAME</td>"
 					  + "<td class='tdc {2}'>Capacity</td>"
 					  + "<td class='tdc {4}'>Max Value</td>"
-					  + "<td class='tdc {6}'>Rating</td>"
+					  + "<td class='tdc {6}'>Device Rating</td>"
 					  + "<td class='tdc {8}'>Data processing</td>"
 					  + "<td class='tdc {10}'>Firewall</td>"
 					  + "<td class='tdc {12}'>Vector</td>"
@@ -1594,12 +1712,13 @@ var sr5 = {
 					  + "<td class='tdc {16}'>Penetration</td>"
 					  + "<td class='tdc {18}'>Power</td>"
 					  + "<td class='tdc {20}'>Effects</td>"
-					  + "<td class='tdc {22}'>Damage</td>"
-					  + "<td class='tdc {24}'>Damage Mod</td>"
-					  + "<td class='tdc {26}'>AP</td>"
-					  + "<td class='tdc {28}'>Blast</td>"
+					  + "<td class='tdc {22}'>Accuracy</td>"
+					  + "<td class='tdc {24}'>Damage</td>"
+					  + "<td class='tdc {26}'>Damage Mod</td>"
+					  + "<td class='tdc {28}'>AP</td>"
+					  + "<td class='tdc {30}'>Blast</td>"
 					  + "<td class='tdc'>AVAIL</td>"
-					  + "<td class='tdr {31}'>COST</td>"
+					  + "<td class='tdr {33}'>COST</td>"
 					  + "</tr></thead>"
 					 + "<tbody><tr>"
 					  + "<td class='tdl {0}'>{1}</td>"
@@ -1617,15 +1736,16 @@ var sr5 = {
 					  + "<td class='tdc {24}'>{25}</td>"
 					  + "<td class='tdc {26}'>{27}</td>"
 					  + "<td class='tdc {28}'>{29}</td>"
-					  + "<td class='tdc'>{30}</td>"
-					  + "<td class='tdr {31}'>{32}</td>"
+					  + "<td class='tdc {30}'>{31}</td>"
+					  + "<td class='tdc'>{32}</td>"
+					  + "<td class='tdr {33}'>{34}</td>"
 					  + "</tr></tbody>"
 					 + "</table>";
 			return ir.format(template,
 					(showName?"":"hide"),s.Name,
 					(s.Capacity.length>0?"":"hide"),s.Capacity,
 					(s.Max>0?"":"hide"),s.Max,
-					(s.Rating>0?"":"hide"),s.Rating,
+					(s.MinRating>0?"":"hide"),(s.MinRating==s.MaxRating?s.MinRating:s.MinRating+" - "+s.MaxRating),
 					(s.DataProcessing>0?"":"hide"),s.DataProcessing,
 					(s.Firewall>0?"":"hide"),s.Firewall,
 					(s.Vector.length>0?"":"hide"),s.Vector,
@@ -1633,6 +1753,7 @@ var sr5 = {
 					(s.Penetration.length>0?"":"hide"),s.Penetration,
 					(s.Power.length>0?"":"hide"),s.Power,
 					(s.Effects.length>0?"":"hide"),s.Effects,
+					(s.Accuracy.length>0?"":"hide"),s.Accuracy,
 					(s.DamageValue.length>0?"":"hide"),s.DamageValue,
 					(s.DamageMod.length>0?"":"hide"),s.DamageMod,
 					(s.ArmorPenetration.length>0?"":"hide"),s.ArmorPenetration,
@@ -1773,7 +1894,8 @@ var sr5 = {
 				+ ", <span class='noWrap'>Sensor: " + s.Sensor+ "</span>"
 				+ ", <span class='noWrap'>Seats: " + s.Seats+ "</span>"
 				+"]"
-				+ (s.Quantity >1? " x"+s.Quantity:"");
+				+ (s.Quantity >1? " x"+s.Quantity:"")
+				+ (s.Note && s.Note.length>0? " - <i>" + s.Note + "</i>" : "");
 		},
 
 		getVehicleCondition:function(veh){
@@ -1796,20 +1918,54 @@ var sr5 = {
 					comma =", ";
 				}
 			}
+			var char = sr5.characters.get(s.CharacterRow);
+			var modeCopy = s.Modes;
+			var fireMode = sr5.fireMode.get(s.CurrentFireMode);
+			var modeRes = modeCopy.replace(s.CurrentFireMode,"<b class='hover' data-hover='"+(fireMode!=null?fireMode.text:"")+"'>"+s.CurrentFireMode+"</b>");
+			var damageValue = s.DamageValue;
+			var armorPen = s.ArmorPenetration;
+			var ammoLeft = (ir.n(s.Ammo) - ir.n(s.CurrentAmount));
+			var ammoName = "";
+			if(s.CurrentAmmoRow>0 && char!=null)
+			{
+				var ammo = char.Gear.get(s.CurrentAmmoRow);
+				if(ammo.Name.indexOf("Regular")==-1)
+				{
+					ammoName = "<b>" + ammo.Name.replace("Ammo: ","").replace("Grenade: ","").replace("Rocket: ","").replace("Arrowhead: ","") + "</b> ";
+				}
+				if(ammo.DamageMod && ammo.DamageMod.length>0)
+				{
+					var damageType = damageValue.indexOf("S")>-1?"S":"P";
+					if(ammo.DamageMod.indexOf("S")>-1)
+					{//if the ammo is Stun change the damage type to Stun(S)
+						damageType = "S";
+					}					
+					damageValue = "<b class='hover' data-hover='"+ammo.Name+"<br>DamageMod "+ ammo.DamageMod +"' >"+(ir.n(damageValue) + ir.n(ammo.DamageMod))+ damageType + "</b>";
+				}
+				else if(ammo.DamageValue && ammo.DamageValue.length>0)
+				{
+					damageValue = "<b class='hover' data-hover='"+ammo.Name+"<br>Damage Value "+ ammo.DamageValue+"'>" + ammo.DamageValue + "</b>";					
+				}
+				if(ammo.ArmorPenetration && ammo.ArmorPenetration.length>0)
+				{
+					armorPen = "<b class='hover' data-hover='"+ammo.Name+"<br>Armor Penetration "+ ammo.ArmorPenetration +"'>" + (ir.n(armorPen) + ir.n(ammo.ArmorPenetration)) + "</b>";
+				}
+			}
 			return  (s.Equipped ? sr5.star : "&bull;")
 				+ s.Name 
 				+ " - "
 				+ s.Type
 				+ " [" 
 				+ (s.Reach.length>0? "<span class='noWrap'>Reach: " + s.Reach+ ", </span>":"")
-				+ (s.Modes.length>0 ? "<span class='noWrap'>Mode: " + s.Modes+ ", </span>": "")
+				+ (s.Modes.length>0 ? "<span class='noWrap'>Mode: " + modeRes + ", </span>": "")
 				+ "<span class='noWrap'>Acc: " + s.Accuracy+ "</span>"
-				+ ", <span class='noWrap'>DV: " + s.DamageValue+ "</span>"
-				+ (s.ArmorPenetration.length>0?", <span class='noWrap'>AP: " + s.ArmorPenetration+ "</span>":"")
-				+ (s.Ammo.length>0?", <span class='noWrap'>Ammo: " + s.Ammo+ "</span>":"")
+				+ ", <span class='noWrap'>DV: " + damageValue+ "</span>"
+				+ (armorPen.length>0?", <span class='noWrap'>AP: " + armorPen + "</span>":"")
+				+ (s.Ammo.length>0?", <span class='noWrap'>Ammo: " + ammoName + (ammoLeft!=ir.n(s.Ammo)?"<b>"+ammoLeft+"/"+s.Ammo+"</b>":s.Ammo) + "</span>":"")
 				+"]"
 				+ (internal.length>0?" ("+internal+")":"")
-				+ (s.Quantity >1? " x"+s.Quantity:"");
+				+ (s.Quantity >1? " x"+s.Quantity:"")
+				+ (s.Note && s.Note.length>0? " - <i>" + s.Note + "</i>" : "");
 		},
 		getWeaponModifier:function(s){
 			return "&bull;"
@@ -1839,6 +1995,20 @@ var sr5 = {
 			{
 				callback(true);
 			}
+		},
+		hasGrenadeAttachment:function(weaponRec){
+			if(weaponRec.Attachments)
+			{
+				for(var i=0,z=weaponRec.Attachments.size();i<z;i++)
+				{
+					var a = weaponRec.Attachments.getAt(i);
+					if(a.Name === "Grenade Launcher")
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		},
 		initHover:function(){
 			if(!sr5.isMobile && hoverPop!=null)
@@ -2064,6 +2234,9 @@ var sr5 = {
 				quickBtns.classList.remove("fixed");
 			}
 		},
+		rateCharacter:function(characterRow,rating,callback){
+			sr5.ajaxAsync({fn:"rateCharacter",characterRow:characterRow,rating:rating},callback);
+		},
 		receiveReward:function(res){
 			if(res.ok)
 			{
@@ -2150,6 +2323,28 @@ var sr5 = {
 			};
 			sr5.ajaxAsync({fn:"selectPlayer",row:row},innerCallback);
 		},
+		selectPlayerAmmo:function(row,callback){
+			var char = sr5.characters.get(row);
+			if(char==null)
+			{
+				//hmm....
+			}
+			var ammo = [];
+			var gear = char.Gear.values;
+			for(var i=0, z=gear.length;i<z;i++)
+			{
+				var a = gear[i];
+				if(a.Type === "Ammunition")
+				{
+					ammo.push(a);
+				}				
+			}
+			if(callback!=null)
+			{
+				return callback(ammo);
+			}
+			return ammo;
+		},
 		sendMessage:function(msg,data,type){
 			var innerCallback = function(res){
 				if(res.ok){
@@ -2165,6 +2360,81 @@ var sr5 = {
 				comma = sr5.splitter;
 			}
 			sr5.ajaxAsync({fn:"sendMessage",message:msg,users:userArray,threadId:data.threadId,type:type},innerCallback);
+		},
+		setAmmoType:function(ele,prefix)
+		{
+			var characterRow = ir.n(ele.dataset.characterrow);
+			var char = sr5.characters.get(characterRow);
+			var row = ir.n(ele.dataset.row);
+			var itemRow = ir.n(ele.dataset.itemrow);
+			var type = ele.dataset.type;
+			var ammo = ir.v(prefix+"AmmoTypeSel"+type+itemRow);
+			var callback = function(res){
+				if(res.ok){
+					if(char!=null)
+					{
+						var a = char[type].get(itemRow);
+						if(a!=null)
+						{
+							a.CurrentAmmoRow = ammo;
+							if(prefix==="descriptionPop")
+							{
+								descriptionPop.init(a);
+							}
+						}
+						ir.set(playerCharacterPop.prefix+type+characterRow+"-"+itemRow,sr5["get"+type](a));
+						playerCharacterPop["build"+type]();
+					}
+					if(model!=null && model.character!=null && model["character"][type]!=null && model.character.Row == characterRow)
+					{
+						var a = model["character"][type].get(itemRow);
+						if(a!=null)
+						{
+							a.CurrentAmmoRow = ammo;
+							ir.set(view.prefix+type+characterRow+"-"+itemRow,sr5["get"+type](a));
+						}
+					}
+				}
+			};
+			sr5.ajaxAsync({fn:"updateAmmoType",type:type,itemRow:itemRow,ammo:ammo},callback);
+		},
+		setFireMode:function(ele)
+		{
+			var characterRow = ir.n(ele.dataset.characterrow);
+			var char = sr5.characters.get(characterRow);
+			var row = ir.n(ele.dataset.row);
+			var itemRow = ir.n(ele.dataset.itemrow);
+			var type = ele.dataset.type;
+			var mode = ele.dataset.mode;
+			var m = sr5.fireMode.get(mode);
+			if(m!=null)
+			{
+				sr5.fire(m.roundsFired,"descriptionPopEquipped");
+			}
+			var callback = function(res){
+				if(res.ok){
+					if(char!=null)
+					{
+						var a = char[type].get(itemRow);
+						if(a!=null)
+						{
+							a.CurrentFireMode = mode;
+						}
+						ir.set(playerCharacterPop.prefix+type+characterRow+"-"+itemRow,sr5["get"+type](a));
+						playerCharacterPop["build"+type]();
+					}
+					if(model!=null && model.character!=null && model["character"][type]!=null && model.character.Row == characterRow)
+					{
+						var a = model["character"][type].get(itemRow);
+						if(a!=null)
+						{
+							a.CurrentFireMode = mode;
+							ir.set(view.prefix+type+characterRow+"-"+itemRow,sr5["get"+type](a));
+						}
+					}
+				}
+			};
+			sr5.ajaxAsync({fn:"updateFireMode",type:type,itemRow:itemRow,mode:mode},callback);
 		},
 		show:function(id){
 			var p = ir.get(id,true);
@@ -2269,6 +2539,22 @@ var sr5 = {
 				}
 			}
 		},
+		toggleSection:function(ele)
+		{
+			var eles = ele.getElementsByClassName("desc");
+			for(var i =0,z=eles.length;i<z;i++)
+			{
+				var a = eles[i];
+				if(a.classList.contains("show"))
+				{
+					a.classList.remove("show");
+				}
+				else
+				{
+					a.classList.add("show");
+				}
+			}
+		},		
 		top:function(){
 			window.scrollTo({
 			    top: 0,
@@ -2317,7 +2603,7 @@ var sr5 = {
 				{
 					continue;
 				}
-				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Level + sr5.splitter + (a.Delete || false);
+				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Level + sr5.splitter + a.Note + sr5.splitter + (a.Delete || false);
 				delim= sr5.delimiter;
 			}
 			sr5.ajaxAsync({fn:"updateCharacterAdeptPower",characterRow:characterRow,updateString:value},callback);
@@ -2332,7 +2618,7 @@ var sr5 = {
 				{
 					continue;
 				}
-				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Quantity + sr5.splitter + a.Equipped + sr5.splitter + (a.Delete || false);
+				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Quantity + sr5.splitter + a.Equipped + sr5.splitter + a.Note + sr5.splitter + (a.Delete || false);
 				delim= sr5.delimiter;
 			}
 			sr5.ajaxAsync({fn:"updateCharacterArmor",characterRow:characterRow,updateString:value},callback);
@@ -2437,7 +2723,7 @@ var sr5 = {
 				{
 					continue;
 				}
-				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Quantity + sr5.splitter + a.Rating + sr5.splitter + (a.Delete || false);
+				value += delim + a.ItemRow + sr5.splitter + a.Row + sr5.splitter + a.Quantity + sr5.splitter + a.Rating + sr5.splitter + a.Note + sr5.splitter + (a.Delete || false);
 				delim= sr5.delimiter;
 			}
 			sr5.ajaxAsync({fn:"updateCharacterGear",characterRow:characterRow,updateString:value},callback);

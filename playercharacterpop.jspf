@@ -104,16 +104,6 @@
 							</div>
 						</div>
 						<div class='pcrow' style='flex-wrap: wrap;'
-							id='playerCharacterPopGearRow{{Row}}'>
-							<div>
-								<b>Gear</b>
-							</div>
-							<div class='flexSpacer'></div>
-							<div>
-								<span id='playerCharacterPopGear{{Row}}'></span>
-							</div>
-						</div>
-						<div class='pcrow' style='flex-wrap: wrap;'
 							id='playerCharacterPopCyberwareRow{{Row}}'>
 							<div>
 								<b>Cyberware</b>
@@ -184,6 +174,26 @@
 							</div>
 						</div>
 						<div class='pcrow' style='flex-wrap: wrap;'
+							id='playerCharacterPopGearRow{{Row}}'>
+							<div>
+								<b>Gear</b>
+							</div>
+							<div class='flexSpacer'></div>
+							<div>
+								<span id='playerCharacterPopGear{{Row}}'></span>
+							</div>
+						</div>
+						<div class='pcrow' style='flex-wrap: wrap;'
+							id='playerCharacterPopAmmoRow{{Row}}'>
+							<div>
+								<b>Ammo</b>
+							</div>
+							<div class='flexSpacer'></div>
+							<div>
+								<span id='playerCharacterPopAmmo{{Row}}'></span>
+							</div>
+						</div>
+						<div class='pcrow' style='flex-wrap: wrap;'
 							id='playerCharacterPopQualityRow{{Row}}'>
 							<div>
 								<b>Qualities</b>
@@ -222,6 +232,7 @@
 							id='playerCharacterPopDamageTrackWrap{{Row}}'>
 							<div class='pcrow playerCharacterPopTrack'
 								style='flex-wrap: wrap; max-width: 22.4rem;'
+								data-characterrow={{Row}}
 								id='playerCharacterPopDamageTrack{{Row}}'>
 								<div>
 									<b>Condition Monitor</b>
@@ -234,6 +245,7 @@
 						<div class='pccontainer'
 							id='playerCharacterPopDamageStatusWrap{{Row}}'>
 							<div class='pcrow playerCharacterPopTrack'
+								data-charaterRow={{Row}}
 								style='flex-wrap: wrap;'
 								id='playerCharacterPopStatusTrack{{Row}}'>
 								<div>
@@ -247,7 +259,9 @@
 						<div class='pccontainer'
 							id='playerCharacterPopAmmoTrackWrap{{Row}}'>
 							<div class='pcrow playerCharacterPopTrack'
-								style='flex-wrap: wrap;' id='playerCharacterPopAmmoTrack{{Row}}'>
+								style='flex-wrap: wrap;' 
+								data-characterrow={{Row}}
+								id='playerCharacterPopAmmoTrack{{Row}}'>
 								<div>
 									<b>Ammo</b>
 								</div>
@@ -262,6 +276,7 @@
 							id='playerCharacterPopMatrixTrackWrap{{Row}}'>
 							<div class='pcrow playerCharacterPopTrack'
 								style='flex-wrap: wrap;'
+								data-characterrow={{Row}}
 								id='playerCharacterPopMatrixTrack{{Row}}'>
 								<div>
 									<b>Matrix Condition</b>
@@ -277,6 +292,7 @@
 							id='playerCharacterPopDroneTrackWrap{{Row}}'>
 							<div class='pcrow playerCharacterPopTrack'
 								style='flex-wrap: wrap;'
+								data-characterrow={{Row}}
 								id='playerCharacterPopDroneTrack{{Row}}'>
 								<div>
 									<b>Drone Condition</b>
@@ -292,6 +308,7 @@
 							id='playerCharacterPopVehicleTrackWrap{{Row}}'>
 							<div class='pcrow playerCharacterPopTrack'
 								style='flex-wrap: wrap;'
+								data-characterrow={{Row}}
 								id='playerCharacterPopVehicleTrack{{Row}}'>
 								<div>
 									<b>Vehicle Condition</b>

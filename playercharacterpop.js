@@ -19,6 +19,13 @@ var playerCharacterPop = {
 		ir.set(container,sr5.getCharacterAdeptPower(self.player.AdeptPower.values,"playerCharacterPop.showDetail",self.prefix));
 		ir.show(self.id +"AdeptPowerRow"+self.player.Row,self.player.AdeptPower!=null && self.player.AdeptPower.size()>0);
 	},	
+	buildAmmo:function()
+	{
+		var self = playerCharacterPop;
+		var container = ir.get(self.id +"Ammo"+self.player.Row);	
+		ir.set(container,sr5.getCharacterAmmo(self.player.Gear.values,"playerCharacterPop.showDetail",self.prefix));
+		ir.show(self.id +"AmmoRow"+self.player.Row,sr5.selectPlayerAmmo(self.player.Row,null).length>0);
+	},
 	buildAmmoTrack:function(){
 		var self = playerCharacterPop;
 		ir.set(self.id+"AmmoContainer"+self.player.Row,"");
@@ -867,6 +874,7 @@ var playerCharacterPop = {
 		self.player.ForceRefresh=false;
 		self.setAll();
 		self.buildAdeptPower();
+		self.buildAmmo();
 		self.buildArmor();
 		self.buildAttackRoll();
 		self.buildBioware();

@@ -1,0 +1,42 @@
+<div class='tableWrap'>
+	<div class='tableTitle'>Ware Grades</div>
+	<table class='table' id='wareGradesTable'>
+		<thead>
+			<tr>
+				<td class='tdl'>Grades</td><td class='tdc'>Ess Cost Multiplier</td><td class='tdc'>Avail Mod</td><td class='tdc'>Cost Multiplier</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class='tdl'>Standard</td>
+				<td class='tdc'>*1.0</td>
+				<td class='tdc'>-</td>
+				<td class='tdc'>*1</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Alphaware</td>
+				<td class='tdc'>*0.8</td>
+				<td class='tdc'>+2</td>
+				<td class='tdc'>*1.2</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Betaware</td>
+				<td class='tdc'>*0.7</td>
+				<td class='tdc'>+4</td>
+				<td class='tdc'>*1.5</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Deltaware</td>
+				<td class='tdc'>*0.5</td>
+				<td class='tdc'>+8</td>
+				<td class='tdc'>*2.5</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Used</td>
+				<td class='tdc'>*1.25</td>
+				<td class='tdc'>-4</td>
+				<td class='tdc'>*0.75</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -31,7 +31,7 @@ var pickBiowarePop = {
 			var bottom = "";
 			var header = "<thead style='position:sticky;top:0;z-index:20;'><tr>"
 						  + "<td class='tdl'>Bioware</td>"
-						  + "<td class='tdc'>Essence</td>"
+						  + "<td class='tdc' style='width:20%;'>Essence</td>"
 						  + "<td class='tdc'></td>"
 						  + "</tr></thead>"
 						  + "<tbody>";

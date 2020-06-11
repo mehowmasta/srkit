@@ -1,0 +1,64 @@
+<div class='tableWrap'>
+	<div class='tableTitle'>Toxin and Drug Protection Table</div>
+	<table class='table' id='toxinDrugProtectionTable'>
+		<thead>
+			<tr>
+				<td class='tdl'>Gear</td>
+				<td class='tdc'>Protect Against</td>
+				<td class='tdc'>Protection</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class='tdl'>Chemical seal</td>
+				<td class='tdc'>Contact, Inhalation</td>
+				<td class='tdc'>Inmunity</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Chemical protection</td>
+				<td class='tdc'>Contact</td>
+				<td class='tdc'>+Rating</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Digestive expansion</td>
+				<td class='tdc'>Ingestion</td>
+				<td class='tdc'>+2</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Dwarf natural resistance</td>
+				<td class='tdc'>All toxins, diseases</td>
+				<td class='tdc'>+2</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Gas Mask</td>
+				<td class='tdc'>Inhalation</td>
+				<td class='tdc'>Immunity</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Internal air tank</td>
+				<td class='tdc'>Inhalation</td>
+				<td class='tdc'>Immunity</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Pathogenic defense</td>
+				<td class='tdc'>Disease</td>
+				<td class='tdc'>+Rating</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Respirator</td>
+				<td class='tdc'>Inhalation</td>
+				<td class='tdc'>+Rating</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Toxin extractor</td>
+				<td class='tdc'>All toxins</td>
+				<td class='tdc'>+Rating</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Tracheal filter</td>
+				<td class='tdc'>Inhalation</td>
+				<td class='tdc'>+Rating</td>
+			</tr>				
+		</tbody>
+	</table>
+</div>

@@ -8,9 +8,17 @@
 	<div class='popupContent' style='padding-top:1.5rem;'>
 		<div id='descriptionPopBonus' class='container' style='' >
 		</div>
+		<div id='descriptionPopNote' class='container' style='' >
+		</div>
 		<div id='descriptionPopContainer' class='container' style='overflow-y:auto;margin-top:0.5rem;' >
 		</div>
-		<div id='descriptionPopEquipped' class='container section' style=''>
+		<div id='descriptionPopEquipped' class='container section flex' style='flex-wrap:nowrap;padding:0;'>
+			<div id='descriptionPopEquip' >
+			</div>
+			<div id='descriptionPopFireMode' >
+			</div>
+			<div id='descriptionPopAmmoType' >
+			</div>
 		</div>
 	</div>
 </div>

@@ -7,6 +7,9 @@ var track = {
 	showCloseButton:true,
 	showNamePlate:true,
 	showTitle:true,
+	afterAmmo:function(res){
+		
+	},
 	boxCount:function(ele,count){
 		var parent = ele.parentNode.parentNode;
 		var wrapper = parent;
@@ -215,7 +218,7 @@ var track = {
 		{
 			return 0;
 		}
-		return ir.n(parent.id.substring("playerCharacterPopDamageTrack".length,parent.id.length));
+		return ir.n(parent.dataset.characterrow);
 	},
 	getControls:function(type)
 	{
@@ -338,7 +341,32 @@ var track = {
 				return;
 			}
 			count = ir.n(count) + 1;
-			sr5.ajaxAsync({fn:"updateAmmo",weaponRow:weaponRow,count:count})
+			var callback=function(res){
+				var characterRow = track.getCharacterRow(ele);
+				var char = sr5.characters.get(characterRow);
+				var type="Weapon";
+				if(char!=null)
+				{
+					var a = char[type].get(weaponRow);
+					if(a!=null)
+					{
+						a.CurrentAmount = count;
+					}
+					ir.set(playerCharacterPop.prefix+type+characterRow+"-"+weaponRow,sr5["get"+type](a));
+					playerCharacterPop["build"+type]();
+				}
+				if(model!=null && model.character!=null && model["character"][type]!=null && model.character.Row == characterRow)
+				{
+					var a = model["character"][type].get(weaponRow);
+					if(a!=null)
+					{
+						a.CurrentAmount = count;
+						ir.set(view.prefix+type+characterRow+"-"+weaponRow,sr5["get"+type](a));
+					}
+				}
+				
+			};
+			sr5.ajaxAsync({fn:"updateAmmo",weaponRow:weaponRow,count:count},callback)
 		}
 
 		if(ele.classList.contains("Drone"))

@@ -127,7 +127,11 @@ model.groups = <%= _bean.get("Groups") %>;
 				<%=_bean.get("ctlMagic") %>
 				<%=_bean.get("ctlResonance") %>
 			</div>
-			<div class='flexSpacer'></div>
+		</div>
+	</div>
+	
+	<div class='pageSubtitle'>Mechanics</div>
+		<div class='container flex'>	
 			<div class='flex' style='align-items:center;'>
 				<%=_bean.get("ctlInitiative") %>
 				<%=_bean.get("ctlMatrixInitiative") %>
@@ -137,15 +141,17 @@ model.groups = <%= _bean.get("Groups") %>;
 				<%=_bean.get("ctlComposure") %>	
 				<%=_bean.get("ctlJudgeIntentions") %>
 				<%=_bean.get("ctlMemory") %>
+			</div>	
+			<div class='flex' style='align-items:center;'>
+				<%=_bean.get("ctlLiftCarry") %>			
+				<%=_bean.get("ctlMovement") %>
 			</div>
-		</div>	
-		<div class='spacer'></div>
-		<%=_bean.get("ctlLiftCarry") %>			
-		<%=_bean.get("ctlMovement") %>
-		<div class='spacer'></div>
-		<%=_bean.get("ctlPhysicalLimit") %>
-		<%=_bean.get("ctlMentalLimit") %>
-		<%=_bean.get("ctlSocialLimit") %>
+			<div class='flex' style='align-items:center;'>
+				<%=_bean.get("ctlPhysicalLimit") %>
+				<%=_bean.get("ctlMentalLimit") %>
+				<%=_bean.get("ctlSocialLimit") %>
+			</div>
+		</div>
 	</div>
 </div>
 

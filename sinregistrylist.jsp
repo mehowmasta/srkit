@@ -50,7 +50,22 @@
 </style>
 <body onload='view.aaOnLoad()'>
 	<%=_bean.startForm()%>
-	<div class='container' id='charactersDiv'>
+	<div class='container' id=''>
+	<div class='flex prWrap' style='align-items:center;' >
+				<div class='selectWrap' style='margin:1rem 2rem;'>
+					<select id='professionalRating' tabindex='1' onchange='view.changePRFilter()'>
+						<option value='-1'>Any</option>
+						<option value='0'>PR 0</option>
+						<option value='1'>PR 1</option>
+						<option value='2'>PR 2</option>
+						<option value='3'>PR 3</option>
+						<option value='4'>PR 4</option>
+						<option value='5'>PR 5</option>
+						<option value='6'>PR 6</option>
+					</select>
+					<label class='inputLabel'>Professional Rating</label>
+				</div>
+			</div>
 		<div class='flex' id='characterList'></div>
 	</div>
 	

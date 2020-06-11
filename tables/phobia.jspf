@@ -1,0 +1,59 @@
+<div class='tableWrap'>
+		<div class='tableTitle'>Phobia TABLE</div>
+		<table class='table' id='phobiaTable' style='width:100%;'>
+			<thead>
+				<tr>
+					<td class='tdl'>Condition</td><td class='tdc'>KARMA</td><td class='tdl'>Description</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class='tdl'>Uncommon</td>
+					<td class='tdc'>2</td>
+					<td class='tdl'>The triggering condition is
+					relatively rare, such as the
+					smell of roses or specific
+					insects.</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Common</td>
+					<td class='tdc'>5</td>
+					<td class='tdl'>The triggering condition is
+					commonly encountered, such
+					as sunlight, trolls, insects in
+					general, magic, the outdoors,
+					or crowds.</td>
+				</tr>
+			</tbody>
+		</table>
+		<table class='table' style='width:100%;'>
+			<thead>
+				<tr>
+					<td class='tdl'>Severity</td><td class='tdc'>KARMA</td><td class='tdl'>Effects</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class='tdl'>Mild</td>
+					<td class='tdc'>2</td>
+					<td class='tdl'>-1 dice pool modifier to all
+					actions</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Moderate</td>
+					<td class='tdc'>5</td>
+					<td class='tdl'>-3 dice pool modifier to all
+					actions; Composure (2) Test or
+					must get away from the source</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Severe</td>
+					<td class='tdc'>10</td>
+					<td class='tdl'>-6 dice pool modifier;
+					Composure (5) Test or must flee
+					from the source for (5 - hits)
+					Combat Turns</td>
+				</tr>				
+			</tbody>
+		</table>
+	</div>

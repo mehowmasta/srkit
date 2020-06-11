@@ -30,7 +30,7 @@ var pickCyberwareAttachmentPop = {
 			var top = "";
 			var bottom = "";
 			var header = "<thead style='position:sticky;top:0;z-index:20;'><tr>"
-						  + "<td class='tdl'>Cyberware</td>"
+						  + "<td class='tdl' style='width:70%;'>Cyberware</td>"
 						  + "<td class='tdc'>Essence</td>"
 						  + "<td class='tdc'>Capacity</td>"
 						  + "<td class='tdc'></td>"

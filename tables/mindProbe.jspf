@@ -1,0 +1,28 @@
+<div class='tableWrap'>
+	<div class='tableTitle'>Mind Probe</div>
+	<table class='table' id='mindProbeTable'>
+		<thead>
+			<tr>
+				<td class='tdc'>Net Hits</td>
+				<td class='tdl'>Results</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class='tdc'>1-2</td>
+				<td class='tdl'>The subject can read the target's surface thoughts only.</td>
+			</tr>
+			<tr>
+				<td class='tdc'>3-4</td>
+				<td class='tdl'>The subject can find out anything the target consciously 
+				knows and view the target's recent memories (up to 72 hours).</td>
+			</tr>
+			<tr>
+				<td class='tdc'>5+</td>
+				<td class='tdl'>The subject can probe the target's subconscious, 
+				gaining information the target may not even be consciously aware of, 
+				like psychological quirks, deep fears, or hidden memories.</td>
+			</tr>			
+		</tbody>
+	</table>
+</div>

@@ -11,13 +11,11 @@ import sr.data.WeaponRec;
 public class WeaponListPage extends AppBasePage {
 
 	public List<WeaponRec> weapons;
-	/*
 	@Override
 	public boolean hasInfo()
 	{
 		return true;
 	}
-	 */
 	@Override
 	public boolean hasSort()
 	{

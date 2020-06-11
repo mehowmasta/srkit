@@ -1,0 +1,29 @@
+<div class='tableWrap'>
+	<div class='tableTitle'>Detection Spell Results</div>
+	<table class='table' id='detectionSpellResultsTable'>
+		<thead>
+			<tr>
+				<td class='tdc'>Net Hits</td>
+				<td class='tdl'>Results</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class='tdc'>1</td>
+				<td class='tdl'>Only General knowledge, no details</td>
+			</tr>
+			<tr>
+				<td class='tdc'>2</td>
+				<td class='tdl'>Major details only, no minor details</td>
+			</tr>
+			<tr>
+				<td class='tdc'>3</td>
+				<td class='tdl'>Major and minor details, with some minor details obscured or missing</td>
+			</tr>
+			<tr>
+				<td class='tdc'>4</td>
+				<td class='tdl'>Detailed Information</td>
+			</tr>				
+		</tbody>
+	</table>
+</div>

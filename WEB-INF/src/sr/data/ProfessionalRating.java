@@ -7,13 +7,13 @@ import ir.data.NameRow;
 import static ir.util.StringKit.jsq;
 
 public enum ProfessionalRating{
-	PR0(0,"Thugs & Mouth Breathers"),
-	PR1(1,"Gangers & Street Scum"),
-	PR2(2,"Corporate Security"),
-	PR3(3,"Police Patrols"),
-	PR4(4,"Organized Crime Gang"),
-	PR5(5,"Elite Corporate Security"),
-	PR6(6,"Elite Special Forces");
+	PR0(0,"Professional Rating 0"),
+	PR1(1,"Professional Rating 1"),
+	PR2(2,"Professional Rating 2"),
+	PR3(3,"Professional Rating 3"),
+	PR4(4,"Professional Rating 4"),
+	PR5(5,"Professional Rating 5"),
+	PR6(6,"Professional Rating 6");
 	private final int value;
 	private final String text;
 	private ProfessionalRating(int value,String text)
@@ -30,7 +30,7 @@ public enum ProfessionalRating{
 			b.append(comma)
 			 .append("{row:").append(jsq(a.value))
 			 .append(",name:").append(jsq(a.name()))
-			 .append(",text:").append(jsq(a.value + " - " + a.text))
+			 .append(",text:").append(jsq(a.text))
 			 .append("}");
 			comma = ",";
 		}
@@ -42,7 +42,7 @@ public enum ProfessionalRating{
 		for(ProfessionalRating a : values())
 		{
 			NameRow row = new NameRow();
-			row.Name = a.value + " " + a.text;
+			row.Name = a.text;
 			row.Row = a.value;
 			list.add(row);
 		}

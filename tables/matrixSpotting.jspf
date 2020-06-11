@@ -1,0 +1,25 @@
+<div class='tableWrap'>
+			<div class='tableTitle'>Matrix Spotting Table</div>
+			<table class='table' id='matrixSpottingTable'>
+				<thead>
+					<tr>
+						<td class='tdl'>Target is...</td><td class='tdc'>NOT RUNNING SILENT</td><td class='tdc'>RUNNING SILENT</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class='tdl'>Within 100 meters</td>
+						<td class='tdc'>Automatic</td>
+						<td class='tdc' rowspan='3'>Opposed Computer + Intuition [Data Processing] v. Logic + Sleaze Test</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Outside 100 meters</td>
+						<td class='tdc'>Simple Computer + Intuition [Data Processing]</td>
+					</tr>
+					<tr>
+						<td class='tdl'>A Host</td>
+						<td class='tdc'>Automatic</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>

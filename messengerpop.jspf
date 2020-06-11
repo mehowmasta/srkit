@@ -32,7 +32,7 @@
 				<div class='flex' style='align-items: center;flex-wrap:wrap;'>
 					<button style='' class='parentBtn mini hover' data-hover='Connect another user to this link' id='messagePopupAddUserToggleBtn{{threadId}}' type='button' tabindex='1' onclick='messengerPop.toggleAddUserButtons(this)'>Add User</button>	
 					<div class='childBtnContainer flex' id='messagePopupAddUserToggleBtn{{threadId}}Selector' style='justify-content:flex-start;align-items:center;max-width:35rem;min-height:8rem;'>
-						<div class='x' style='top:0rem;' onclick='messengerPop.toggleAddUserButtons(this)'>X</div>					
+						<div class='x' style='top:0rem;z-index:90;' onclick='messengerPop.toggleAddUserButtons(this)'>X</div>					
 						<div class='inputWrap childBtn'>
 							<input type='email' id='messagePopupAddUserLogin{{threadId}}' name='' onfocus="this.select()" onkeyup='messengerPop.userKeyup(event)' list='messagePopupAddUserList'><label class='inputLabel'>User Login</label>
 							<datalist id="messagePopupAddUserList">
@@ -40,6 +40,7 @@
 							</datalist>
 						</div>
 						<button id='messagePopupAddUserBtn{{threadId}}' type='button' class='childBtn mini' style='max-height:3.75rem' onclick='messengerPop.addUser(this)'>Add</button>
+						<button id='messagePopupAddFriendBtn{{threadId}}' type='button' class='childBtn mini' style='max-height:3.75rem' onclick='messengerPop.addFriend(this)'>Friends</button>
 					</div>
 					<button id='messagePopupLeaveBtn{{threadId}}' type='button' style='align-self: center;' class='mini hover' data-hover='Disconnect from this link' tabindex='1' onclick='messengerPop.leaveThread(this)'>Leave</button>
 			  		<button id='messagePopupDeleteBtn{{threadId}}' type='button' style='align-self: center;' class='mini hover' data-hover='Destroy this link' tabindex='1' onclick='messengerPop.deleteThread(this)'>Delete</button>		
@@ -55,11 +56,11 @@
 		  
 	 	</div>
 	 	<div class='popupFooter flex messageFooter'>
-		 	<div style='width:calc(100% - 3rem);' onclick="">
+		 	<div style='width:calc(100% - 5rem);' onclick="">
 			  	<textarea class='messageText' id='messagePopupText{{threadId}}' placeholder='type here, ENTER to send' onkeydown='messengerPop.keydown(event)' tabindex=1></textarea>
 			  	<!-- <button type='button' onclick='messengerPop.sendMessage(this)'  tabindex=1>Send</button> -->
 		   </div>
-		   <div style='width:3rem;' >
+		   <div style='width:5rem;' >
 		   		<div class='imgBtn hover' data-hover='Share Map' onclick='messengerPop.shareMap(this)'>
 		   			<img class="medIcon"  src='<%= Images.get(Images.Map) %>'>
 		   		</div>

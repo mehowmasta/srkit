@@ -135,7 +135,7 @@ class RecInfo
     String and = "";
     for (String k : primaryKeys)
     {
-      where.append(and).append(k).append("=?");
+      where.append(and).append("`").append(k).append("`").append("=?");
       and = " and ";
     }
     return where.toString();

@@ -24,14 +24,14 @@ var pickProgramPop = {
 			var top = "";
 			var bottom = "";
 			var header = "<thead style='position:sticky;top:0;z-index:20;'><tr>"
-						  + "<td class='tdl'>Name</td>"
-						  + "<td class='tdc'>Type</td>"
+						  + "<td class='tdl' style='width:80%;'>Name</td>"
+						  + "<td class='tdl' style='width:30%;'>Type</td>"
 						  + "<td class='tdc'></td>"
 						  + "</tr></thead>"
 						  + "<tbody>";
 			var rowTemplate = "<tr id='" + self.id + "Row{2}' class='{5}'>"
 						  + "<td class='tdl clickable'  onclick='return pickProgramPop.showDetail({2})'>{0}</td>"
-						  + "<td class='tdc'>{1}</td>"
+						  + "<td class='tdl'>{1}</td>"
 						  + "<td class='tdc' style='white-space:nowrap;'>" 
 						  + "<button id='" + self.id + "MinusBtn{2}' class='mini' type='button' {3} onclick='"+self.id+".minusOne({2})'>-</button>"
 						  + "<button id='" + self.id + "PlusBtn{2}' class='programPlusBtn mini' {4} type='button' onclick='"+self.id+".plusOne({2})'>+</button>"

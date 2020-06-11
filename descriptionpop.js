@@ -1,5 +1,8 @@
 var descriptionPop = {
-		callback:null,
+	callback:null,
+	hasAmmoType:false,
+	hasEquip:false,
+	hasFireMode:false,
 	id:'descriptionPop',
 	close:function(){
 		var self = descriptionPop;
@@ -7,7 +10,14 @@ var descriptionPop = {
 	},
 	init:function(record){
 		var self = descriptionPop;
+		var characterRow = record.CharacterRow;
 		var htm = sr5.getSection(record,null,true);
+		if(record.CurrentAmmoRow && record.CurrentAmmoRow>0)
+		{
+			var char = sr5.characters.get(characterRow);
+			var ammo = char.Gear.get(record.CurrentAmmoRow);
+			htm+= sr5.getSection(ammo,null,true);
+		}
 		if(record.Attachments && record.Attachments.size()>0)
 		{
 			var values = record.Attachments.values;
@@ -34,7 +44,34 @@ var descriptionPop = {
 			};
 			sr5.selectImage(record.Portrait,callback);
 		}
+		if(characterRow)
+		{
+			var char = sr5.characters.get(characterRow);
+			if(char !=null)
+			{
+				if(char.User != sr5.user.Row)
+				{
+					return ir.hide(self.id+"Equipped");
+				}
+			}
+		}
 		self.initEquip(record);
+		self.initFireMode(record);
+		self.initAmmoType(record);
+		self.showEquipSection(self.hasEquip || self.hasFireMode || self.hasAmmoType);
+	},
+	initAmmoType:function(record)
+	{		
+		var self = descriptionPop;		
+		if(self.fromCharacterSheet || !record.hasOwnProperty("CurrentAmmoRow") || (!record.Ammo && record.Ammo.length==0 && record.Type!=="Bow"))
+		{
+			self.hasAmmoType=false;
+			ir.set(self.id+"AmmoType","");	
+			return
+		}
+		self.hasAmmoType=true;
+		ir.set(self.id+"AmmoType",sr5.getAmmoTypeSelect(record,self.id));	
+		ir.set(self.id+"AmmoTypeSelWeapon"+record.ItemRow, record.CurrentAmmoRow);
 	},
 	initBonus:function(bonuses){
 		var self = descriptionPop;
@@ -51,26 +88,26 @@ var descriptionPop = {
 	initEquip:function(record)
 	{		
 		var self = descriptionPop;
-		var characterRow = record.CharacterRow;
-		if(characterRow)
-		{
-			var char = sr5.characters.get(characterRow);
-			if(char !=null)
-			{
-				if(char.User != sr5.user.Row)
-				{
-					return ir.hide(self.id+"Equipped");
-				}
-			}
-		}
+		
 		if(self.fromCharacterSheet ||!record.hasOwnProperty("Equipped") )
 		{
-			ir.get(self.id+"Container").classList.remove("hasEquip");
-			return ir.hide(self.id+"Equipped");
+			self.hasEquip=false;
+			return
 		}
-		ir.show(self.id+"Equipped");
-		ir.set(self.id+"Equipped",sr5.getEquipCheckbox(record));	
-		ir.get(self.id+"Container").classList.add("hasEquip");	
+		self.hasEquip=true;
+		ir.set(self.id+"Equip",sr5.getEquipCheckbox(record));		
+	},
+	initFireMode:function(record)
+	{		
+		var self = descriptionPop;		
+		if(self.fromCharacterSheet || !record.hasOwnProperty("CurrentFireMode") || !record.Modes || record.Modes.length==0)
+		{
+			self.hasFireMode=false;
+			ir.set(self.id+"FireMode","");	
+			return
+		}
+		self.hasFireMode=true;
+		ir.set(self.id+"FireMode",sr5.getFireModeRadio(record));		
 	},
 	initMulti:function(records){
 		var self = descriptionPop;
@@ -90,10 +127,26 @@ var descriptionPop = {
 			ir.set(div,sr5.getThumb(imageRec));
 		}
 	},
+	initNotes:function(records){
+		var self = descriptionPop;
+		var htm = "";
+		var comma = "";
+		for(var i =0 ,z=records.length;i<z;i++)
+		{
+			var b = records[i];
+			if(b.Note && b.Note.length>0)
+			{
+				htm += comma + b.Note;
+				comma += ", "; 
+			}
+		}
+		ir.set(self.id+"Note",htm);
+	},
 	show:function(record,callback){
 		var self = descriptionPop;
 		self.callback = callback;
 		self.init(record);
+		self.initNotes([record])
 		ir.hide(self.id + "Bonus");	
 		var pop = ir.get(self.id);
 		if(pop.classList.contains("show"))
@@ -110,6 +163,7 @@ var descriptionPop = {
 		self.callback = callback;
 		self.initBonus(bonuses);
 		self.initMulti(records);
+		self.initNotes(records);
 		ir.show(self.id + "Bonus");
 		var pop = ir.get(self.id);
 		if(pop.classList.contains("show"))
@@ -119,6 +173,20 @@ var descriptionPop = {
 		else
 		{
 			pop.classList.add("show");
+		}
+	},
+	showEquipSection:function(showIt)
+	{
+		var self = descriptionPop;
+		if(showIt)
+		{
+			ir.show(self.id+"Equipped");
+			ir.get(self.id+"Container").classList.add("hasEquip");
+		}
+		else
+		{
+			ir.hide(self.id+"Equipped");
+			ir.get(self.id+"Container").classList.remove("hasEquip");
 		}
 	},
 	zz_descriptionPop:0

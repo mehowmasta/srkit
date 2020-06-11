@@ -1,0 +1,116 @@
+<div class='tableWrap'>
+	<div class='tableTitle'>Addiction Table</div>
+	<table class='table' id='addictionTable'>
+		<thead>
+			<tr>
+				<td class='tdl'>Substance</td>
+				<td class='tdc'>Addiction Rating</td>
+				<td class='tdc'>Addiction Threshold</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr><td class='tdl' colspan='3'><b>Drugs</b></td></tr>
+			<tr>
+				<td class='tdl'>&emsp;Alcohol</td>
+				<td class='tdc'>3</td>
+				<td class='tdc'>2</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>&emsp;Bliss</td>
+				<td class='tdc'>5</td>
+				<td class='tdc'>3</td>
+			</tr>				
+			<tr>
+				<td class='tdl'>&emsp;Cram</td>
+				<td class='tdc'>4</td>
+				<td class='tdc'>3</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Jazz</td>
+				<td class='tdc'>8</td>
+				<td class='tdc'>3</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Kamikaze</td>
+				<td class='tdc'>9</td>
+				<td class='tdc'>3</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Long Haul</td>
+				<td class='tdc'>2</td>
+				<td class='tdc'>1</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Nitro</td>
+				<td class='tdc'>9</td>
+				<td class='tdc'>3</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Novacoke</td>
+				<td class='tdc'>7</td>
+				<td class='tdc'>2</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Psyche</td>
+				<td class='tdc'>6</td>
+				<td class='tdc'>2</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Soykaf</td>
+				<td class='tdc'>1</td>
+				<td class='tdc'>2</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Zen</td>
+				<td class='tdc'>3</td>
+				<td class='tdc'>1</td>
+			</tr>
+			<tr><td class='tdl' colspan='3'><b>Simsense</b></td></tr>
+			<tr>
+				<td class='tdl'>&emsp;BTL, Dreamchip</td>
+				<td class='tdc'>6</td>
+				<td class='tdc'>1</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;BTL, Moodchip</td>
+				<td class='tdc'>6</td>
+				<td class='tdc'>2</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;BTL, Personafix</td>
+				<td class='tdc'>7</td>
+				<td class='tdc'>2</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;BTL, Tripchip</td>
+				<td class='tdc'>8</td>
+				<td class='tdc'>3</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Hot-Sim Simsense</td>
+				<td class='tdc'>3</td>
+				<td class='tdc'>1</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Legal-Strength Simsense</td>
+				<td class='tdc'>2</td>
+				<td class='tdc'>1</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Skillwires</td>
+				<td class='tdc'>5</td>
+				<td class='tdc'>2</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Focus Addiction</td>
+				<td class='tdc'>total Force of all active foci</td>
+				<td class='tdc'>2</td>
+			</tr>
+			<tr>
+				<td class='tdl'>&emsp;Essence Drain</td>
+				<td class='tdc'>critter's Magic</td>
+				<td class='tdc'>2</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

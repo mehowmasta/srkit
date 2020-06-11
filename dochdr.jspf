@@ -23,6 +23,7 @@
 <link href='https://fonts.googleapis.com/css?family=Electrolize' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Ceviche One' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Permanent Marker' rel='stylesheet'>
 <link href="style.jsp?p=<%=_bean.isMobile() %>&a=<%=_bean.isSysAdmin()%>&<%=_bean.getThemeParameters()%>" rel="stylesheet" charset="UTF-8" type="text/css" />
 <title><%= AppBasePage.PRODUCT_NAME %></title>
 <script src="raphael.js?s=<%=stamp %>" TYPE="text/javascript"></script>

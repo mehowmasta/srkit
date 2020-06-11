@@ -1,0 +1,12 @@
+<script src='friendpop.js?s=<%=stamp %>'></script>
+<style>
+</style>
+<div id='friendPop' class='popup search' style='min-width:23rem;max-width:34rem;min-height:4rem;'>
+	<div class='popupHeader'>
+		<div class='x' onclick='friendPop.close()'>X</div>
+		<div class='title' style='	padding: 1rem; width: 100%;'>Friends</div>
+	</div>
+	<div class='popupContent'>
+		<div id='friendPopList'></div>
+	</div>
+</div>

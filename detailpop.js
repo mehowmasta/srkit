@@ -316,6 +316,9 @@ var detailPop = {
 		self.initPrograms();
 		self.initButtons();
 	},
+	initAmmoType:function(){
+		
+	},
 	initButtons:function(){
 		var self = detailPop;	
 		var canUpdate = (self.blankCharacterRecord.hasOwnProperty("Equipped")
@@ -513,8 +516,8 @@ var detailPop = {
 		var record = self.currentRecord;
 		if(self.blankCharacterRecord.hasOwnProperty("Rating"))
 		{
-			if(record.hasOwnProperty("MaxRating") && (record.MaxRating<=1 || (record.MinRating || 1)==record.MaxRating)){
-				ir.set(self.id+"Rating",1);
+			if(record.hasOwnProperty("MaxRating") && (record.MinRating==record.MaxRating)){
+				ir.set(self.id+"Rating",record.MaxRating);
 				ir.hide(self.id+"RatingWrap");
 			}
 			else

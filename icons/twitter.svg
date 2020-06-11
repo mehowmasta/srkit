@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="49.350773mm"
+   height="49.423195mm"
+   viewBox="0 0 174.86494 175.12155"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="twitter.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="-63.728532"
+     inkscape:cy="32.962508"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer3"
+     showgrid="false"
+     inkscape:snap-object-midpoints="false"
+     inkscape:snap-others="true"
+     inkscape:snap-to-guides="true"
+     showguides="true"
+     inkscape:snap-page="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="false"
+     inkscape:bbox-nodes="false"
+     inkscape:window-width="1680"
+     inkscape:window-height="987"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4193"
+       originx="-283.46284"
+       originy="-538.11441" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Background"
+     transform="translate(-0.4684983,0.16081395)"
+     style="display:inline">
+    <path
+       style="fill:#ebb530;fill-opacity:1"
+       d="M 83.489491,174.87114 C 64.14825,173.21022 49.790043,168.07947 35.920475,157.87287 13.419472,141.3144 0.4684983,115.55599 0.4684983,87.361833 c 0,-43.416648 30.6211187,-79.355011 73.6601427,-86.4509601 17.56841,-2.8965454 37.024309,0.1437878 53.298659,8.3288681 39.56691,19.899925 57.65093,65.790406 42.67483,108.292719 -10.28193,29.18023 -37.27453,51.4209 -68.17131,56.17006 -6.078379,0.93431 -14.761949,1.48458 -18.441329,1.16862 z"
+       id="path4245"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ssssssss" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Reddit icon"
+     style="display:inline">
+    <g
+       transform="matrix(0.52845974,0,0,0.52845974,21.999999,33.766242)"
+       id="g4"
+       style="fill:#ffffff">
+      <path
+         style="fill:#ffffff"
+         inkscape:connector-curvature="0"
+         d="m 256,25.450026 c -9.41916,4.177241 -19.54155,7.000461 -30.16584,8.270207 C 236.6785,27.219805 245.00583,16.926993 248.92744,4.6630769 238.77976,10.681263 227.53932,15.052338 215.57599,17.408298 205.99483,7.2006971 192.34506,0.822 177.2392,0.822 c -29.0066,0 -52.52312,23.515593 -52.52312,52.520312 0,4.116376 0.46538,8.125066 1.36057,11.968952 C 82.425838,63.121045 43.725725,42.211429 17.821398,10.435929 c -4.520897,7.757065 -7.110955,16.779194 -7.110955,26.40436 0,18.221237 9.273082,34.297202 23.365771,43.715425 -8.610118,-0.27249 -16.708029,-2.635005 -23.789956,-6.568785 -0.0037,0.219116 -0.0037,0.439168 -0.0037,0.660156 0,25.447365 18.104188,46.675355 42.131051,51.499645 -4.407594,1.20045 -9.047412,1.84188 -13.83799,1.84188 -3.384118,0 -6.674596,-0.32867 -9.8808,-0.94201 6.683024,20.86654 26.079432,36.05106 49.062219,36.47525 -17.974966,14.08613 -40.621588,22.48275 -65.228077,22.48275 -4.2390434,0 -8.4200303,-0.24814 -12.528915,-0.73319 23.243103,14.90173 50.850726,23.59612 80.510919,23.59612 96.605615,0 149.433065,-80.03055 149.433065,-149.43493 0,-2.277303 -0.0506,-4.542434 -0.1517,-6.794455 C 240.05326,45.233164 248.95834,35.982554 256,25.450026"
+         id="path6" />
+    </g>
+  </g>
+</svg>

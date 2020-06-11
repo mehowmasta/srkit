@@ -10,7 +10,6 @@ import sr.data.GearRec;
 public class MedicalListPage extends AppBasePage {
 
 	public List<GearRec> gear;
-	/*
 	@Override
 	public boolean hasInfo()
 	{
@@ -19,9 +18,8 @@ public class MedicalListPage extends AppBasePage {
 	@Override
 	public boolean hasSort()
 	{
-		return true;
+		return false;
 	}
-	*/
 	@Override
 	public boolean hasSearch()
 	{

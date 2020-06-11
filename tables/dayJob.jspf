@@ -1,0 +1,27 @@
+<div class='tableWrap'>
+		<div class='tableTitle'>Day Job Table</div>
+		<table class='table' id='dayJobTable' style='width:100%;'>
+			<thead>
+				<tr>
+					<td class='tdc'>KARMA VALUES</td><td class='tdc'>Salary/Month</td><td class='tdc'>Hours/Week</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class='tdc'>5</td>
+					<td class='tdc'>1,000¥</td>
+					<td class='tdc'>10</td>
+				</tr>
+				<tr>
+					<td class='tdc'>10</td>
+					<td class='tdc'>2,500¥</td>
+					<td class='tdc'>20</td>
+				</tr>
+				<tr>
+					<td class='tdc'>15</td>
+					<td class='tdc'>5,000¥</td>
+					<td class='tdc'>40</td>
+				</tr>
+			</tbody>
+		</table>		
+	</div>

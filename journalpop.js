@@ -5,6 +5,18 @@ var journalPop = {
 		titles:{},
 		types:{},
 		id:"journalPop",
+		addCharacter:function(){
+			var self = journalPop;
+			if(pickCharacterPop)
+			{
+				pickCharacterPop.show([],false,journalPop.afterAddCharacter);				
+			}
+		},
+		afterAddCharacter:function(character)
+		{
+			var self = journalPop;
+			var container = ir.get("")
+		},
 		buildJournalEntries:function(){
 			var self = journalPop;
 			var htm = "";

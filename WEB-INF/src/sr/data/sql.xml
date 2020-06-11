@@ -273,19 +273,52 @@
 	</createTable>
 </CharacterKnowledgeRec>
 
+<CharacterRatingRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tcharacterrating` (
+	  `Character` INT NULL,
+	  `User` INT NULL,
+	  `Rating` INT NULL,
+	  PRIMARY KEY (`Character`,`User`),
+	  UNIQUE INDEX `uUserCharacter` (`Character` ASC, `User` ASC))
+	ENGINE = MyISAM
+	]]></createTable>
+	<selectForCharacter><![CDATA[
+	select avg(rating) from tcharacterrating
+	where character=?
+	]]></selectForCharacter>
+</CharacterRatingRec>
+
 <CharacterSettingRec>
-	<createTable>
+	<createTable><![CDATA[
 	CREATE TABLE `tCharacterSetting` (
 	  `CharacterRow` INT NOT NULL,
 	  `TogglePanel` VARCHAR(200) NULL,
 	  PRIMARY KEY (`CharacterRow`))
 	ENGINE = MyISAM
-	</createTable>
+	]]></createTable>
 	<selectForCharacter><![CDATA[
 	select * from tcharacterSetting
 	where characterRow = ?
 	]]></selectForCharacter>
 </CharacterSettingRec>
+
+<CharacterTagRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tcharactertag` (
+	  `Row` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	  `Character` INT NULL,
+	  `User` INT NULL,
+	  `Tag` varchar(200) NULL,
+	  PRIMARY KEY (`Row`),
+	  INDEX `iCharacter` (`Character` ASC))
+	ENGINE = MyISAM
+	]]></createTable>
+	<selectForCharacter><![CDATA[
+	select * from tcharactertag
+	where character=?
+	]]></selectForCharacter>
+</CharacterTagRec>
 
 <CharacterWeaponModifierRec>
 	<createTable><![CDATA[

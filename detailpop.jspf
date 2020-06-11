@@ -114,13 +114,18 @@ text-align:left;padding:1rem;font-size:1.4rem;
 					</datalist>
 				</div>
 			</div>
-			<div id='detailPopEquipWrap'>
-				<div class="checkWrap" style='text-align:center;'>
-					<input name="detailPopEquip" id="detailPopEquip" tabindex="1" type="checkbox">
-					<label for="detailPopEquip">Equip</label>
+			<div class='flex' style='flex-wrap:nowrap'>
+				<div id='detailPopEquipWrap'>
+					<div class="checkWrap" style='text-align:center;'>
+						<input name="detailPopEquip" id="detailPopEquip" tabindex="1" type="checkbox">
+						<label for="detailPopEquip">Equip</label>
+					</div>
+				</div>
+				<div id='detailPopFireModeWrap'>
+				</div>
+				<div id='detailPopAmmoTypeWrap'>
 				</div>
 			</div>
-				
 		</div>
 		<div id='detailPopSummary'>
 		</div>		

@@ -14,7 +14,7 @@
 	</div>
 	<div class='popupContent'>
 		<div class='container'>
-			<div class='tableWrap' style='margin:0.5rem;'>
+			<div class='tableWrap' style='margin:0.5rem;width:100%;'>
 				<div class='tableTitle'>Bioware</div>
 				<table class='pickTable table show' id='pickBiowarePopTable'>
 					<tr><td style='width:100%;text-align:center;'>Loading...</td></tr>

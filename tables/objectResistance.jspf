@@ -1,0 +1,41 @@
+<div class='tableWrap'>
+	<div class='tableTitle'>Object Resistance</div>
+	<table class='table' id='objectResistanceTable'>
+		<thead>
+			<tr>
+				<td class='tdl'>Initiative type</td>
+				<td class='tdc'>Dice Pool</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class='tdl'>Natural Objects</td>
+				<td class='tdc'>3</td>
+			</tr>		
+			<tr>
+				<td class='tdl' span='2'>&emsp;<i>Trees, soil, unprocessed water, hand-carved wood, metal cold-worked by hand</i></td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Manufactured Low-Tech Objects and Materials</td>
+				<td class='tdc'>6</td>
+			</tr>		
+			<tr>
+				<td class='tdl' span='2'>&emsp;<i>Brick, leather, simple plastics</i></td>
+			</tr>
+			<tr>
+				<td class='tdl'>Manufactured High-Tech Objects and Materials</td>
+				<td class='tdc'>9</td>
+			</tr>		
+			<tr>
+				<td class='tdl' span='2'>&emsp;<i>Advanced plastics, alloys, electronic equipment, sensors</i></td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Highly Processed Objects</td>
+				<td class='tdc'>15+</td>
+			</tr>		
+			<tr>
+				<td class='tdl' span='2'>&emsp;<i>Computers, complex toxic wastes, drones, vehicles</i></td>
+			</tr>		
+		</tbody>
+	</table>
+</div>

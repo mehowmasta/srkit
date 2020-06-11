@@ -6,6 +6,11 @@ var messengerPop = {
 	messagePopupTemplate:null,
 	newThreadCount:0,
 	threads:null,
+	addFriend:function(ele){
+		var self = messengerPop;
+		friendPop.callback= function(user){self.afterFriend(user,ele)};
+		friendPop.show();
+	},
 	addMessage:function(res){
 		var self = messengerPop;
 		var template = "<div id='threadMessage{4}' class='threadMessageWrap {3}'><div class='flex' style='justify-content: space-between;'><div class='threadMessageUser'>{0}</div><div class='threadMessageDate'>{1}</div></div><div class='threadMessage'>{2}</div></div>";
@@ -116,6 +121,12 @@ var messengerPop = {
 		}
 		self.updateThreadDiv(thread);
 	},	
+	afterFriend:function(user,ele){
+		var self = messengerPop;
+		var threadId = ir.n(self.getPopupThreadId(ele));
+		ir.set("messagePopupAddUserLogin"+threadId,user.Login);
+		self.addUser(ir.get("messagePopupAddUserBtn"+threadId));
+	},
 	afterShareMap:function(threadId,map){
 		var self = messengerPop;
 		self.sendMap(threadId,map);
@@ -842,8 +853,9 @@ var messengerPop = {
 		thread.threadId = newThreadId;
 		popup("messagePopup"+oldThreadId);
 		ir.get("messagePopup"+oldThreadId).id = "messagePopup"+newThreadId;
-		ir.get("messagePopupAddUserSelector"+oldThreadId).id = "messagePopupAddUserSelector"+newThreadId;
+		//ir.get("messagePopupAddUserSelector"+oldThreadId).id = "messagePopupAddUserSelector"+newThreadId;
 		ir.get("messagePopupAddUserBtn"+oldThreadId).id = "messagePopupAddUserBtn"+newThreadId;
+		ir.get("messagePopupAddFriendBtn"+oldThreadId).id = "messagePopupAddFriendBtn"+newThreadId;
 		ir.get("messagePopupAddUserToggleBtn"+oldThreadId).id = "messagePopupAddUserToggleBtn"+newThreadId;
 		ir.get("messagePopupDivUsers"+oldThreadId).id = "messagePopupDivUsers"+newThreadId;
 		ir.get("messagePopupAddUserLogin"+oldThreadId).id = "messagePopupAddUserLogin"+newThreadId;

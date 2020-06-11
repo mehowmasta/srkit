@@ -31,6 +31,7 @@ public class ImageRec extends AppRec{
 	public static String DIVISION = "Division";
 	public static String EXTENSION = "Extension";
 	public static String INACTIVE = "Inactive";
+	public static String ISOMETRIC = "Isometric";
 	public static String NAME = "Name";
 	public static String ROW = "Row";
 	public static String TABLE = "tImage";
@@ -43,6 +44,7 @@ public class ImageRec extends AppRec{
 	public int Division = 16;
 	public String Extension = "";
 	public boolean Inactive = false;
+	public boolean Isometric = false;
 	public String Name = "";
 	public int Row = 0;
 	public ImageType Type = ImageType.Map;

@@ -66,6 +66,7 @@ var view = {
 		view.buildTeams();
 		view.changeMagic();
 		sr5.doneLoading();
+		sr5.characters.set(model.character);
 	},
 	addContact:function(){
 		var blankContact = ir.copy(sr5.blankContact);

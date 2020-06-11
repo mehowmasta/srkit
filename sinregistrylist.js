@@ -68,7 +68,7 @@ var view = {
 							 + "</div>";
 				if(lastPR!=s.ProfessionalRating)
 				{
-					htm += "<div class='divider shadow'>PR: "+sr5.professionalRating.get(s.ProfessionalRating).text+"</div>"
+					htm += "<div class='divider shadow'>"+sr5.professionalRating.get(s.ProfessionalRating).text+"</div>"
 				}
 				htm += ir.format(template,
 						view.applySearch(s.Name),
@@ -99,11 +99,20 @@ var view = {
 			container.innerHTML = top + bottom + "</div>";
 			ir.set("characterCount",count!=arr.length?count+" / " + arr.length:count);
 		},	
+		changePRFilter:function(){
+			view.buildCharacters();			
+		},
 		filterCharacter:function(s)
 		{
-			if(view.searchArg.length<3)
+
+			var pr = ir.vn("professionalRating");
+			if(view.searchArg.length<3 && pr==-1)
 			{
 				return false;
+			}
+			if(pr>-1 && s.ProfessionalRating != pr)
+			{
+				return true;
 			}
 			if(s.Name.toLowerCase().indexOf(view.searchArg)>-1)
 			{

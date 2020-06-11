@@ -9,6 +9,7 @@
 <%@include  file="pickportraitpop.jspf"%>
 <%@include  file="imagepreviewpop.jspf"%>
 <%@include  file="messengerpop.jspf"%>
+<%@include  file="friendpop.jspf"%>
 <%@include  file="hoverpop.jspf"%>
 <%@include  file="maptokenoptionpop.jspf" %>
 <%@include  file="journalpop.jspf" %>
@@ -23,6 +24,7 @@ sr5.defenseModifier = <%= DefenseModifier.toJson() %>;
 sr5.deleteButton = "<%= _bean.get("DeleteButton") %>";
 sr5.delimiter = "<%= _bean.get("Delimiter") %>";
 sr5.environmentalModifier = <%= EnvironmentalModifier.toJson() %>;
+sr5.fireMode = new KeyedArray("name",<%= WeaponFireMode.toJson() %>);
 sr5.friends = new KeyedArray("Row",<%= _bean.get("Friends") %>);
 sr5.iconPath = "<%= _bean.get("IconPath") %>";
 sr5.isMobile = ir.isTrue(<%= _bean.get("MobileDevice")%>);

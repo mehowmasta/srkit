@@ -56,6 +56,14 @@
 							<datalist id="journalPopTitleDataList">
 							</datalist>
 					</div>
+					<!-- 
+					<div class="characterWrap" style='width:35rem;flex:0;max-width:calc(100% - 2rem);'>
+						<label class='title'>Characters</label>
+						<div id='journalPopCharacterList'></div>
+						<button id="journalPopAddCharacterBtn"  tabindex="1" type="button" onclick="journalPop.addCharacter()" class="hover mini" data-hover="Associate a character with this Journal Entry">Add</button>					
+					
+					</div>
+					 -->
 					<div class='spacer'></div>
 					<div class="inputWrap" style='flex:10;max-width:calc(100% - 2rem);'>
 						<textarea tabindex="1" style="height:100%;width:100%;resize:none;" class="hover" name="journalPopText" id="journalPopText"></textarea>

@@ -1,0 +1,30 @@
+<div class='tableWrap'>
+	<div class='tableTitle'>User Modes Table</div>
+	<table class='table' id='userModesTable'>
+		<thead>
+			<tr>
+				<td class='tdl'>User Mode</td><td class='tdc'>Initiative</td><td class='tdc'>Initiative dice</td><td class='tdc'>Notes</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class='tdl'>Augmented Reality (AR)</td>
+				<td class='tdc'>Physical Initiative</td>
+				<td class='tdc'>Physical Initiative Dice</td>
+				<td class='tdc'>can be distracting</td>
+			</tr>
+			<tr>
+				<td class='tdl'>Cold-Sim (VR)</td>
+				<td class='tdc'>Data Processing + Intuition</td>
+				<td class='tdc'>3D6</td>
+				<td class='tdc'></td>
+			</tr>
+			<tr>
+				<td class='tdl'>Hot-Sim (VR)</td>
+				<td class='tdc'>Data Processing + Intuition</td>
+				<td class='tdc'>4D6</td>
+				<td class='tdc'>+2 dice pool bonus to Matrix actions</td>
+			</tr>
+		</tbody>
+	</table>
+</div>	

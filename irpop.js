@@ -8,6 +8,19 @@ var irPop = {
   active:function(){
 	  return irPop.visibleIds.length > 0;
   },
+  closeLast:function(){
+	if(irPop.visibleIds.length>0)
+	{
+		irPop.showHide(irPop.visibleIds[irPop.visibleIds.length - 1],false);
+	}
+	else
+	{
+	    var background = ir.get(irPop.backgroundId);
+		background.classList.remove("show");
+    	background.style.zIndex = -20;
+    	background.onclick = null;
+	}
+  },
   showHide : function(idOrObj,supressBackground) {
 	var visIds = irPop.visibleIds;
     var pop = idOrObj;
@@ -27,6 +40,7 @@ var irPop = {
     	{
         	var lastPop = ir.get(visIds[visIds.length-1]);
         	background.style.zIndex = lastPop.style.zIndex - 1;
+        	background.onclick = irPop.closeLast;
         	if(lastPop.classList.contains("noback"))
     		{
                 background.classList.remove("show");
@@ -36,6 +50,7 @@ var irPop = {
     	{
             background.classList.remove("show");
         	background.style.zIndex = -20;
+        	background.onclick = null;
     	}
     } else {// showing
         var zIndex = 200;
@@ -45,16 +60,22 @@ var irPop = {
                 zIndex = Number(lastPop.style.zIndex) + 2;
             }
         }
-        background.style.zIndex = zIndex - 1;
         pop.style.zIndex = zIndex;
         irPop.visibleIds.push(pop.id);
         if(supressBackground || pop.classList.contains("noback"))
     	{
         	background.classList.remove("show");
+        	background.onclick = null;
     	}
         else if (!background.classList.contains("show")) {
             background.classList.add("show");
+        	background.onclick = irPop.closeLast;
+            background.style.zIndex = zIndex - 1;
         }
+        else
+    	{
+            background.style.zIndex = zIndex - 1;
+    	}
         pop.classList.add("show");
         pop.focus();
         try{pop.scrollTop=0;}catch(awNevermind){}

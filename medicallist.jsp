@@ -26,7 +26,10 @@
 </style>
 <body onload='view.aaOnLoad()'>
 <%=_bean.startForm()%>
-
+	<div id='infoPopup' class='popup info'>
+		<%@include file="tables/toxinDrugProtection.jspf"%>
+		<%@include file="tables/addiction.jspf"%>
+	</div>
 <div class='container' id='gearDiv'>
 	<div id='gearList'></div>
 </div>

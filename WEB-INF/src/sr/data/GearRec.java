@@ -35,6 +35,7 @@ public class GearRec extends SrRec {
 	        }
 	    }	
 	}
+	public static final String ACCURACY = "Accuracy";
 	public static final String ARMORPENETRATION = "ArmorPenetration";
 	public static final String AVAILABILITY = "Availability";
 	public static final String BLAST = "Blast";
@@ -56,6 +57,7 @@ public class GearRec extends SrRec {
 	public static final String VECTOR = "Vector";
 	public static final String WIRELESS = "Wireless";
 	//
+	public String Accuracy = "";
 	public String ArmorPenetration = "";
 	public String Availability = "";
 	public String Blast = "";

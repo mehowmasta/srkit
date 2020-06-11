@@ -27,6 +27,7 @@ import sr.data.CharacterGearRec;
 import sr.data.CharacterKnowledgeRec;
 import sr.data.CharacterKnowledgeRec.KnowledgeType;
 import sr.data.CharacterQualityRec;
+import sr.data.CharacterRatingRec;
 import sr.data.CharacterRec;
 import sr.data.CharacterRow;
 import sr.data.CharacterSettingRec;
@@ -509,6 +510,24 @@ public class AjaxPage extends AppBasePage {
 		}
 		return true;
 	}
+	public String rateCharacter() throws Exception
+	{
+		int rating = readInt("rating");
+		int characterRow = readInt("characterRow");
+		CharacterRatingRec rec = new CharacterRatingRec();
+		rec.Character = readInt("characterRow");
+		if(db.select(rec,characterRow,currentUser.Row))
+		{
+			rec.Rating = rating;
+			db.update(rec);
+		}
+		else
+		{
+			rec.Rating = rating;
+			db.insert(rec);
+		}
+		return okOneComma + "rating:" + rec.toString() + "}";
+	}
 	public String removeMapData() throws Exception
 	{
 		MapDataRec rec = new MapDataRec();
@@ -917,6 +936,37 @@ public class AjaxPage extends AppBasePage {
 		return okOne;
 	}
 
+	@SuppressWarnings("unchecked")
+	public String updateAmmoType() throws Exception
+	{
+		int itemRow = readInt("itemRow");
+		if(itemRow<1)
+		{
+			return "{ok:0}";
+		}
+		try {
+			Class<CharacterWeaponRec> clazz = (Class<CharacterWeaponRec>) Class.forName("sr.data.Character"+readString("type",60)+"Rec");
+			CharacterWeaponRec obj = clazz.newInstance();
+			obj.Row = itemRow;
+			db.select(obj);
+			CharacterRec character = new CharacterRec();
+			character.Row = obj.CharacterRow;
+			if(!db.select(character))
+			{
+				return eeJson("Character not found.");
+			}
+			if(character.User != currentUser.Row)
+			{
+				return okZero;
+			}
+			obj.CurrentAmmoRow = readInt("ammo");
+			db.update(obj);
+		}
+		catch (Exception e){
+			return okZero;
+		}
+		return okOne;
+	}
 	public String updateBudget() throws Exception
 	{
 		if(currentUser.isGuest())
@@ -976,12 +1026,12 @@ public class AjaxPage extends AppBasePage {
 			{
 				boolean toDelete = false;
 				String[] data = q.split(SPLITTER);
-				if(data.length==4)
+				if(data.length==5)
 				{
 					CharacterAdeptPowerRec cq = new CharacterAdeptPowerRec();						
 					cq.CharacterRow = characterRow;
 					cq.Row = Integer.parseInt(data[0]);
-					toDelete = Boolean.parseBoolean(data[3]);
+					toDelete = Boolean.parseBoolean(data[4]);
 					if(toDelete)
 					{
 						db.delete(cq);
@@ -990,6 +1040,7 @@ public class AjaxPage extends AppBasePage {
 					{	
 						db.select(cq);
 						cq.Level = Integer.parseInt(data[2]);
+						cq.Note = data[3];
 						db.update(cq);
 					}
 					else
@@ -999,6 +1050,7 @@ public class AjaxPage extends AppBasePage {
 						cq.Row = 0;
 						cq.AdeptPowerRow = Integer.parseInt(data[1]);
 						cq.Level = Integer.parseInt(data[2]);
+						cq.Note = data[3];
 						db.insert(cq);
 						b.append(cq.Row);
 						delim = DELIMITER;
@@ -1006,7 +1058,7 @@ public class AjaxPage extends AppBasePage {
 				}
 				else
 				{
-					return eeJson("Incorrect amount of parameters for updating qualities.");
+					return eeJson("Incorrect amount of parameters for updating adept powers.");
 				}
 			}
 		}
@@ -1029,12 +1081,12 @@ public class AjaxPage extends AppBasePage {
 			{
 				boolean toDelete = false;
 				String[] data = q.split(SPLITTER);
-				if(data.length==5)
+				if(data.length==6)
 				{
 					CharacterArmorRec cq = new CharacterArmorRec();						
 					cq.CharacterRow = characterRow;
 					cq.Row = Integer.parseInt(data[0]);
-					toDelete = Boolean.parseBoolean(data[4]);
+					toDelete = Boolean.parseBoolean(data[5]);
 					if(toDelete)
 					{
 						db.delete(cq);
@@ -1044,6 +1096,7 @@ public class AjaxPage extends AppBasePage {
 						db.select(cq);
 						cq.Quantity = Integer.parseInt(data[2]);
 						cq.Equipped = Boolean.parseBoolean(data[3]);
+						cq.Note = data[4];
 						db.update(cq);
 					}
 					else //new record
@@ -1054,6 +1107,7 @@ public class AjaxPage extends AppBasePage {
 						cq.ArmorRow = Integer.parseInt(data[1]);
 						cq.Quantity = Integer.parseInt(data[2]);
 						cq.Equipped = Boolean.parseBoolean(data[3]);
+						cq.Note = data[4];
 						db.insert(cq);
 						b.append(cq.Row);
 						delim = DELIMITER;
@@ -1061,7 +1115,7 @@ public class AjaxPage extends AppBasePage {
 				}
 				else
 				{
-					return eeJson("Incorrect amount of parameters for updating cyberdecks.");
+					return eeJson("Incorrect amount of parameters for updating armor.");
 				}
 			}
 		}
@@ -1447,23 +1501,23 @@ public class AjaxPage extends AppBasePage {
 		{
 			return eeJson("Access denied, registered users only.");
 		}
-		String qualities = readString("updateString",2000);
+		String gear = readString("updateString",2000);
 		int characterRow = readInt("characterRow");
 		StringBuilder b = new StringBuilder();
 		String delim = "";
-		if(qualities.length()>0)
+		if(gear.length()>0)
 		{
-			String[] qs = qualities.split(DELIMITER);			
+			String[] qs = gear.split(DELIMITER);			
 			for(String q : qs)
 			{
 				boolean toDelete = false;
 				String[] data = q.split(SPLITTER);
-				if(data.length==5)
+				if(data.length==6)
 				{
 					CharacterGearRec cq = new CharacterGearRec();						
 					cq.CharacterRow = characterRow;
 					cq.Row = Integer.parseInt(data[0]);
-					toDelete = Boolean.parseBoolean(data[4]);
+					toDelete = Boolean.parseBoolean(data[5]);
 					if(toDelete)
 					{
 						db.delete(cq);
@@ -1473,6 +1527,7 @@ public class AjaxPage extends AppBasePage {
 						db.select(cq);
 						cq.Quantity = Integer.parseInt(data[2]);
 						cq.Rating = Integer.parseInt(data[3]);
+						cq.Note = data[4];
 						db.update(cq);
 					}
 					else //new record
@@ -1483,6 +1538,7 @@ public class AjaxPage extends AppBasePage {
 						cq.GearRow = Integer.parseInt(data[1]);
 						cq.Quantity = Integer.parseInt(data[2]);
 						cq.Rating = Integer.parseInt(data[3]);
+						cq.Note = data[4];
 						db.insert(cq);
 						b.append(cq.Row);
 						delim = DELIMITER;
@@ -1968,6 +2024,37 @@ public class AjaxPage extends AppBasePage {
 				return okZero;
 			}
 			obj.Equipped = readBoolean("equipped");
+			db.update(obj);
+		}
+		catch (Exception e){
+			return okZero;
+		}
+		return okOne;
+	}
+	@SuppressWarnings("unchecked")
+	public String updateFireMode() throws Exception
+	{
+		int itemRow = readInt("itemRow");
+		if(itemRow<1)
+		{
+			return "{ok:0}";
+		}
+		try {
+			Class<CharacterWeaponRec> clazz = (Class<CharacterWeaponRec>) Class.forName("sr.data.Character"+readString("type",60)+"Rec");
+			CharacterWeaponRec obj = clazz.newInstance();
+			obj.Row = itemRow;
+			db.select(obj);
+			CharacterRec character = new CharacterRec();
+			character.Row = obj.CharacterRow;
+			if(!db.select(character))
+			{
+				return eeJson("Character not found.");
+			}
+			if(character.User != currentUser.Row)
+			{
+				return okZero;
+			}
+			obj.CurrentFireMode = readString("mode",20);
 			db.update(obj);
 		}
 		catch (Exception e){

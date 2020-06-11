@@ -10,14 +10,14 @@ select *
 	where Row=in_characterRow;
 #
 # select AdeptPower
-select s.*, cs.Level, cs.Row as ItemRow, cs.CharacterRow
+select s.*, cs.Level, cs.Row as ItemRow, cs.CharacterRow, cs.Note
 	from tcharacteradeptpower cs
 	inner join tadeptpower s on s.Row = cs.AdeptPowerRow
 	where cs.characterrow=in_characterRow
 	order by s.Name;
 #
 # select Armor
-select s.*, cs.Quantity, cs.Equipped, cs.Row as ItemRow, cs.CharacterRow
+select s.*, cs.Quantity, cs.Equipped, cs.Row as ItemRow, cs.CharacterRow, cs.Note
 	from tcharacterarmor cs
 	inner join tarmor s on s.Row = cs.ArmorRow 
 	where cs.characterrow=in_characterRow
@@ -65,7 +65,7 @@ select s.*, cs.Quantity, cs.Equipped, cs.CurrentAmount, cs.Row as ItemRow, cs.Ch
 	order by s.Name;
 #
 # select Gear
-select s.*, cs.Quantity, cs.Rating, cs.Row as ItemRow, cs.CharacterRow
+select s.*, cs.Quantity, cs.Rating, cs.Row as ItemRow, cs.CharacterRow, cs.Note
 	from tcharactergear cs
 	inner join tgear s on s.Row = cs.GearRow 
 	where cs.characterrow=in_characterRow
@@ -125,7 +125,7 @@ select s.*, cs.Quantity, cs.Equipped, cs.CurrentAmount, cs.Row as ItemRow, cs.Ch
 	order by s.craft, s.Name;
 #
 # select Weapons
-select s.*, cs.Quantity, cs.Equipped , cs.CurrentAmount, cs.Row as ItemRow, cs.CharacterRow, cs.Note as Note
+select s.*, cs.Quantity, cs.Equipped, cs.CurrentAmount, cs.CurrentAmmoRow, cs.CurrentAmmoType, cs.CurrentFireMode, cs.Row as ItemRow, cs.CharacterRow, cs.Note as Note
 	from tcharacterweapon cs
 	inner join tweapon s on s.Row = cs.WeaponRow 
 	where cs.characterrow=in_characterRow

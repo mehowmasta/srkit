@@ -1,0 +1,65 @@
+<div class='tableWrap'>
+	<div class='tableTitle'>CONCEALABILITY MODIFIERS</div>
+	<table class='table' id='concealModTable'>
+		<thead>
+			<tr>
+				<td class='tdc'>Modifier*</td>
+				<td class='tdl'>Example Items</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class='tdc'>-6</td>
+				<td class='tdl'>RFID tag, bug slap patch, microdrone,
+					contact lenses</td>
+			</tr>
+			<tr>
+				<td class='tdc'>-4</td>
+				<td class='tdl'>Hold-out pistol, monowhip, ammo clip,
+					credstick, chips/softs, sequencer/passkey, autopicker, lockpick
+					set, commlink, glasses</td>
+			</tr>
+			<tr>
+				<td class='tdc'>-2</td>
+				<td class='tdl'>Light pistol, knife, sap, minidrone,
+					microgrenade, flash-pak, jammer, cyberdeck, rigger command
+					console</td>
+			</tr>
+			<tr>
+				<td class='tdc'>-0</td>
+				<td class='tdl'>Heavy pistol, machine pistol with folding
+					stock collapsed, grenade, goggles, ammo belt/drum, club,
+					extendable baton (collapsed)</td>
+			</tr>
+			<tr>
+				<td class='tdc'>+2</td>
+				<td class='tdl'>SMG, machine pistol with folding stock
+					extended, medkit, small drone, extendable baton (extended), stun
+					baton</td>
+			</tr>
+			<tr>
+				<td class='tdc'>+4</td>
+				<td class='tdl'>Sword, sawed-off shotgun, bullpup assault
+					rifle</td>
+			</tr>
+			<tr>
+				<td class='tdc'>+6</td>
+				<td class='tdl'>Katana, monosword, shotgun, assault rifle,
+					sport rifle, crossbow</td>
+			</tr>
+			<tr>
+				<td class='tdc'>+8</td>
+				<td class='tdl'>Sniper rifle, bow, grenade launcher, medium
+					drone</td>
+			</tr>
+			<tr>
+				<td class='tdc'>+10/Forget about it</td>
+				<td class='tdl'>Machine gun, rocket launcher, missile
+					launcher, staff, claymore, metahuman body</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class='table' style='text-align: right;color:white;'>
+		<i  style='font-size:1rem;'>*Applies to observer</i>
+	</div>
+</div>

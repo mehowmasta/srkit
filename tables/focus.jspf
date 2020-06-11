@@ -1,0 +1,41 @@
+<div class='tableWrap'>
+	<div class='tableTitle'>Focus Table</div>
+	<table class='table' id='focusTable'>
+		<thead>
+			<tr>
+				<td class='tdl'>Item</td>
+				<td class='tdc'>Bonding Cost (in karma)</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class='tdl'>Enchanting Focus</td>
+				<td class='tdc'>Force x 3</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Metamagic Focus</td>
+				<td class='tdc'>Force x 3</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Power Focus</td>
+				<td class='tdc'>Force x 6</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Qi Focus</td>
+				<td class='tdc'>Force x 2</td>
+			</tr>		
+			<tr>
+				<td class='tdl'>Spell Focus</td>
+				<td class='tdc'>Force x 2</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Spirit Focus</td>
+				<td class='tdc'>Force x 2</td>
+			</tr>	
+			<tr>
+				<td class='tdl'>Weapon Focus</td>
+				<td class='tdc'>Force x 3</td>
+			</tr>		
+		</tbody>
+	</table>
+</div>

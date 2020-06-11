@@ -1,0 +1,62 @@
+<div class='tableWrap'>
+		<div class='tableTitle'>ALLERGY TABLE</div>
+		<table class='table' id='allergyTableTable'>
+			<thead>
+				<tr>
+					<td class='tdl'>Condition</td><td class='tdc'>Karma</td><td class='tdl'>Description</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class='tdl'>Uncommon</td>
+					<td class='tdc'>2</td>
+					<td class='tdl'>The substance or condition is rare for the local environment. Examples: silver, gold,
+					antibiotics, grass.</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Common</td>
+					<td class='tdc'>7</td>
+					<td class='tdl'>+The substance or condition is prevalent in the local environment. Examples: sunlight,
+					seafood, bees, pollen, pollutants, Wi-Fi sensitivity, soy, wheat.</td>
+				</tr>
+			</tbody>
+		</table>
+		<table class='table' style='width:100%;'>
+			<thead>
+				<tr>
+					<td class='tdl'>Severity</td><td class='tdc'>KARMA</td><td class='tdl'>Effects</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class='tdl'>Mild</td>
+					<td class='tdc'>3</td>
+					<td class='tdl'>Symptoms are discomfiting and distracting. Apply a -2 dice pool modifier to the character`s
+					Physical Tests while under the effects of the Allergy.</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Moderate</td>
+					<td class='tdc'>8</td>
+					<td class='tdl'>Contact with the allergen produces intense pain. Apply a -4 dice pool modifier to all Physical
+					Tests made while a character experiences the symptoms.</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Severe</td>
+					<td class='tdc'>13</td>
+					<td class='tdl'>Contact with the allergen results in extreme pain and actual physical damage. Apply a -4
+					dice pool modifier to all tests made while a character experiences symptoms. The character
+					also suffers 1 box of Physical Damage (unresisted) for every 1 minute they are exposed to
+					the allergen.</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Extreme</td>
+					<td class='tdc'>18</td>
+					<td class='tdl'>A character at this level, when exposed to the allergen, goes into full anaphylactic shock. The
+					character receives a -6 dice pool modifier for anything they do. The character is considered
+					to be in excruciating agony. The character suffers 1 box of Physical Damage (unresisted) for
+					every 30 seconds they are exposed to the allergen. First Aid, Medicine, or magical means can
+					stop the damage taken from the anaphylactic shock.</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>

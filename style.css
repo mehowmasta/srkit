@@ -3,6 +3,7 @@
 	font-family:Electrolize;	
 	box-sizing: border-box;
 	outline:none !important;
+	font-variant-ligatures: none;
 }
 a{ text-transform:uppercase; }
 .attribute, .bonus{
@@ -393,8 +394,8 @@ button.mini{
 	margin-top:0.5rem;
 	max-height:0;
 	overflow:hidden;
-	-webkit-transition: all 1s;
-    transition: all 1s;
+	-webkit-transition: all 500ms;
+    transition: all 500ms;
 }
 .desc.show {
 	max-height:100rem;
@@ -439,10 +440,10 @@ button.mini{
 	right:1rem;
 }
 #descriptionPopContainer {
-	max-height: calc(100vh - 6rem);	
+	max-height: calc(100vh - 7rem);	
 }
 #descriptionPopContainer.hasEquip {
-	max-height: calc(100vh - 13rem);	
+	max-height: calc(100vh - 14rem);	
 }
 .detail{
 	color: <%=f3%>;
@@ -551,10 +552,13 @@ text-align:left;padding:1rem;font-size:1.4rem;
 	-webkit-box-shadow: initial;
 	box-shadow: initial;
 }
-#descriptionPopBonus {
+#descriptionPopBonus, #descriptionPopNote {
 	
 	color: <%=f1%>;
 	font-size: 1.4rem;
+}
+#descriptionPopNote {
+	font-style: italic;
 }
 .diceRollInfoPop .title{
 	padding:0;
@@ -679,6 +683,10 @@ text-align:left;padding:1rem;font-size:1.4rem;
 	border-bottom:1px solid <%=f1%>;
 	text-align: center;	
 }
+.fire{	
+  	animation: fire 50ms infinite;
+ 	-webkit-animation: fire 50ms infinite;
+}
 .fileWrap, .file{
 	cursor:pointer;
 	
@@ -727,6 +735,13 @@ form {
     position:absolute;
     top:0;
 }
+.gridOverlay.isometric {	
+	transform: rotatez(-60deg) skewY(30deg);
+}
+.gridOverlay.isometric .mapData {	
+	transform: rotatez(60deg) skewY(-30deg);
+}
+
 .gridOverlay.hide > .square
 {
 	border-color:transparent !important;
@@ -919,6 +934,7 @@ form {
 	opacity:1;
 	transition-delay: 0.8s;
 }
+.info, .info .table td {font-size:1.2rem;}
 .initBlock.selected {
 	background-color:<%=f2%>;
 }
@@ -1784,21 +1800,20 @@ option {
 	bottom: 0;
 	width: 100vw;
 	height: 100vh;
-	pointer-events: none;
 	overflow: none;
 	-webkit-overflow-scrolling: none;
 	-webkit-transition: all 500ms;
     transition: all 500ms;
+    z-index:-20;
 }
 #popupBackground.show{
 	opacity: 0.8;
-	pointer-events: auto;	
 }
 .popup.descriptionPop, .popup.diceRollInfoPop{
 	left:0;
 	top:0;
 	right:0;
-	max-width:640px;
+	max-width:720px;
 	-ms-transform: translateY(0) translateX(-102%);
 	-webkit-transform: translateY(0) translateX(-102%);
 	-moz-transform: translateY(0) translateX(-102%);
@@ -2141,6 +2156,11 @@ option {
 }
 .quickBtns.fixed label{	
 	display:none;
+}
+.radioWrap label{
+	display:flex;
+	align-items:center;
+	
 }
 .right {
 	text-align:right;	
@@ -2746,9 +2766,12 @@ nav {
 .navMenu span {
 	vertical-align: super;
 	padding: 0 1rem;
-	font-family:Ceviche One;
-    text-transform: uppercase;
+	font-family:"Permanent Marker";
     text-shadow: 0 0.2rem 0.2rem <%=s3%>;
+	text-transform: initial;
+	top: 0.5rem;
+	position: relative;
+	line-height: 1.5rem;
 }
 
 .navMenu {
@@ -2797,10 +2820,9 @@ nav {
 	position: absolute;
 	left: 8rem;
 	font-size: 3.6rem;
-	top: 0.2rem;
+	top: -0.4rem;
 	z-index: -1;
-	font-family: Ceviche One;
-	text-transform: uppercase;
+	font-family:"Permanent Marker";
 	text-shadow: 2px 2px 0px <%=s1%>;
 	color: <%=b4%>;
 	overflow: hidden;
@@ -2895,8 +2917,7 @@ nav {
 	cursor: pointer;
 }
 
-@media (max-width: 640px) {
-	
+@media (max-width: 640px) {	
 	html{font-size:72.5%;}
 	.long {
 		display:none;
@@ -2987,6 +3008,9 @@ nav {
 @media (min-height: 1079px) and (min-width: 1919px)
 {
 	html{font-size:124%}
+	.mainBtn{height:20vh;width:20vw;font-size:2vw}
+	.mainBtn .medIcon {height:10vh;width:10vw;}
+	.popup.descriptionPop, .popup.diceRollInfoPop{max-width:1080px;}
 }
 @-webkit-keyframes bounce {
   0%       { top:-0.5rem; }
@@ -3001,6 +3025,16 @@ nav {
   100%     { top:-0.5rem;}
 }
 
+@-webkit-keyframes fire {
+  0%       { transform:translateY(0); }
+  50%      {  transform:translateY(-1vh); }
+  100%     { transform:translateY(0);}
+}
+@keyframes fire {
+  0%       { transform:translateY(0); }
+  50%      {  transform:translateY(-1vh); }
+  100%     { transform:translateY(0);}
+}
 @-webkit-keyframes load {
   0%       { width:0; }
   100%     { width:50%;}

@@ -1,0 +1,30 @@
+<div class='tableWrap'>
+		<div class='tableTitle'>Bone Lacing</div>
+		<table class='table' id='boneLacingTable'>
+			<thead>
+				<tr>
+					<td class='tdl'>Material</td><td class='tdc'>Body Boost</td><td class='tdc'>Armor</td><td class='tdc'>Unarmed Damage</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class='tdl'>Plastic</td>
+					<td class='tdc'>+1</td>
+					<td class='tdc'>+1</td>
+					<td class='tdc'>(STR + 1)P</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Aluminum</td>
+					<td class='tdc'>+2</td>
+					<td class='tdc'>+2</td>
+					<td class='tdc'>(STR + 2)P</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Titanium</td>
+					<td class='tdc'>+3</td>
+					<td class='tdc'>+3</td>
+					<td class='tdc'>(STR + 3)P</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>

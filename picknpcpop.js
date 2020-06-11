@@ -48,7 +48,7 @@ var pickNPCPop = {
 			var sex = sr5.sex.get(p.Sex).Name;
 			if(lastPR!=p.ProfessionalRating)
 			{
-				htm += "<div class='divider shadow'>PR: "+sr5.professionalRating.get(p.ProfessionalRating).text+"</div>"
+				htm += "<div class='divider shadow'>"+sr5.professionalRating.get(p.ProfessionalRating).text+"</div>"
 			}
 			htm += ir.format(template,
 					self.applySearch(p.Name),

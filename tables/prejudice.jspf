@@ -1,0 +1,41 @@
+<div class='tableWrap'>
+		<div class='tableTitle'>Prejudice TABLE</div>
+		<table class='table' id='prejudicedTable' style='width:100%;'>
+			<thead>
+				<tr>
+					<td class='tdl'>PREVALENCE OF TARGET GROUP</td><td class='tdc'>KARMA VALUE</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class='tdl'>Common target group (e.g, humans,metahumans)</td>
+					<td class='tdc'>5 Karma</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Specific target group (e.g., the Awakened,technomancers, shapeshifters, aspectedmagicians)</td>
+					<td class='tdc'>3 Karma</td>
+				</tr>
+			</tbody>
+		</table>
+		<table class='table' style='width:100%;'>
+			<thead>
+				<tr>
+					<td class='tdl'>Degree</td><td class='tdc'>KARMA VALUE</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class='tdl'>Biased (e.g., closet meta-hater)</td>
+					<td class='tdc'>0 Karma</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Outspoken (e.g., typical memberof Humanis)</td>
+					<td class='tdc'>2 Karma</td>
+				</tr>
+				<tr>
+					<td class='tdl'>Radical (e.g., racial supremacist)</td>
+					<td class='tdc'>5 Karma</td>
+				</tr>				
+			</tbody>
+		</table>
+	</div>

@@ -1,0 +1,37 @@
+Row,Name,Body,Agility,Reaction,Strength,Willpower,Logic,Intuition,Charisma,Edge,Essence,Magic,Resonance,Traits,Initiative,ShapeShifter,AdditionalKarma,Source,Metavariant,Description
+37,Human,1/6,1/6,1/6,1/6,1/6,1/6,1/6,1/6,2/7,6,0,NULL,None,REA+INT,0,0,Core,NULL,NULL
+38,Elf,1/6,2/7,1/6,1/6,1/6,1/6,1/6,3/8,1/6,6,0,NULL,"Low-Light Vision",REA+INT,0,0,Core,NULL,NULL
+39,Dwarf,3/8,1/6,1/5,3/8,2/7,1/6,1/6,1/6,1/6,6,0,NULL,"Thermographic Vision, +2 dice for pathogen and toxin resistance, +20% increased Lifestyle cost",REA+INT,0,0,Core,NULL,NULL
+40,Ork,4/9,1/6,1/6,3/8,1/6,1/5,1/6,1/6,1/5,6,0,NULL,"Low-Light Vision",REA+INT,0,0,Core,NULL,NULL
+41,Troll,5/10,1/5,1/6,5/10,1/6,1/5,1/5,1/4,1/6,6,0,NULL,"Thermographic Vision, +1 Reach, +1 dermal armor, double Lifestyle costs",REA+INT,0,0,Core,NULL,NULL
+42,Gnome,1/4,2/7,1/6,1/4,2/7,2/7,1/6,1/6,1/6,6,0,NULL,"Arcane Arrester (2), Neoteny, Thermographic Vision",REA+INT,0,7,SR5:RF,Dwarf,NULL
+43,Hanuman,1/6,2/7,1/6,2/7,1/6,1/5,2/7,1/5,1/6,6,0,NULL,"Low-Light Vision, Monkey Paws, Prehensile Tail, Unusual Hair (Body)",REA+INT,0,5,SR5:RF,Dwarf,NULL
+44,Koborokuru,2/7,1/6,1/6,2/7,2/7,1/6,1/6,1/6,1/6,6,0,NULL,"Celerity, Resistance to Pathogens/Toxins, Thermographic Vision, Unusual Hair",REA+INT,0,0,SR5:RF,Dwarf,NULL
+45,Menehune,2/7,2/7,1/5,2/7,1/6,1/6,1/6,1/6,1/6,6,0,NULL,"Resistance to Pathogens/Toxins, Thermographic Vision, Underwater Vision",REA+INT,0,2,SR5:RF,Dwarf,NULL
+46,Dryad,1/6,2/7,1/6,1/5,1/6,1/6,1/6,3/8,1/6,6,0,NULL,"Glamour, Low-Light Vision,Â Symbiosis",REA+INT,0,0,SR5:RF,Elf,NULL
+47,Nocturna,1/5,3/8,1/6,1/6,1/6,1/6,1/6,2/7,1/6,6,0,NULL,"Allergy (Sunlight, Mild), Low-Light Vision,Â Keen-eared,Â Nocturnal,Â Unusual Hair (Colored Fur)",REA+INT,0,0,SR5:RF,Elf,NULL
+48,Wakyambi,1/6,2/7,1/6,1/6,1/6,1/5,2/7,1/6,2/7,6,0,NULL,"Celerity,Â Elongated Limbs, Low-Light Vision",REA+INT,0,12,SR5:RF,Elf,NULL
+49,"Xapiri ThÃ«pÃ«",1/6,2/7,1/6,1/6,1/6,1/5,1/6,2/7,1/6,6,0,NULL,"Allergy (Pollutants, Mild), Low-Light Vision, Photometabolism",REA+INT,0,0,SR5:RF,Elf,NULL
+50,Nartaki,1/6,1/6,1/6,1/6,1/6,1/6,1/6,1/6,1/6,6,0,NULL,"Shiva Arms, Striking Skin Pigmentation",REA+INT,0,0,SR5:RF,Human,NULL
+51,Hobgoblin,1/6,1/6,1/6,2/7,1/6,1/5,1/6,2/7,1/6,6,0,NULL,"Fangs, Low-Light Vision, Extravagant Eyes, Poor Self Control (Vindictive)",REA+INT,0,5,SR5:RF,Ork,NULL
+52,Ogre,4/9,1/6,1/5,3/8,2/7,1/5,1/6,1/4,1/6,6,0,NULL,"Low-Light Vision, Ogre Stomach",REA+INT,0,8,SR5:RF,Ork,NULL
+53,Oni,3/8,2/7,1/6,2/7,1/6,1/5,1/6,2/7,1/6,6,0,NULL,"Low-Light Vision, Striking Skin Pigmentation",REA+INT,0,4,SR5:RF,Ork,NULL
+54,Satyr,2/7,1/6,2/7,2/7,1/6,1/6,1/6,1/5,1/6,6,0,NULL,"Low-Light Vision, Satyr Legs",REA+INT,0,10,SR5:RF,Ork,NULL
+55,Cyclops,5/10,1/5,1/6,6/11,1/6,1/4,1/5,1/4,1/6,6,0,NULL,"Cyclopean Eye, +1 Reach",REA+INT,0,2,SR5:RF,Troll,NULL
+56,Fomorian,4/9,1/5,1/6,5/10,1/5,1/4,1/4,1/5,1/6,6,0,NULL,"Arcane Arrester (1), Thermographic Vision, +1 Reach",REA+INT,0,12,SR5:RF,Troll,NULL
+57,Giant,5/10,1/5,1/5,5/10,1/6,1/5,1/5,1/5,1/6,6,0,NULL,"Dermal Alteration (Bark), Thermographic Vision, +1 Reach",REA+INT,0,2,SR5:RF,Troll,NULL
+58,Minotaur,6/11,1/5,1/6,5/10,1/6,1/5,1/6,1/4,1/6,6,0,NULL,"Goring Horns, Thermographic Vision, +1 Reach",REA+INT,0,2,SR5:RF,Troll,NULL
+59,Centaur,3/8,1/6,1/6,3/8,1/6,1/6,1/5,1/5,1/5,6,1,NULL,"Low-Light Vision, Thermographic Vision, Magic Sense, Natural Weapon (Kick: DV (STR + 2)P, AP +1, +1Reach), Search; Movement (x1/x4/+4)",REA+INT,0,25,SR5:RF,,NULL
+60,Naga,3/8,1/4,2/7,4/9,2/7,1/6,1/6,2/7,1/5,6,1,NULL,"Armor 8, Cold-Blooded, Dual Natured, Guard, Natural Weapon (Bite: DV (STR + 1)P, AP â€“2, Reach â€“1), Venom",REA+INT,0,25,SR5:RF,NULL,NULL
+61,Pixie,1/2,3/8,3/8,1/2,3/8,2/7,2/7,3/8,2/7,6,1,NULL,"Astral Perception, Concealment (Self Only), Vanishing, Uneducated; Movement (x1/x2/+1; x2/x6/+2m flight)",REA+INT,0,15,SR5:RF,NULL,NULL
+62,Sasquatch,6/11,1/6,1/6,5/10,1/6,1/6,1/6,1/6,1/6,6,1,NULL,"Dual Natured, Mimicry, Natural Weapon (Claws: DV (STR + 1)P, AP â€”, +1 Reach), Uneducated",REA+INT,0,20,SR5:RF,NULL,NULL
+63,Bovine,3/8,1/4,1/4,4/9,1/6,1/5,1/6,1/6,1/6,6,1,NULL,"Goring Horns, Shift (Metahuman Form), Uneducated; Movement (x1/x4/+1m)",+1D6,1,5,SR5:RF,NULL,NULL
+64,Canine,1/5,1/6,2/7,1/5,2/7,1/5,2/7,2/7,1/6,6,1,NULL,"Broadened Auditory Spectrum (Ultrasonic), Low-Light Vision, Natural Weapon (Bite: DV [STR + 1]P, APâ€“1), Shift (Metahuman Form), Vomeronasal Organ; Movement (x2/x6/+3)",+1D6,1,10,SR5:RF,NULL,NULL
+65,Equine,4/9,1/4,1/6,5/10,1/6,1/6,1/6,1/6,1/6,6,1,NULL,"Keen-eared, Shift (Metahuman Form), Uneducated; Movement (x1/x4/+4)",+1D6,1,15,SR5:RF,NULL,NULL
+66,Falconine,1/4,2/7,3/8,1/4,1/6,1/5,2/7,2/7,1/6,6,1,NULL,"Hawk Eyed, Natural Weapon (Bite: DV (STR + 2)P, AP â€“1, Reach â€“1; Talons: DV (STR)P, AP â€”), Shift(Metahuman Form); Movement (x1/x2/+0.5m; x2/x6/+2 flight)",+2D6,1,10,SR5:RF,NULL,NULL
+67,Leonine,3/8,1/6,2/7,4/9,1/5,1/4,2/7,2/7,1/6,6,1,NULL,"Balance Receptor, Broadened Auditory Spectrum (Ultrasonic), Low-Light Vision, Natural Weapon (Bite: DV(STR + 1)P, AP â€“1; Claws: DV (STR + 1)P, AP â€“1, Reach +1), Shift (Metahuman Form), Uneducated; Movement (x2/x5/+2)",+2D6,1,20,SR5:RF,NULL,NULL
+68,Lupine,1/6,2/7,1/6,1/6,1/6,1/5,2/7,2/7,1/6,6,1,NULL,"Broadened Auditory Spectrum (Ultrasonic), Low-Light Vision, Natural Weapon (Bite: DV (STR + 1)P, APâ€“1), Shift (Metahuman Form), Uneducated, Vomeronasal Organ; Movement (x1/x5/+3)",+2D6,1,15,SR5:RF,NULL,NULL
+69,Pantherine,2/7,2/7,2/7,1/6,1/6,1/5,3/8,3/8,1/6,6,1,NULL,"Balance Receptor, Broadened Auditory Spectrum (Ultrasonic), Low-Light Vision, Natural Weapon (Bite:DV (STR + 2)P, AP â€“3; Claws: DV (STR + 1)P, AP â€”), Shift (Metahuman Form), Uneducated; Movement (x1/x5/+2)",+2D6,1,25,SR5:RF,NULL,NULL
+70,Tigrine,3/8,2/7,2/7,3/8,1/5,1/4,3/8,2/7,1/6,6,1,NULL,"Balance Receptor, Broadened Auditory Spectrum (Ultrasonic), Low-Light Vision, Natural Weapon (Bite:DV (STR + 2)P, AP â€“2; Claws: DV (STR + 1)P, AP â€“1, Reach +1), Shift (Metahuman Form), Uneducated; Movement (x1/x5/+2)",+2D6,1,25,SR5:RF,NULL,NULL
+71,Ursine,6/11,1/5,1/5,7/12,1/5,1/5,1/6,1/6,1/6,6,1,NULL,"Broadened Auditory Spectrum (Ultrasonic), Keen-Eared, Low-Light Vision, Natural Weapon (Bite: DV(STR + 2)P, AP â€“2; Claws: DV (STR + 3)P, AP â€“1, Reach +1), Shift (Metahuman Form), Uneducated, Vomeronasal Organ;Movement (x1/x3/+2)",+1D6,1,20,SR5:RF,NULL,NULL
+72,Vulpine,1/4,2/7,1/6,1/4,1/6,1/5,2/7,2/7,1/6,6,1,NULL,"Broadened Auditory Spectrum (Ultrasonic), Keen-Eared, Low-Light Vision, Natural Weapon (Bite: DV(STR + 1)P, AP â€”), Shift (Metahuman Form), Uneducated, Vomeronasal Organ; Movement (x1/x3/+2)",+2D6,1,5,SR5:RF,NULL,NULL

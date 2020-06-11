@@ -1,0 +1,53 @@
+<div class='tableWrap'>
+			<div class='tableTitle'>Matrix Search Table</div>
+			<table class='table' id='matrixSearchTable'>
+				<thead>
+					<tr>
+						<td class='tdl'>Information is...</td><td class='tdc'>Threshold</td><td class='tdc'>Time</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class='tdl'>General Knowledge or Public</td>
+						<td class='tdc'>1</td>
+						<td class='tdc'>1 minute</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Limited Interest or Not Publicized</td>
+						<td class='tdc'>3</td>
+						<td class='tdc'>30 minutes</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Hidden or Actively Hunted and Erased</td>
+						<td class='tdc'>6</td>
+						<td class='tdc'>12 hours</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Protected or Secret</td>
+						<td class='tdc'>N/A</td>
+						<td class='tdc'>N/A</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class='table'>
+				<thead>
+					<tr>
+						<td class='tdl'>Information is...</td><td class='tdc'>Dice pool Modifier</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class='tdl'>Intricate or Specialized</td>
+						<td class='tdc'>-1</td>
+					</tr>
+					<tr>
+						<td class='tdl'>Obscure</td>
+						<td class='tdc'>-2</td>
+					</tr>
+					<tr>
+						<td class='tdl'>On another grid</td>
+						<td class='tdc'>-2</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>		

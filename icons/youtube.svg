@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="49.350773mm"
+   height="49.423195mm"
+   viewBox="0 0 174.86494 175.12155"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="youtube.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="88.969202"
+     inkscape:cy="83.198168"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer3"
+     showgrid="false"
+     inkscape:snap-object-midpoints="false"
+     inkscape:snap-others="true"
+     inkscape:snap-to-guides="true"
+     showguides="true"
+     inkscape:snap-page="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="false"
+     inkscape:bbox-nodes="false"
+     inkscape:window-width="1035"
+     inkscape:window-height="595"
+     inkscape:window-x="577"
+     inkscape:window-y="229"
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4193"
+       originx="-283.46284"
+       originy="-538.11441" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Background"
+     transform="translate(-0.4684983,0.16081395)"
+     style="display:inline">
+    <path
+       style="fill:#ebb530;fill-opacity:1"
+       d="M 83.489491,174.87114 C 64.14825,173.21022 49.790043,168.07947 35.920475,157.87287 13.419472,141.3144 0.4684983,115.55599 0.4684983,87.361833 c 0,-43.416648 30.6211187,-79.355011 73.6601427,-86.4509601 17.56841,-2.8965454 37.024309,0.1437878 53.298659,8.3288681 39.56691,19.899925 57.65093,65.790406 42.67483,108.292719 -10.28193,29.18023 -37.27453,51.4209 -68.17131,56.17006 -6.078379,0.93431 -14.761949,1.48458 -18.441329,1.16862 z"
+       id="path4245"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ssssssss" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Reddit icon"
+     style="display:inline">
+    <path
+       inkscape:connector-curvature="0"
+       d="M 90.612021,137.30352 61.414368,136.76954 C 51.960815,136.58346 42.483734,136.95491 33.215544,135.02712 19.116489,132.14686 18.117665,118.02426 17.0725,106.1781 15.632365,89.52388 16.189877,72.567372 18.907599,56.052173 c 1.534239,-9.266761 7.572113,-14.796308 16.909459,-15.398029 31.520396,-2.183728 63.250405,-1.92493 94.700932,-0.906142 3.32158,0.09339 6.66596,0.603861 9.9412,1.184899 16.16729,2.833929 16.56155,18.837956 17.60956,32.310338 1.04516,13.611409 0.60385,27.292671 -1.39379,40.811401 -1.6027,11.19311 -4.66904,20.57965 -17.60956,21.48579 -16.21363,1.18491 -32.05511,2.13882 -48.314361,1.8351 7.66e-4,-0.072 -0.09269,-0.072 -0.139018,-0.072 z M 73.446617,108.96568 C 85.664943,101.95037 97.650136,95.051998 109.79859,88.083747 97.557456,81.068443 85.595075,74.170055 73.446617,67.201809 Z"
+       id="path8"
+       style="fill:#ffffff;fill-opacity:1" />
+  </g>
+</svg>

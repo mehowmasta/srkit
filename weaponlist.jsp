@@ -30,7 +30,9 @@
 </style>
 <body onload='view.aaOnLoad()'>
 <%=_bean.startForm()%>
-
+<div id='infoPopup' class='popup info'>		
+	<%@include file="tables/reloadWeapon.jspf"%>
+</div>
 <div class='container' id='weaponsDiv'>
 	<div id='weaponList'></div>
 </div>
