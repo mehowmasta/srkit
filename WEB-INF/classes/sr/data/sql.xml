@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql> 
+
+<AdeptPowerRec>
+	<selectAll><![CDATA[
+	select * from tAdeptPower
+	order by name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tAdeptPower 
+	where name like ?
+	]]></selectByName>
+	<selectForCharacter><![CDATA[
+	select s.*, cs.Level
+	from tCharacter c
+	inner join tcharacteradeptpower cs on c.Row=cs.characterrow
+	inner join tadeptpower s on s.Row = cs.AdeptPowerRow 
+	where c.Row=?
+	order by s.Name	
+	]]></selectForCharacter>
+</AdeptPowerRec>
+
+<AppDb>
+	<selectLastLoginInfo><![CDATA[
+	SELECT concat(rpad(u.Name,50,' '),' ',max(s.SesStart)) as x
+	FROM tsession s
+	inner join tUser u on s.SesUser=u.Row
+	where Name not like 'Guest%'
+	group by Name
+	]]></selectLastLoginInfo>
+</AppDb>
+
+<ArmorRec>
+	<selectAll><![CDATA[
+	select * from tArmor
+	order by environment desc, name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tArmor 
+	where name like ?
+	]]></selectByName>
+	<selectForCharacter><![CDATA[
+	select s.*, cs.Quantity, cs.Equipped 
+	from tCharacter c
+	inner join tcharacterarmor cs on c.Row=cs.characterrow
+	inner join tarmor s on s.Row = cs.ArmorRow 
+	where c.Row=?
+	order by s.Name	
+	]]></selectForCharacter>
+</ArmorRec>
+
+<BudgetRec>
+	<createTable><![CDATA[
+		CREATE TABLE `tbudget` (
+		  `Row` int(11) NOT NULL AUTO_INCREMENT,
+	  	  `User` INT NULL,
+		  `Name` varchar(100) DEFAULT NULL,
+		  `Category` varchar(255) DEFAULT '',
+		  `Note` varchar(2000) DEFAULT NULL,
+		  `Time` date DEFAULT NULL,
+		  `Type` varchar(50) DEFAULT NULL,
+		  `Amount` float(7,2) DEFAULT '0',
+		  PRIMARY KEY (`Row`),
+		  KEY `iUser` (`User`),
+		  KEY `iType` (`Type`),
+		  KEY `iTime` (`Time`),
+		  KEY `iCategory` (`Category`)		  
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8		
+	]]></createTable>
+	<selectList><![CDATA[
+		select b.*, UNIX_TIMESTAMP(b.Time) as ts 
+			from tbudget b
+			where b.user=? and date(b.Time) between date(?) and date(?)
+        union all
+		select b.*, UNIX_TIMESTAMP(b.Time) as ts 
+			from tbudgetshare s
+		    inner join tbudget b on s.Sharer=b.user
+		    where s.Sharee=? and date(b.Time) between date(?) and date(?)
+		group by b.Row
+		order by ts desc,Row desc
+	]]></selectList>
+</BudgetRec>
+
+<BudgetShareRec>
+	<addShare><![CDATA[	
+		insert ignore into tbudgetshare(Sharer,Sharee) values (?,?)
+	]]></addShare>
+	<createTable><![CDATA[
+		CREATE TABLE `tbudgetshare` (
+	  	  `Sharer` INT NULL,
+	  	  `Sharee` INT NULL,
+		  PRIMARY KEY (`Sharer`,`Sharee`)		  
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8		
+	]]></createTable>
+	<deleteShare><![CDATA[
+		delete from tbudgetshare 
+		where (Sharer=? and Sharee=?) 
+		or (Sharee=? and Sharer=?)
+	]]></deleteShare>
+	<selectSharers><![CDATA[
+	select u.*
+	from tbudgetshare s
+	inner join tuser u on s.Sharer=u.Row
+	where s.Sharee=?
+	]]></selectSharers>
+</BudgetShareRec>
+
+<CharacterRec>
+	<addKarma><![CDATA[	
+	update tcharacter set karma=karma+? where Row=?
+	]]></addKarma>
+	<deleteAdeptPowers><![CDATA[
+    delete from tCharacterAdeptPower where CharacterRow=?
+	]]></deleteAdeptPowers>
+	<deleteArmor><![CDATA[
+    delete from tCharacterArmor where CharacterRow=?
+	]]></deleteArmor>
+	<deleteBioware><![CDATA[
+    delete from tCharacterBioware where CharacterRow=?
+	]]></deleteBioware>
+	<deleteContacts><![CDATA[
+    delete from tCharacterContact where CharacterRow=?
+	]]></deleteContacts>
+	<deleteCyberdecks><![CDATA[
+    delete from tCharacterCyberdeck where CharacterRow=?
+	]]></deleteCyberdecks>
+	<deleteCyberdeckPrograms><![CDATA[
+    delete from tCharacterCyberdeckProgram where CharacterRow=?
+	]]></deleteCyberdeckPrograms>
+	<deleteCyberware><![CDATA[
+    delete from tCharacterCyberware where CharacterRow=?
+	]]></deleteCyberware>
+	<deleteCyberwareAttachments><![CDATA[
+    delete from tCharacterCyberwareAttachment where CharacterRow=?
+	]]></deleteCyberwareAttachments>
+	<deleteDrones><![CDATA[
+    delete from tCharacterDrone where CharacterRow=?
+	]]></deleteDrones>
+	<deleteGear><![CDATA[
+    delete from tCharacterGear where CharacterRow=?
+	]]></deleteGear>
+	<deleteGroupCharacter><![CDATA[
+    delete from tGroupCharacter where CharacterRow=?
+	]]></deleteGroupCharacter>
+	<deleteKnowledge><![CDATA[
+    delete from tCharacterKnowledge where CharacterRow=?
+	]]></deleteKnowledge>
+	<deleteQualities><![CDATA[
+    delete from tCharacterQuality where CharacterRow=?
+	]]></deleteQualities>
+	<deleteSkills><![CDATA[
+    delete from tCharacterSkill where CharacterRow=?
+	]]></deleteSkills>
+	<deleteSpells><![CDATA[
+    delete from tCharacterSpell where CharacterRow=?
+	]]></deleteSpells>
+	<deleteVehicles><![CDATA[
+    delete from tCharacterVehicle where CharacterRow=?
+	]]></deleteVehicles>
+	<deleteWeapons><![CDATA[
+    delete from tCharacterWeapon where CharacterRow=?
+	]]></deleteWeapons>	
+	<selectForGroup><![CDATA[
+	select c.*, u.Name as UserName, g.Row as GroupRow, gc.CharacterRow, gc.Row as GroupCharacterRow, gc.Quantity, ifnull(i.Extension,"") as Extension, ifnull(i.User,0) as UserImage
+	from tgroup g
+	inner join tgroupcharacter gc on g.Row = gc.GroupRow
+	inner join tCharacter c on c.Row=gc.CharacterRow
+	inner join tuser u on u.Row = c.User	
+	left join timage i on (c.user=i.user or i.user=0) and c.Portrait=i.row
+	where g.row = ?
+	order by c.name
+	]]></selectForGroup>
+	<selectForPicker><![CDATA[
+	select * 
+	from (select c.*, ifnull(i.Extension,"") as Extension, ifnull(i.User,0) as UserImage 
+		from tCharacter c
+		left join timage i on (c.user=i.user or i.user=0) and c.Portrait=i.row
+		where c.user=? and c.inactive=0) dt1   
+	union all
+	select *
+	from ( select c.*, ifnull(i.Extension,"") as Extension, ifnull(i.User,0) as UserImage 
+		from tgroup g
+		inner join tgroupcharacter gc on g.Row=gc.GroupRow
+		inner join tcharacter c on c.Row=gc.CharacterRow and c.User<>g.User and c.inactive=0
+		left join timage i on (c.user=i.user or i.user=0) and c.Portrait=i.row
+		where g.User=?) dt2
+	order by Name
+	]]></selectForPicker>
+	<selectForRegistry><![CDATA[
+	select c.*, ifnull(i.Extension,"") as Extension, ifnull(i.User,0) as UserImage 
+	from tCharacter c
+	left join timage i on (c.user=i.user or i.user=0) and c.Portrait=i.row
+	where c.Type='NPC' and c.Register=1
+	order by c.ProfessionalRating, c.Name
+	]]></selectForRegistry>
+	<selectForUser><![CDATA[
+	select c.*, ifnull(i.Extension,"") as Extension, ifnull(i.User,0) as UserImage 
+	from tCharacter c
+	left join timage i on (c.user=i.user or i.user=0) and c.Portrait=i.row
+	where c.user = ? or c.transfer=?	
+	order by c.Name
+	]]></selectForUser>
+	<selectPlayerCharacter><![CDATA[
+	select * from tCharacter
+	where user = ? and Row = ?
+	]]></selectPlayerCharacter>
+	<selectType><![CDATA[
+	select c.*, ifnull(i.Extension,"") as Extension, ifnull(i.User,0) as UserImage 
+	from tCharacter c
+	left join timage i on (c.user=i.user or i.user=0) and c.Portrait=i.row
+	where c.user = ? and c.type = ?
+	and c.inactive<?
+	and inactive
+	order by c.name
+	]]></selectType>
+</CharacterRec>
+
+
+<CharacterContactRec>
+	<createTable><![CDATA[
+		CREATE TABLE `tcharactercontact` (
+		  `Row` int(11) NOT NULL AUTO_INCREMENT,
+		  `CharacterRow` int(11) DEFAULT NULL,
+		  `Name` varchar(100) DEFAULT NULL,
+		  `Archetype` varchar(100) DEFAULT NULL,
+		  `Connection` int(1) DEFAULT NULL,
+		  `Loyalty` int(1) DEFAULT NULL,
+		  `MetaType` int(11) DEFAULT NULL,
+		  `Sex` enum('M','F','T') DEFAULT NULL,
+		  `Age` int(4) DEFAULT NULL,
+		  `Type` varchar(45) DEFAULT NULL,
+		  `PersonalLife` varchar(100) DEFAULT NULL,
+		  `PaymentMethod` varchar(100) DEFAULT NULL,
+		  `Hobbies` varchar(100) DEFAULT NULL,
+		  `Group` tinyint(1) DEFAULT NULL,
+		  `Free` tinyint(1) DEFAULT NULL,
+		  `Blackmail` tinyint(1) DEFAULT NULL,
+		  `Family` tinyint(1) DEFAULT NULL,
+		  `Note` varchar(255) DEFAULT NULL,
+		  `Portrait` int(11) DEFAULT '0',
+		  PRIMARY KEY (`Row`),
+		  KEY `iCharacterrow` (`CharacterRow`)
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8		
+	]]></createTable>
+</CharacterContactRec>
+
+
+<CharacterCyberdeckRec>
+	<deleteCyberdeckPrograms><![CDATA[
+    delete from tCharacterCyberdeckProgram where ParentRow=?
+	]]></deleteCyberdeckPrograms>
+</CharacterCyberdeckRec>
+
+<CharacterCyberwareRec>
+	<deleteCyberwareAttachments><![CDATA[
+    delete from tCharacterCyberwareAttachment where ParentRow=?
+	]]></deleteCyberwareAttachments>
+</CharacterCyberwareRec>
+
+<CharacterKnowledgeRec>
+	<createTable>
+	CREATE TABLE `tCharacterKnowledge` (
+	  `Row` INT NOT NULL AUTO_INCREMENT,
+	  `CharacterRow` INT NULL,
+	  `Name` VARCHAR(100) NULL,
+	  `Type` ENUM('Academic') NULL,
+	  `Rating` INT NULL,
+	  `Native` TINYINT(1) DEFAULT 0,
+	  `Note` VARCHAR(1000) NULL,
+	  PRIMARY KEY (`Row`),
+	  INDEX `iCharacterRow` (`CharacterRow` ASC))
+	ENGINE = MyISAM
+	</createTable>
+</CharacterKnowledgeRec>
+
+<CharacterRatingRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tcharacterrating` (
+	  `Character` INT NULL,
+	  `User` INT NULL,
+	  `Rating` INT NULL,
+	  PRIMARY KEY (`Character`,`User`),
+	  UNIQUE INDEX `uUserCharacter` (`Character` ASC, `User` ASC))
+	ENGINE = MyISAM
+	]]></createTable>
+	<selectForCharacter><![CDATA[
+	select avg(rating) from tcharacterrating
+	where character=?
+	]]></selectForCharacter>
+</CharacterRatingRec>
+
+<CharacterSettingRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tCharacterSetting` (
+	  `CharacterRow` INT NOT NULL,
+	  `TogglePanel` VARCHAR(200) NULL,
+	  PRIMARY KEY (`CharacterRow`))
+	ENGINE = MyISAM
+	]]></createTable>
+	<selectForCharacter><![CDATA[
+	select * from tcharacterSetting
+	where characterRow = ?
+	]]></selectForCharacter>
+</CharacterSettingRec>
+
+<CharacterTagRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tcharactertag` (
+	  `Row` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	  `Character` INT NULL,
+	  `User` INT NULL,
+	  `Tag` varchar(200) NULL,
+	  PRIMARY KEY (`Row`),
+	  INDEX `iCharacter` (`Character` ASC))
+	ENGINE = MyISAM
+	]]></createTable>
+	<selectForCharacter><![CDATA[
+	select * from tcharactertag
+	where character=?
+	]]></selectForCharacter>
+</CharacterTagRec>
+
+<CharacterWeaponModifierRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tcharacterweaponmodifier` (
+	  `Row` int(11) NOT NULL AUTO_INCREMENT,
+	  `CharacterRow` int(11) DEFAULT NULL,
+	  `WeaponModifierRow` int(11) DEFAULT NULL,
+	  `ParentRow` int(11) DEFAULT NULL,
+	  `Mounted` enum('Top','Under','Barrel','Internal','Side','Stock','NA') DEFAULT NULL,
+	  `Rating` int(2) DEFAULT NULL,
+	  `Note` varchar(255) DEFAULT '',
+	  PRIMARY KEY (`Row`),
+	  KEY `iParent` (`ParentRow`),
+	  KEY `iCharacter` (`CharacterRow`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8	
+	]]></createTable>
+</CharacterWeaponModifierRec>
+
+<CritterPowerRec>
+	<selectAll><![CDATA[
+	select * from tCritterPower
+	order by spelltype, name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tCritterPower 
+	where name like ?
+	]]></selectByName>
+	<selectForCharacter><![CDATA[
+	select s.*
+	from tCharacter c
+	inner join tcharactercritterpower cs on c.Row=cs.characterrow
+	inner join tCritterPower s on s.Row = cs.CritterPowerRow 
+	where c.Row=?
+	order by s.Name	
+	]]></selectForCharacter>
+	<selectGroup><![CDATA[
+	select * from tgroup
+	where user = ? and Row = ?
+	]]></selectGroup>
+</CritterPowerRec>
+
+<CyberdeckRec>
+	<selectAll><![CDATA[
+	select * from tcyberdeck
+	order by name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tcyberdeck 
+	where name like ?
+	]]></selectByName>
+	<selectForCharacter><![CDATA[
+	select s.*, cs.Quantity
+	from tCharacter c
+	inner join tcharactercyberdeck cs on c.Row=cs.characterrow
+	inner join tcyberdeck s on s.Row = cs.CyberdeckRow 
+	where c.Row=?
+	order by s.Name	
+	]]></selectForCharacter>
+</CyberdeckRec>
+
+<CyberwareRec>
+	<selectAll><![CDATA[
+	select * from tCyberware
+	order by base,type,name
+	]]></selectAll>
+	<selectBiowareForCharacter><![CDATA[
+	select s.*, cs.Rating, cs.Grade
+	from tCharacter c
+	inner join tcharacterbioware cs on c.Row=cs.characterrow
+	inner join tcyberware s on s.Row = cs.BiowareRow 
+	where c.Row=?
+	order by s.Name	
+	]]></selectBiowareForCharacter>
+	<selectByName><![CDATA[
+	select * from tCyberware 
+	where name like ?
+	]]></selectByName>
+	<selectCyberwareForCharacter><![CDATA[
+	select s.*, cs.Rating, cs.Grade, cs.Parent
+	from tCharacter c
+	inner join tcharactercyberware cs on c.Row=cs.characterrow
+	inner join tcyberware s on s.Row = cs.CyberwareRow 
+	where c.Row=?
+	order by s.Name	
+	]]></selectCyberwareForCharacter>
+	<selectWare><![CDATA[
+	select * from tCyberware
+	where Type=?
+	order by Part,Name
+	]]></selectWare>
+	<selectWareAttachments><![CDATA[
+	select * from tCyberware
+	where Type=? and Attachable=1
+	order by Part,Name
+	]]></selectWareAttachments>
+	<selectWareBase><![CDATA[
+	select * from tCyberware
+	where Type=? and Base=1
+	order by Part,Name
+	]]></selectWareBase>
+</CyberwareRec>
+
+<DroneRec>
+	<selectAll><![CDATA[
+	select * from tDrone
+	order by size desc, name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tDrone 
+	where name like ?
+	]]></selectByName>
+	<selectForCharacter><![CDATA[
+	select s.*, cs.Quantity
+	from tCharacter c
+	inner join tcharacterdrone cs on c.Row=cs.characterrow
+	inner join tdrone s on s.Row = cs.DroneRow 
+	where c.Row=?
+	order by s.Name	
+	]]></selectForCharacter>
+</DroneRec>
+
+<FriendRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tfriend` (
+	  `Row` INT NOT NULL AUTO_INCREMENT,
+	  `User` INT NOT NULL,
+	  `Friend` INT NOT NULL,
+	  `Confirmed` TINYINT(1) NULL,
+	  PRIMARY KEY (`Row`),
+	  INDEX `iUser` (`User` ASC),
+	  INDEX `iFriend` (`Friend` ASC))	
+	]]></createTable>
+	<selectFriendship><![CDATA[
+	select * from tfriend
+	where user=? and friend=?
+	union
+	select * from tfriend
+	where user=? and friend=?
+	]]></selectFriendship>
+</FriendRec>
+
+<GearRec>
+	<selectAll><![CDATA[
+	select * from tgear
+	order by type,subtype,name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tgear 
+	where name like ?
+	]]></selectByName>
+	<selectType><![CDATA[
+	select * from tgear
+	where Type=?
+	order by type,subtype,name
+	]]></selectType>
+</GearRec>
+
+<GroupRec>
+	<deleteCharacters><![CDATA[
+    delete from tGroupCharacter where GroupRow=?
+	]]></deleteCharacters>
+	<isDupKey><![CDATA[
+	select 1 from tgroup
+	where Row<>? and ShareKey=?
+	]]></isDupKey>
+	<selectForCharacter><![CDATA[
+	select g.*, group_concat(if(g.user<>c.User,concat(concat(c.Name,if(gc2.Quantity>1,concat(' x',gc2.Quantity),'')),' [',u.Name,']') ,concat(c.Name,if(gc2.Quantity>1,concat(' x',gc2.Quantity),'')))) as Characters,	
+	group_concat(c.Row) as CharacterRows,
+	group_concat(if(i.Row>0,'thumb_','_'),ifnull(i.User,''),'_',ifnull(i.Row,''),'.',ifnull(i.Extension,'')) as Images,
+	group_concat(gc2.Quantity) as Quantity
+	from tGroupcharacter gc
+	inner join tgroup g on g.Row = gc.GroupRow
+    inner join tGroupCharacter gc2 on gc2.grouprow=gc.grouprow
+	left join tcharacter c on c.Row=gc2.CharacterRow
+	left join tuser u on u.Row=c.User	
+	left join timage i on c.Portrait=i.row and (c.user=i.user or i.user=0) 
+	where gc.characterrow=? and g.inactive<?	
+	group by g.Row
+	order by name
+	]]></selectForCharacter>
+	<selectForUser><![CDATA[
+	select g.*, group_concat(if(g.user<>c.User,concat(concat(c.Name,if(gc.Quantity>1,concat(' x',gc.Quantity),'')),' [',u.Name,']') ,concat(c.Name,if(gc.Quantity>1,concat(' x',gc.Quantity),'')))) as Characters,	
+	group_concat(if(i.Row>0,'thumb_','_'),ifnull(i.User,''),'_',ifnull(i.Row,''),'.',ifnull(i.Extension,'')) as Images,
+	gc.Quantity as Quantity
+	from tGroup g
+	left join tgroupcharacter gc on g.Row = gc.GroupRow
+	left join tcharacter c on c.Row=gc.CharacterRow
+	left join tuser u on u.Row=c.User	
+	left join timage i on c.Portrait=i.row and (c.user=i.user or i.user=0) 
+	where (g.user = ? or c.user=?) and g.inactive<?	
+	group by g.Row
+	order by name
+	]]></selectForUser>
+	<selectGroup><![CDATA[
+	select * from tgroup
+	where Row = ?
+	]]></selectGroup>
+	<selectGroupByKey><![CDATA[
+	select * from tgroup
+	where ShareKey = ?
+	]]></selectGroupByKey>
+</GroupRec>
+
+<GroupCharacterRec>
+	<deleteGroupCharacter><![CDATA[
+	delete from tgroupcharacter
+	where grouprow=? and characterrow=?
+	]]></deleteGroupCharacter>
+	<isDup><![CDATA[
+	select 1 from tgroupcharacter
+	where grouprow=? and characterrow=?
+	]]></isDup>
+</GroupCharacterRec>
+
+<ImageRec>
+	<isDupName><![CDATA[
+	select 1 from timage
+	where Row<>? and Name=?
+	]]></isDupName>
+	<selectForUser><![CDATA[
+	select * from timage
+	where (user=? or user=0) and type=? and inactive<?	
+	]]></selectForUser>
+	<selectImage><![CDATA[
+	select * from timage
+	where (user = ? or user=0) and Row = ?
+	]]></selectImage>
+	<selectMapRows><![CDATA[
+	select Row,Name
+	from timage
+	where user=? and type=? and inactive<?	
+	]]></selectMapRows>
+</ImageRec>
+
+<JournalRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tjournal` (
+	  `Row` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	  `User` INT NULL,
+	  `Type` VARCHAR(100) NULL,
+	  `Title` VARCHAR(100) NULL,
+	  `Time` DATETIME NULL,
+	  `Text` TEXT NULL,
+	  `Tags` varchar(255) NULL,
+	  PRIMARY KEY (`Row`),
+	  INDEX `iUserTime` (`User` ASC, `Time` ASC))
+	ENGINE = MyISAM	
+	]]></createTable>
+	<selectAll><![CDATA[
+	select * 
+	from tjournal 
+	where user=?
+	order by Time desc
+	]]></selectAll>
+</JournalRec>
+
+<LoginDb>
+	<loginRegular><![CDATA[
+    select * from tUser where Login=? and Pwd=aes_encrypt(?,?)
+	union all
+    select * from tUser where upper(email)=upper(?) and Pwd=aes_encrypt(?,?)
+	]]></loginRegular>
+	<selectIpAddressPairs><![CDATA[	
+	select FromAddr as o1,max(Location) as o2
+	from tSession
+	where Location>' ' and Location<>FromAddr
+	group by FromAddr
+	]]></selectIpAddressPairs>
+</LoginDb>
+
+<MapDataRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tmapdata` (
+	  `Row` int(11) NOT NULL AUTO_INCREMENT,
+	  `MapRow` int(11) DEFAULT NULL,
+	  `Name` varchar(45) DEFAULT NULL,
+	  `X` int(11) DEFAULT NULL,
+	  `Y` int(11) DEFAULT NULL,
+	  `Type` enum('PC','NPC','Gear','Weapon','Vehicle','Armor','Cyberdeck') NOT NULL,
+	  `ObjectRow` int(11) DEFAULT NULL,
+	  `Note` varchar(400) DEFAULT NULL,
+	  `Layer` enum('GM','Player','Map') NOT NULL,
+	  `Size` float(2,1) DEFAULT NULL,
+	  `Rotation` int(3) DEFAULT NULL,
+	  `Mirror` tinyint(1) DEFAULT NULL,
+	  `Opacity` float(2,1) DEFAULT NULL,
+	  PRIMARY KEY (`Row`),
+	  KEY `tmapdata_imaprow` (`MapRow`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8
+	]]></createTable>
+	<deleteAllMapData><![CDATA[
+	delete from tmapdata where mapRow=?
+	]]></deleteAllMapData>
+	<selectAll><![CDATA[
+	select * 
+	from tmapdata
+	where maprow=?
+	]]></selectAll>
+</MapDataRec>
+
+<MatrixActionRec>
+	<selectAll><![CDATA[
+	select * from tMatrixAction
+	order by action, name
+	]]></selectAll>
+</MatrixActionRec>
+
+<MentorSpiritRec>
+	<selectAll><![CDATA[
+	select * from tMentorSpirit
+	order by name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tMentorSpirit 
+	where name like ?
+	]]></selectByName>
+</MentorSpiritRec>
+
+<MessageRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tmessage` (
+	  `Row` int(11) NOT NULL AUTO_INCREMENT,
+	  `Thread` int(11) NOT NULL DEFAULT '0',
+	  `CreatedAt` datetime DEFAULT NULL,
+	  `CreatedBy` int(11) NOT NULL DEFAULT '0',
+	  `Message` varchar(2000) NOT NULL,
+	  `Deleted` tinyint(1) DEFAULT '0',
+	  `Type` enum('Message','Notification','Roll') NOT NULL,
+	  PRIMARY KEY (`Row`),
+	  KEY `tmessage_iThread` (`Thread`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8
+	]]></createTable>
+</MessageRec>
+
+<MessageThreadRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tmessagethread` (
+	  `Row` int(11) NOT NULL AUTO_INCREMENT,
+	  `Name` varchar(60) NOT NULL,
+	  `CreatedBy` int(11) NOT NULL DEFAULT '0',
+	  `Deleted` tinyint(1) DEFAULT '0',
+	  `DisableResponse` tinyint(1) DEFAULT '0',
+	  `Type` enum('Private','Community','System') NOT NULL,
+	  PRIMARY KEY (`Row`),
+	  KEY `tmessagethread_iName` (`Name`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8
+	]]></createTable>
+	<selectThreadForRollShare><![CDATA[	
+	select t.* from tmessagethread t
+	inner join tmessagethreaduser tu on t.row=tu.thread and tu.user=? and tu.shareroll=1
+	where t.deleted=0
+	]]></selectThreadForRollShare>
+	<selectThreadForUsers><![CDATA[
+	select thread 
+	from (
+		select thread, concat(',',group_concat(user order by user),',') as users
+		from tmessagethreaduser
+		group by thread order by thread
+		) dt 		
+    inner join tmessagethread t on dt.thread=t.row
+	where dt.users=concat(',',?,',') and t.deleted=0
+	order by thread desc limit 1
+	]]></selectThreadForUsers>
+	<selectUsers><![CDATA[
+	select u.*, ifnull(c.Portrait,0)as Portrait,
+	ifnull(i.Extension,"") as Extension, ifnull(i.User,0) as UserImage 
+	from tmessagethreaduser tu
+	inner join  tuser u on tu.user=u.Row
+	left join tcharacter c on u.playercharacter = c.row 
+	left join timage i on (c.user=i.user or i.user=0) and c.Portrait=i.row
+	where tu.thread = ?
+	]]></selectUsers>
+</MessageThreadRec>
+
+<MessageThreadUserRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tmessagethreaduser` (
+	  `Thread` int(11) NOT NULL,
+	  `User` int(11) NOT NULL,
+	  `LastRowSeen` int(11) NOT NULL DEFAULT '0',
+	  `Role` enum('Owner','Mod','Guest') NOT NULL,
+	  PRIMARY KEY (`Thread`,`User`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8
+	]]></createTable>
+	<selectUnseenCount><![CDATA[
+	SELECT count(tu.Thread) 
+	FROM tmessagethreaduser tu
+	inner join tmessage a on tu.thread = a.thread
+	inner join tmessagethread t on tu.thread=t.row
+	where tu.user=? and tu.LastRowSeen<a.Row 
+	and t.deleted=0 and a.CreatedBy<>?
+	and a.Type<>'Notification' and a.Type<>'Roll'
+	]]></selectUnseenCount>
+	<updateSeen><![CDATA[
+	update tmessagethreaduser
+	set lastrowseen = (select max(Row) from tmessage where thread=?)
+	where thread=? and user=?
+	]]></updateSeen>
+</MessageThreadUserRec>
+
+<ProgramRec>
+	<selectAll><![CDATA[
+	select * from tProgram
+	order by type, name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tProgram 
+	where name like ?
+	]]></selectByName>
+</ProgramRec>
+
+<QualityRec>
+	<selectAll><![CDATA[
+	select * from tQuality
+	order by Type,Name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tQuality 
+	where name like ?
+	]]></selectByName>
+	<selectForCharacter><![CDATA[
+	select q.*, cq.Rating 
+	from tCharacter c
+	inner join tcharacterquality cq on c.Row=cq.characterrow
+	inner join tquality q on q.Row = cq.QualityRow 
+	where c.Row=?
+	order by q.Type desc,q.Name	
+	]]></selectForCharacter>
+	<selectType><![CDATA[
+	select * from tQuality
+	where Type=?
+	order by Name
+	]]></selectType>
+</QualityRec>
+
+<RaceRec>
+	<selectAll><![CDATA[
+	select * from trace
+	order by row
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from trace 
+	where name like ?
+	]]></selectByName>
+</RaceRec>
+
+<SessionRec>
+	<end><![CDATA[
+    update tSession set SesEnd=? where Row=?
+	]]></end>
+	<endAll><![CDATA[
+    update tSession set SesEnd=now() where SesEnd is null
+	]]></endAll>
+</SessionRec>
+
+<SkillRec>
+	<selectAll><![CDATA[
+	select * from tSkill
+	order by Type,name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tskill 
+	where name like ?
+	]]></selectByName>
+	<selectForCharacter><![CDATA[
+	select s.*, cs.Rating 
+	from tCharacter c
+	inner join tcharacterskill cs on c.Row=cs.characterrow
+	inner join tskill s on s.Row = cs.SkillRow 
+	where c.Row=?
+	order by s.Name	
+	]]></selectForCharacter>
+</SkillRec>
+
+<SpellRec>
+	<selectAll><![CDATA[
+	select * from tSpell
+	order by category,name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tspell 
+	where name like ?
+	]]></selectByName>
+	<selectForCharacter><![CDATA[
+	select s.*
+	from tCharacter c
+	inner join tcharacterspell cs on c.Row=cs.characterrow
+	inner join tspell s on s.Row = cs.SpellRow 
+	where c.Row=?
+	order by s.Name	
+	]]></selectForCharacter>
+</SpellRec>
+
+<SpellCategoryRec>
+	<selectAll><![CDATA[
+	select * from tSpellCategory
+	]]></selectAll>
+</SpellCategoryRec>
+
+<ThemeRec>
+	<createTable><![CDATA[
+	CREATE TABLE `ttheme` (
+	  `Row` int(11) NOT NULL AUTO_INCREMENT,
+	  `Name` varchar(45) DEFAULT NULL,
+	  `B1` varchar(6) DEFAULT NULL,
+	  `B2` varchar(6) DEFAULT NULL,
+	  `B3` varchar(6) DEFAULT NULL,
+	  `B4` varchar(6) DEFAULT NULL,
+	  `F1` varchar(6) DEFAULT NULL,
+	  `F2` varchar(6) DEFAULT NULL,
+	  `F3` varchar(6) DEFAULT NULL,
+	  `F4` varchar(6) DEFAULT NULL,
+	  `T1` varchar(6) DEFAULT NULL,
+	  `T2` varchar(6) DEFAULT NULL,
+	  `T3` varchar(6) DEFAULT NULL,
+	  `T4` varchar(6) DEFAULT NULL,
+	  `T5` varchar(6) DEFAULT NULL,
+	  `S1` varchar(6) DEFAULT NULL,
+	  `S2` varchar(6) DEFAULT NULL,
+	  `S3` varchar(6) DEFAULT NULL,
+	  `IconFolder` varchar(45) DEFAULT NULL,
+	  PRIMARY KEY (`Row`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8
+	]]></createTable>
+	<insert><![CDATA[
+	INSERT INTO ttheme
+	(Name,B1,B2,F1,F2,IconFolder)
+	VALUES
+	(?,?,?,?,?,?)
+	]]></insert>
+	<selectNameRows><![CDATA[
+	select Name, Row from ttheme
+	]]></selectNameRows>
+</ThemeRec>
+
+<UserRec>
+	<hasFriendRequest><![CDATA[
+	select count(*) from tFriend
+	where friend=? and confirmed=0
+	]]></hasFriendRequest>
+	<hasTransferRequest><![CDATA[
+	select count(*) from tcharacter
+	where transfer=?
+	]]></hasTransferRequest>
+	<isDupLogin><![CDATA[
+	select 1 from tUser where Login=? and Row<>? 
+	]]></isDupLogin>
+	<isFriendsWith><![CDATA[
+	select 1 from tfriend where user=? and friend=? and confirmed=1
+	]]></isFriendsWith>
+	<selectAll>
+	select u.*, max(s.SesStart) as LastLogin from tuser u 
+	left join tsession s on u.Row=s.sesUser
+	group by u.row
+	order by u.name
+	</selectAll>
+	<selectByLogin><![CDATA[
+	select u.*, ifnull(c.Portrait,0)as Portrait,
+	ifnull(i.Extension,"") as Extension, ifnull(i.User,0) as UserImage
+	from tuser u 
+	left join tcharacter c on u.playercharacter = c.row 
+	left join timage i on (c.user=i.user or i.user=0) and c.Portrait=i.row
+	where login like ? and u.inactive=0
+	]]></selectByLogin>
+	<selectCharacters><![CDATA[
+	select c.*, u.Name as UserName, ifnull(i.Extension,"") as Extension, ifnull(i.User,0) as UserImage
+	from tCharacter c 
+	inner join tuser u on u.Row = c.User	
+	left join timage i on (c.user=i.user or i.user=0) and c.Portrait=i.row
+	where u.row = ?
+	order by c.name
+	]]></selectCharacters>
+	<selectFriends><![CDATA[
+	select u.*, f.Row as FriendRow, f.User as FriendUser, f.friend as FriendFriend, f.Confirmed as FriendConfirmed 
+	from tfriend f
+	inner join tuser u on f.friend=u.row
+	where f.user=? and f.confirmed=1
+	]]></selectFriends>
+	<selectRequests><![CDATA[
+	select u.Row,u.Name,u.Email, f.Row as FriendRow, f.User as FriendUser, f.friend as FriendFriend, f.Confirmed as FriendConfirmed 
+	from tfriend f
+	inner join tuser u on f.friend=u.row
+	where f.user=? and f.confirmed=0
+	union
+	select u.Row,u.Name,u.Email, f.Row as FriendRow, f.User as FriendUser, f.friend as FriendFriend, f.Confirmed as FriendConfirmed 
+	from tfriend f
+	inner join tuser u on f.user=u.row
+	where f.friend=? and f.confirmed=0
+	]]></selectRequests>
+	<updatePwd><![CDATA[
+	update tUser set Pwd=aes_encrypt(?,?) where Row=?
+	]]></updatePwd>	
+</UserRec>
+
+<VehicleRec>
+	<selectAll><![CDATA[
+	select * from tVehicle
+	order by craft, name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tVehicle 
+	where name like ?
+	]]></selectByName>
+	<selectForCharacter><![CDATA[
+	select s.*, cs.Quantity
+	from tCharacter c
+	inner join tcharactervehicle cs on c.Row=cs.characterrow
+	inner join tvehicle s on s.Row = cs.VehicleRow 
+	where c.Row=?
+	order by s.craft, s.Name	
+	]]></selectForCharacter>
+</VehicleRec>
+
+<WeaponRec>
+	<selectAll><![CDATA[
+	select * from tWeapon
+	order by type, name
+	]]></selectAll>
+	<selectByName><![CDATA[
+	select * from tWeapon 
+	where name like ?
+	]]></selectByName>
+	<selectForCharacter><![CDATA[
+	select s.*, cs.Quantity, cs.Equipped 
+	from tCharacter c
+	inner join tcharacterweapon cs on c.Row=cs.characterrow
+	inner join tweapon s on s.Row = cs.WeaponRow 
+	where c.Row=?
+	order by s.Name	
+	]]></selectForCharacter>
+</WeaponRec>
+
+<WeaponModifierRec>
+	<createTable><![CDATA[
+	CREATE TABLE `tweaponmodifier` (
+	  `Row` INT NULL AUTO_INCREMENT,
+	  `Name` VARCHAR(255) NULL,
+	  `Type` ENUM('Any', 'Top', 'Under', 'Barrel', 'Internal', 'Side', 'Stock') NULL,
+	  `Availability` VARCHAR(45) NULL,
+	  `Cost` VARCHAR(45) NULL,
+	  `Description` VARCHAR(2000) NULL,
+	  `Wireless` VARCHAR(45) NULL,
+	  `Source` VARCHAR(45) NULL,
+	  `Bonus` VARCHAR(255) NULL,
+	  `MinRating` INT(1) NULL,
+	  `MaxRating` INT(2) NULL,
+	  `Attachable` TINYINT(1) NULL,
+	  PRIMARY KEY (`Row`),
+	  INDEX `iType` (`Type` ASC),
+	  INDEX `iName` (`Name` ASC))
+	ENGINE = MyISAM
+	DEFAULT CHARACTER SET = utf8
+	COLLATE = utf8_bin
+	]]></createTable>
+	<selectAll><![CDATA[
+	select * from tWeaponModifier
+	order by name
+	]]></selectAll>
+	<selectWeaponModifiers><![CDATA[
+	select * from tweaponmodifier
+	order by name
+	]]></selectWeaponModifiers>
+</WeaponModifierRec>
+
+</sql>
