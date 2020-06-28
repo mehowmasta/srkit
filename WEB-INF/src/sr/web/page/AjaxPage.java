@@ -1811,6 +1811,23 @@ public class AjaxPage extends AppBasePage {
 		}
 		return "{ok:1,newRows:"+jsq(b.toString())+"}";
 	}
+	public String updateCharacterStatus() throws Exception
+	{
+		CharacterRec rec = new CharacterRec();
+		rec.Row = readInt("characterRow");
+		if(!db.select(rec))
+		{
+			return eeJson("Charcter not found.");
+		}
+		if(rec.User != currentUser.Row)
+		{
+			return okZero;
+		}
+		rec.Status = readString("status",500);
+		db.update(rec);
+		return okOne;
+		
+	}
 	public String updateCharacterVehicle() throws Exception
 	{
 		if(currentUser.isGuest())

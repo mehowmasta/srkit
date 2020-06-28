@@ -137,7 +137,7 @@ var track = {
 				{
 					htm += "<div class='inputWrap'><input class='boardName' type='text'><label class='inputLabel'>Name</label></div><div class='flexSpacer'></div>";
 				}
-				htm	+= track.getStatus();
+				htm	+= track.getStatus(wrapper);
 				wrapper.innerHTML = htm;
 			}
 			else
@@ -277,7 +277,7 @@ var track = {
 	getStatus:function(){
 		var statusTypes = sr5.statusType.values;
 		var htm = "";
-		var template = "<div class='statusTrack flex'><span class='subtitle'>{4}</span><div class='statusBoxWrap flex'><div class='statusBox status{0} {2} hover' data-hover='{5}' data-defaultinput='{6}' onclick=track.toggleStatus(this,\"{0}\")>{1}</div>{3}</div></div>";
+		var template = "<div class='statusTrack flex'><span class='subtitle'>{4}</span><div class='statusBoxWrap flex'><div class='statusBox status{0} {2} hover' data-type='{0}' data-hover='{5}' data-defaultinput='{6}' onclick=track.toggleStatus(this,\"{0}\")>{1}</div>{3}</div></div>";
 		for(var i =0,z=statusTypes.length;i<z;i++)
 		{
 			var t = statusTypes[i];
@@ -285,7 +285,7 @@ var track = {
 			var input = "";
 			if(t.useInput)
 			{
-				input = "<div class='inputWrap' style='display:none;'><input type='number' value='"+t.inputDefault+"' style='width:6rem;text-align:center;' onclick='this.select()'><label class='inputLabel'>"+t.inputLabel+"</label></div>";
+				input = "<div class='inputWrap' style='display:none;'><input type='number' value='"+t.inputDefault+"' style='width:6rem;text-align:center;' onchange='track.saveStatus(this,\""+t.name+"\")'' onclick='this.select()'><label class='inputLabel'>"+t.inputLabel+"</label></div>";
 			}
 			var hover = t.description;
 			if(t.resist.length>0)
@@ -299,6 +299,25 @@ var track = {
 			htm += ir.format(template,t.name,img,"",input,t.text,hover,t.inputDefault);
 		}
 		return htm;
+	},
+	readStatus:function(characterRow,name){
+		var statusTrack = ir.get("playerCharacterPopStatusTrack"+characterRow);
+		var boxes = statusTrack.getElementsByClassName("statusBox");
+		var statusJson = {};
+		for(var i =0,z=boxes.length;i<z;i++)
+		{
+			var a = boxes[i];
+			if(a.classList.contains("fill"))
+			{
+				statusJson[a.dataset.type] = 1;
+				if(a.nextElementSibling!=null)
+				{
+					statusJson[a.dataset.type] = a.nextElementSibling.firstElementChild.value;
+				}
+			}
+			
+		}
+		return statusJson;
 	},
 	save:function(ele,count)
 	{
@@ -390,6 +409,13 @@ var track = {
 			sr5.ajaxAsync({fn:"updateVehicle",vehicleRow:vehicleRow,count:count})
 		}
 	},
+	saveStatus:function(ele,name){
+		var characterRow = track.getCharacterRow(ele);
+		var statusJson = track.readStatus(characterRow,name);
+		var char = sr5.characters.get(characterRow);
+		char.Status = statusJson;
+		sr5.ajaxAsync({fn:"updateCharacterStatus",characterRow:characterRow,status:JSON.stringify(statusJson)})
+	},
 	toggleStatus:function(ele,name){
 		var sibling = ele.nextElementSibling;
 		if(ele.classList.contains("fill"))
@@ -409,6 +435,7 @@ var track = {
 				sibling.firstElementChild.value = ele.dataset.defaultinput;
 			}
 		}
+		track.saveStatus(ele,name);
 	},
 	zz_track:0	
 };

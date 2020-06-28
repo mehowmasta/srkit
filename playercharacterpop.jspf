@@ -245,7 +245,7 @@
 						<div class='pccontainer'
 							id='playerCharacterPopDamageStatusWrap{{Row}}'>
 							<div class='pcrow playerCharacterPopTrack'
-								data-charaterRow={{Row}}
+								data-characterRow={{Row}}
 								style='flex-wrap: wrap;'
 								id='playerCharacterPopStatusTrack{{Row}}'>
 								<div>

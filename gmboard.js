@@ -207,6 +207,7 @@ var view = {
 			trackType = track.scoreBoardType.get("Status");
 			gridWrap[1].appendChild(track.buildGrid(trackType,""));			
 			view.toggleInitButtons();
+			view.setCharacterStatus(character);
 			if(type==="PC" && character.Row>0)
 			{
 				var charRowArray = [];
@@ -757,6 +758,9 @@ var view = {
 		},
 		setBlockInitiative:function(block,value){
 			block.getElementsByClassName("initiative")[0].value = Math.max(0,value);
+		},
+		setCharacterStatus:function(character){
+			
 		},
 		showBlock:function(block,show)
 		{

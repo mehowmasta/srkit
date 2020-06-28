@@ -2044,6 +2044,7 @@ var sr5 = {
 				playerCharacterPop.blankPlayer = sr5.blankPlayer;
 				playerCharacterPop.player = sr5.characters.get(sr5.user.PlayerCharacter);
 				sr5.player = playerCharacterPop.player;
+				sr5.initPlayerStatus(sr5.player);
 				sr5.initPlayerAttachments(sr5.player);
 				sr5.initPlayerModifiers(sr5.player);
 				sr5.initPlayerSkillBonus(sr5.player);
@@ -2124,6 +2125,24 @@ var sr5 = {
 				if(player.SkillBonus && player.SkillBonus[s.Name.replace(/ /g,'')])
 				{
 					s.Bonus = player.SkillBonus[s.Name.replace(/ /g,'')];
+				}
+			}
+		},
+		initPlayerStatus:function(player){
+			if(typeof player.Status === 'string')
+			{
+				if(player.Status.length>0)
+				{
+					try{					
+						player.Status = JSON.parse(player.Status);	
+					}
+					catch(e){
+						player.Status = {};
+					}
+				}
+				else
+				{
+					player.Status = {};
 				}
 			}
 		},
@@ -2311,6 +2330,7 @@ var sr5 = {
 			var innerCallback = function(res){
 				if(res.ok)
 				{
+					sr5.initPlayerStatus(res.player);
 					sr5.initPlayerAttachments(res.player);
 					sr5.initPlayerModifiers(res.player);
 					sr5.initPlayerSkillBonus(res.player);

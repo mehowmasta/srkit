@@ -658,6 +658,7 @@ var playerCharacterPop = {
 		track.showTitle=false;
 		track.showCloseButton=false;
 		container.appendChild(track.buildGrid(type,null,null,0,0,0,0));
+		self.setStatus();
 	},
 	buildVehicle:function()
 	{
@@ -972,6 +973,34 @@ var playerCharacterPop = {
 				}
 			}
 		}
+	},
+	setStatus:function(){
+		var self = playerCharacterPop;
+		var status = self.player.Status;
+		/*
+		if (typeof status === 'string' || status instanceof String)
+		{
+			status = JSON.parse(status);
+		}
+		*/
+		var statusTrack = ir.get("playerCharacterPopStatusTrack" + self.player.Row)
+		if(status!=null)
+		{
+			for(var attr in status)
+			{
+				var box = statusTrack.getElementsByClassName("status"+attr)[0];
+				if(box!=null)
+				{
+					box.classList.add("fill");
+					if(box.nextElementSibling!=null)
+					{
+						ir.show(box.nextElementSibling);
+						ir.set(box.nextElementSibling.firstElementChild,status[attr]);
+					}
+				}
+			}
+		}
+		
 	},
 	show:function(player,forceRefresh){
 		var self = playerCharacterPop;

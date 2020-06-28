@@ -156,6 +156,7 @@ public class CharacterRec extends AppRec {
 	public static final String ROW = "Row";
 	public static final String SEX = "Sex";
 	public static final String SOCIALLIMIT = "SocialLimit";
+	public static final String STATUS = "Status";
 	public static final String STREETCRED = "StreetCred";
 	public static final String STRENGTH = "Strength";
 	public static final String STUNCURRENT = "StunCurrent";
@@ -214,6 +215,8 @@ public class CharacterRec extends AppRec {
 	public int PhysicalCurrent = 0;//
 	public int StunMax = 0;//
 	public int StunCurrent = 0;//
+	/** Json string for status*/ 
+	public String Status = "";
 	//
 	/** Misc */
 	public int InitiativeDice = 1;//
