@@ -20,4 +20,5 @@ To get the project running there are a few steps you will need to take.
 
 5. SrKit also uses MySql Stored Procedures. There are 2 stored procedures you will need to run they are <a href='/sr5_sql/select_character.sql'>select_character.sql</a> and <a href='/sr5_sql/select_message_threads.sql'>select_message_threads.sql</a>. You can run them from mysql workbench or right from the command line: <code> mysql sr5 < [[path of select_character.sql file]]/select_character.sql</code>
 
-<i>Note: the project may use 3rd party *.jar files. If some classes are missing they are probably 3rd party. You can download them, or ask me for them and place them in /[[your tomcat path]]/lib</i>
+6. Required Jar Files for Tomcat Lib. The project uses 3rd party *.jar files, place them in /[[your tomcat path]]/lib
+ - <a href='https://jar-download.com/artifacts/org.json'>org.json.jar</a>
